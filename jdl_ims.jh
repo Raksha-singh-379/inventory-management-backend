@@ -331,8 +331,7 @@ relationship OneToMany {
 
 relationship OneToMany {
 	PurchaseQuotation to PurchaseQuotationDetails{purchaseQuotation}
-    PurchaseQuotation to GoodsRecived{purchaseQuotation}
-    PurchaseQuotationDetails to Product {purchaseQuotationDetails}  
+    PurchaseQuotation to GoodsRecived{purchaseQuotation}  
 }
 
 relationship OneToMany{
@@ -353,6 +352,7 @@ relationship ManyToOne {
   PurchaseQuotation{securityUser(login)} to SecurityUser
   PurchaseQuotation{project(projectName)} to Project
   PurchaseQuotation{clientDetails} to ClientDetails
+  PurchaseQuotationDetails{product} to Product 
 }
 
 relationship ManyToOne {
