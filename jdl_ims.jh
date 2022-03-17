@@ -349,9 +349,9 @@ relationship ManyToOne {
   ProductInventory{securityUser(login)} to SecurityUser
   ProductInventory{wareHouse} to WareHouse
   ConsumptionDetails{securityUser(login)} to SecurityUser
-  ConsumptionDetails{project(name)} to Project
+  ConsumptionDetails{project(projectName)} to Project
   PurchaseQuotation{securityUser(login)} to SecurityUser
-  PurchaseQuotation{project} to Project
+  PurchaseQuotation{project(projectName)} to Project
   PurchaseQuotation{clientDetails} to ClientDetails
 }
 
