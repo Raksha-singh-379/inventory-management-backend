@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -39,12 +38,10 @@ public class PurchaseQuotationDetails implements Serializable {
     @Column(name = "discount")
     private Double discount;
 
-    @NotNull
-    @Column(name = "last_modified", nullable = false)
+    @Column(name = "last_modified")
     private String lastModified;
 
-    @NotNull
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
     @Column(name = "free_field_1")
@@ -62,7 +59,10 @@ public class PurchaseQuotationDetails implements Serializable {
     private Set<Product> products = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "purchaseQuotationDetails", "goodReciveds", "securityUser", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "purchaseQuotationDetails", "goodsReciveds", "securityUser", "project", "clientDetails" },
+        allowSetters = true
+    )
     private PurchaseQuotation purchaseQuotation;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

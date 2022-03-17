@@ -24,7 +24,9 @@ describe('Notification Service', () => {
       id: 0,
       massage: 'AAAAAAA',
       notificationType: NotificationType.APPROVAL,
+      title: 'AAAAAAA',
       isActionRequired: false,
+      isRead: false,
       freeField1: 'AAAAAAA',
       freeField2: 'AAAAAAA',
       lastModified: 'AAAAAAA',
@@ -66,7 +68,9 @@ describe('Notification Service', () => {
           id: 1,
           massage: 'BBBBBB',
           notificationType: 'BBBBBB',
+          title: 'BBBBBB',
           isActionRequired: true,
+          isRead: true,
           freeField1: 'BBBBBB',
           freeField2: 'BBBBBB',
           lastModified: 'BBBBBB',
@@ -88,9 +92,9 @@ describe('Notification Service', () => {
       const patchObject = Object.assign(
         {
           massage: 'BBBBBB',
-          freeField1: 'BBBBBB',
+          isActionRequired: true,
+          isRead: true,
           freeField2: 'BBBBBB',
-          lastModifiedBy: 'BBBBBB',
         },
         new Notification()
       );
@@ -112,7 +116,9 @@ describe('Notification Service', () => {
           id: 1,
           massage: 'BBBBBB',
           notificationType: 'BBBBBB',
+          title: 'BBBBBB',
           isActionRequired: true,
+          isRead: true,
           freeField1: 'BBBBBB',
           freeField2: 'BBBBBB',
           lastModified: 'BBBBBB',
@@ -168,7 +174,7 @@ describe('Notification Service', () => {
       });
 
       it('should add only unique Notification to an array', () => {
-        const notificationArray: INotification[] = [{ id: 123 }, { id: 456 }, { id: 25921 }];
+        const notificationArray: INotification[] = [{ id: 123 }, { id: 456 }, { id: 16597 }];
         const notificationCollection: INotification[] = [{ id: 123 }];
         expectedResult = service.addNotificationToCollectionIfMissing(notificationCollection, ...notificationArray);
         expect(expectedResult).toHaveLength(3);

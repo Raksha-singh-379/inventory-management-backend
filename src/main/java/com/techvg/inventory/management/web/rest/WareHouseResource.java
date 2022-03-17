@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +62,7 @@ public class WareHouseResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/ware-houses")
-    public ResponseEntity<WareHouseDTO> createWareHouse(@Valid @RequestBody WareHouseDTO wareHouseDTO) throws URISyntaxException {
+    public ResponseEntity<WareHouseDTO> createWareHouse(@RequestBody WareHouseDTO wareHouseDTO) throws URISyntaxException {
         log.debug("REST request to save WareHouse : {}", wareHouseDTO);
         if (wareHouseDTO.getId() != null) {
             throw new BadRequestAlertException("A new wareHouse cannot already have an ID", ENTITY_NAME, "idexists");
@@ -89,7 +87,7 @@ public class WareHouseResource {
     @PutMapping("/ware-houses/{id}")
     public ResponseEntity<WareHouseDTO> updateWareHouse(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody WareHouseDTO wareHouseDTO
+        @RequestBody WareHouseDTO wareHouseDTO
     ) throws URISyntaxException {
         log.debug("REST request to update WareHouse : {}, {}", id, wareHouseDTO);
         if (wareHouseDTO.getId() == null) {
@@ -124,7 +122,7 @@ public class WareHouseResource {
     @PatchMapping(value = "/ware-houses/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<WareHouseDTO> partialUpdateWareHouse(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody WareHouseDTO wareHouseDTO
+        @RequestBody WareHouseDTO wareHouseDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update WareHouse partially : {}, {}", id, wareHouseDTO);
         if (wareHouseDTO.getId() == null) {

@@ -19,8 +19,8 @@ export class SecurityPermissionUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required]],
     description: [],
-    lastModified: [null, [Validators.required]],
-    lastModifiedBy: [null, [Validators.required]],
+    lastModified: [],
+    lastModifiedBy: [],
   });
 
   constructor(

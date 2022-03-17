@@ -82,32 +82,23 @@
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityName": "purchaseQuotation",
-      "otherEntityRelationshipName": "productInventory",
-      "relationshipName": "purchaseQuotation",
-      "relationshipType": "many-to-one"
-    },
-    {
       "otherEntityName": "productTransaction",
       "otherEntityRelationshipName": "productInventory",
       "relationshipName": "productTransaction",
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityField": "whName",
-      "otherEntityName": "wareHouse",
-      "otherEntityRelationshipName": "productInventory",
-      "ownerSide": true,
-      "relationshipName": "wareHouse",
-      "relationshipType": "many-to-many"
-    },
-    {
       "otherEntityField": "login",
       "otherEntityName": "securityUser",
       "otherEntityRelationshipName": "productInventory",
-      "ownerSide": true,
       "relationshipName": "securityUser",
-      "relationshipType": "many-to-many"
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "wareHouse",
+      "otherEntityRelationshipName": "productInventory",
+      "relationshipName": "wareHouse",
+      "relationshipType": "many-to-one"
     }
   ],
   "service": "serviceClass"

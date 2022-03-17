@@ -1,10 +1,9 @@
 import dayjs from 'dayjs/esm';
 import { IConsumptionDetails } from 'app/entities/consumption-details/consumption-details.model';
 import { IProduct } from 'app/entities/product/product.model';
-import { IPurchaseQuotation } from 'app/entities/purchase-quotation/purchase-quotation.model';
 import { IProductTransaction } from 'app/entities/product-transaction/product-transaction.model';
-import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
 import { ISecurityUser } from 'app/entities/security-user/security-user.model';
+import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
 
 export interface IProductInventory {
   id?: number;
@@ -24,10 +23,9 @@ export interface IProductInventory {
   isActive?: boolean | null;
   consumptionDetails?: IConsumptionDetails[] | null;
   product?: IProduct | null;
-  purchaseQuotation?: IPurchaseQuotation | null;
   productTransaction?: IProductTransaction | null;
-  wareHouses?: IWareHouse[] | null;
-  securityUsers?: ISecurityUser[] | null;
+  securityUser?: ISecurityUser | null;
+  wareHouse?: IWareHouse | null;
 }
 
 export class ProductInventory implements IProductInventory {
@@ -49,10 +47,9 @@ export class ProductInventory implements IProductInventory {
     public isActive?: boolean | null,
     public consumptionDetails?: IConsumptionDetails[] | null,
     public product?: IProduct | null,
-    public purchaseQuotation?: IPurchaseQuotation | null,
     public productTransaction?: IProductTransaction | null,
-    public wareHouses?: IWareHouse[] | null,
-    public securityUsers?: ISecurityUser[] | null
+    public securityUser?: ISecurityUser | null,
+    public wareHouse?: IWareHouse | null
   ) {
     this.isDeleted = this.isDeleted ?? false;
     this.isActive = this.isActive ?? false;

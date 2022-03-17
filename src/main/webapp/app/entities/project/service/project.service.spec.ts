@@ -25,7 +25,7 @@ describe('Project Service', () => {
 
     elemDefault = {
       id: 0,
-      name: 'AAAAAAA',
+      projectName: 'AAAAAAA',
       startDate: currentDate,
       endDate: currentDate,
       departmentName: 'AAAAAAA',
@@ -84,7 +84,7 @@ describe('Project Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
-          name: 'BBBBBB',
+          projectName: 'BBBBBB',
           startDate: currentDate.format(DATE_TIME_FORMAT),
           endDate: currentDate.format(DATE_TIME_FORMAT),
           departmentName: 'BBBBBB',
@@ -116,7 +116,7 @@ describe('Project Service', () => {
     it('should partial update a Project', () => {
       const patchObject = Object.assign(
         {
-          name: 'BBBBBB',
+          projectName: 'BBBBBB',
           budget: 'BBBBBB',
           freeField1: 'BBBBBB',
           freeField2: 'BBBBBB',
@@ -145,7 +145,7 @@ describe('Project Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
-          name: 'BBBBBB',
+          projectName: 'BBBBBB',
           startDate: currentDate.format(DATE_TIME_FORMAT),
           endDate: currentDate.format(DATE_TIME_FORMAT),
           departmentName: 'BBBBBB',

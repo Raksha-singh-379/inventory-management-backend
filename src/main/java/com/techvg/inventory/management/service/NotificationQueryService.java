@@ -96,8 +96,14 @@ public class NotificationQueryService extends QueryService<Notification> {
             if (criteria.getNotificationType() != null) {
                 specification = specification.and(buildSpecification(criteria.getNotificationType(), Notification_.notificationType));
             }
+            if (criteria.getTitle() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getTitle(), Notification_.title));
+            }
             if (criteria.getIsActionRequired() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsActionRequired(), Notification_.isActionRequired));
+            }
+            if (criteria.getIsRead() != null) {
+                specification = specification.and(buildSpecification(criteria.getIsRead(), Notification_.isRead));
             }
             if (criteria.getFreeField1() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getFreeField1(), Notification_.freeField1));

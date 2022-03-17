@@ -10,6 +10,10 @@ import { PurchaseQuotationService } from '../service/purchase-quotation.service'
 import { IPurchaseQuotation, PurchaseQuotation } from '../purchase-quotation.model';
 import { ISecurityUser } from 'app/entities/security-user/security-user.model';
 import { SecurityUserService } from 'app/entities/security-user/service/security-user.service';
+import { IProject } from 'app/entities/project/project.model';
+import { ProjectService } from 'app/entities/project/service/project.service';
+import { IClientDetails } from 'app/entities/client-details/client-details.model';
+import { ClientDetailsService } from 'app/entities/client-details/service/client-details.service';
 
 import { PurchaseQuotationUpdateComponent } from './purchase-quotation-update.component';
 
@@ -19,6 +23,8 @@ describe('PurchaseQuotation Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let purchaseQuotationService: PurchaseQuotationService;
   let securityUserService: SecurityUserService;
+  let projectService: ProjectService;
+  let clientDetailsService: ClientDetailsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -41,6 +47,8 @@ describe('PurchaseQuotation Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     purchaseQuotationService = TestBed.inject(PurchaseQuotationService);
     securityUserService = TestBed.inject(SecurityUserService);
+    projectService = TestBed.inject(ProjectService);
+    clientDetailsService = TestBed.inject(ClientDetailsService);
 
     comp = fixture.componentInstance;
   });
@@ -68,16 +76,63 @@ describe('PurchaseQuotation Management Update Component', () => {
       expect(comp.securityUsersSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Project query and add missing value', () => {
+      const purchaseQuotation: IPurchaseQuotation = { id: 456 };
+      const project: IProject = { id: 77203 };
+      purchaseQuotation.project = project;
+
+      const projectCollection: IProject[] = [{ id: 75122 }];
+      jest.spyOn(projectService, 'query').mockReturnValue(of(new HttpResponse({ body: projectCollection })));
+      const additionalProjects = [project];
+      const expectedCollection: IProject[] = [...additionalProjects, ...projectCollection];
+      jest.spyOn(projectService, 'addProjectToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ purchaseQuotation });
+      comp.ngOnInit();
+
+      expect(projectService.query).toHaveBeenCalled();
+      expect(projectService.addProjectToCollectionIfMissing).toHaveBeenCalledWith(projectCollection, ...additionalProjects);
+      expect(comp.projectsSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should call ClientDetails query and add missing value', () => {
+      const purchaseQuotation: IPurchaseQuotation = { id: 456 };
+      const clientDetails: IClientDetails = { id: 25151 };
+      purchaseQuotation.clientDetails = clientDetails;
+
+      const clientDetailsCollection: IClientDetails[] = [{ id: 35314 }];
+      jest.spyOn(clientDetailsService, 'query').mockReturnValue(of(new HttpResponse({ body: clientDetailsCollection })));
+      const additionalClientDetails = [clientDetails];
+      const expectedCollection: IClientDetails[] = [...additionalClientDetails, ...clientDetailsCollection];
+      jest.spyOn(clientDetailsService, 'addClientDetailsToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ purchaseQuotation });
+      comp.ngOnInit();
+
+      expect(clientDetailsService.query).toHaveBeenCalled();
+      expect(clientDetailsService.addClientDetailsToCollectionIfMissing).toHaveBeenCalledWith(
+        clientDetailsCollection,
+        ...additionalClientDetails
+      );
+      expect(comp.clientDetailsSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const purchaseQuotation: IPurchaseQuotation = { id: 456 };
       const securityUser: ISecurityUser = { id: 32982 };
       purchaseQuotation.securityUser = securityUser;
+      const project: IProject = { id: 93214 };
+      purchaseQuotation.project = project;
+      const clientDetails: IClientDetails = { id: 33642 };
+      purchaseQuotation.clientDetails = clientDetails;
 
       activatedRoute.data = of({ purchaseQuotation });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(purchaseQuotation));
       expect(comp.securityUsersSharedCollection).toContain(securityUser);
+      expect(comp.projectsSharedCollection).toContain(project);
+      expect(comp.clientDetailsSharedCollection).toContain(clientDetails);
     });
   });
 
@@ -150,6 +205,22 @@ describe('PurchaseQuotation Management Update Component', () => {
       it('Should return tracked SecurityUser primary key', () => {
         const entity = { id: 123 };
         const trackResult = comp.trackSecurityUserById(0, entity);
+        expect(trackResult).toEqual(entity.id);
+      });
+    });
+
+    describe('trackProjectById', () => {
+      it('Should return tracked Project primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackProjectById(0, entity);
+        expect(trackResult).toEqual(entity.id);
+      });
+    });
+
+    describe('trackClientDetailsById', () => {
+      it('Should return tracked ClientDetails primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackClientDetailsById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });
     });

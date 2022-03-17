@@ -20,7 +20,7 @@ export class ProjectUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    name: [],
+    projectName: [],
     startDate: [],
     endDate: [],
     departmentName: [],
@@ -82,7 +82,7 @@ export class ProjectUpdateComponent implements OnInit {
   protected updateForm(project: IProject): void {
     this.editForm.patchValue({
       id: project.id,
-      name: project.name,
+      projectName: project.projectName,
       startDate: project.startDate ? project.startDate.format(DATE_TIME_FORMAT) : null,
       endDate: project.endDate ? project.endDate.format(DATE_TIME_FORMAT) : null,
       departmentName: project.departmentName,
@@ -99,7 +99,7 @@ export class ProjectUpdateComponent implements OnInit {
     return {
       ...new Project(),
       id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
+      projectName: this.editForm.get(['projectName'])!.value,
       startDate: this.editForm.get(['startDate'])!.value ? dayjs(this.editForm.get(['startDate'])!.value, DATE_TIME_FORMAT) : undefined,
       endDate: this.editForm.get(['endDate'])!.value ? dayjs(this.editForm.get(['endDate'])!.value, DATE_TIME_FORMAT) : undefined,
       departmentName: this.editForm.get(['departmentName'])!.value,

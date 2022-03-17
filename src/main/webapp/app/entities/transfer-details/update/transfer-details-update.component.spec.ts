@@ -8,8 +8,6 @@ import { of, Subject, from } from 'rxjs';
 
 import { TransferDetailsService } from '../service/transfer-details.service';
 import { ITransferDetails, TransferDetails } from '../transfer-details.model';
-import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
-import { WareHouseService } from 'app/entities/ware-house/service/ware-house.service';
 import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
 import { ITransfer } from 'app/entities/transfer/transfer.model';
@@ -22,7 +20,6 @@ describe('TransferDetails Management Update Component', () => {
   let fixture: ComponentFixture<TransferDetailsUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let transferDetailsService: TransferDetailsService;
-  let wareHouseService: WareHouseService;
   let productService: ProductService;
   let transferService: TransferService;
 
@@ -46,7 +43,6 @@ describe('TransferDetails Management Update Component', () => {
     fixture = TestBed.createComponent(TransferDetailsUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     transferDetailsService = TestBed.inject(TransferDetailsService);
-    wareHouseService = TestBed.inject(WareHouseService);
     productService = TestBed.inject(ProductService);
     transferService = TestBed.inject(TransferService);
 
@@ -54,25 +50,6 @@ describe('TransferDetails Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call WareHouse query and add missing value', () => {
-      const transferDetails: ITransferDetails = { id: 456 };
-      const wareHouse: IWareHouse = { id: 10351 };
-      transferDetails.wareHouse = wareHouse;
-
-      const wareHouseCollection: IWareHouse[] = [{ id: 56181 }];
-      jest.spyOn(wareHouseService, 'query').mockReturnValue(of(new HttpResponse({ body: wareHouseCollection })));
-      const additionalWareHouses = [wareHouse];
-      const expectedCollection: IWareHouse[] = [...additionalWareHouses, ...wareHouseCollection];
-      jest.spyOn(wareHouseService, 'addWareHouseToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ transferDetails });
-      comp.ngOnInit();
-
-      expect(wareHouseService.query).toHaveBeenCalled();
-      expect(wareHouseService.addWareHouseToCollectionIfMissing).toHaveBeenCalledWith(wareHouseCollection, ...additionalWareHouses);
-      expect(comp.wareHousesSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call Product query and add missing value', () => {
       const transferDetails: ITransferDetails = { id: 456 };
       const product: IProduct = { id: 36391 };
@@ -113,8 +90,6 @@ describe('TransferDetails Management Update Component', () => {
 
     it('Should update editForm', () => {
       const transferDetails: ITransferDetails = { id: 456 };
-      const wareHouse: IWareHouse = { id: 89467 };
-      transferDetails.wareHouse = wareHouse;
       const product: IProduct = { id: 10362 };
       transferDetails.product = product;
       const transfer: ITransfer = { id: 28297 };
@@ -124,7 +99,6 @@ describe('TransferDetails Management Update Component', () => {
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(transferDetails));
-      expect(comp.wareHousesSharedCollection).toContain(wareHouse);
       expect(comp.productsSharedCollection).toContain(product);
       expect(comp.transfersSharedCollection).toContain(transfer);
     });
@@ -195,14 +169,6 @@ describe('TransferDetails Management Update Component', () => {
   });
 
   describe('Tracking relationships identifiers', () => {
-    describe('trackWareHouseById', () => {
-      it('Should return tracked WareHouse primary key', () => {
-        const entity = { id: 123 };
-        const trackResult = comp.trackWareHouseById(0, entity);
-        expect(trackResult).toEqual(entity.id);
-      });
-    });
-
     describe('trackProductById', () => {
       it('Should return tracked Product primary key', () => {
         const entity = { id: 123 };

@@ -2,7 +2,7 @@ import dayjs from 'dayjs/esm';
 
 export interface IProject {
   id?: number;
-  name?: string | null;
+  projectName?: string | null;
   startDate?: dayjs.Dayjs | null;
   endDate?: dayjs.Dayjs | null;
   departmentName?: string | null;
@@ -17,7 +17,7 @@ export interface IProject {
 export class Project implements IProject {
   constructor(
     public id?: number,
-    public name?: string | null,
+    public projectName?: string | null,
     public startDate?: dayjs.Dayjs | null,
     public endDate?: dayjs.Dayjs | null,
     public departmentName?: string | null,

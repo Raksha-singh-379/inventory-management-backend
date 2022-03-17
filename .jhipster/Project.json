@@ -6,7 +6,7 @@
   "entityTableName": "project",
   "fields": [
     {
-      "fieldName": "name",
+      "fieldName": "projectName",
       "fieldType": "String"
     },
     {

@@ -47,8 +47,6 @@ public class TransferDetailsCriteria implements Serializable, Criteria {
 
     private BooleanFilter isActive;
 
-    private LongFilter wareHouseId;
-
     private LongFilter productId;
 
     private LongFilter transferId;
@@ -68,7 +66,6 @@ public class TransferDetailsCriteria implements Serializable, Criteria {
         this.lastModifiedBy = other.lastModifiedBy == null ? null : other.lastModifiedBy.copy();
         this.isDeleted = other.isDeleted == null ? null : other.isDeleted.copy();
         this.isActive = other.isActive == null ? null : other.isActive.copy();
-        this.wareHouseId = other.wareHouseId == null ? null : other.wareHouseId.copy();
         this.productId = other.productId == null ? null : other.productId.copy();
         this.transferId = other.transferId == null ? null : other.transferId.copy();
         this.distinct = other.distinct;
@@ -229,21 +226,6 @@ public class TransferDetailsCriteria implements Serializable, Criteria {
         this.isActive = isActive;
     }
 
-    public LongFilter getWareHouseId() {
-        return wareHouseId;
-    }
-
-    public LongFilter wareHouseId() {
-        if (wareHouseId == null) {
-            wareHouseId = new LongFilter();
-        }
-        return wareHouseId;
-    }
-
-    public void setWareHouseId(LongFilter wareHouseId) {
-        this.wareHouseId = wareHouseId;
-    }
-
     public LongFilter getProductId() {
         return productId;
     }
@@ -302,7 +284,6 @@ public class TransferDetailsCriteria implements Serializable, Criteria {
             Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
             Objects.equals(isDeleted, that.isDeleted) &&
             Objects.equals(isActive, that.isActive) &&
-            Objects.equals(wareHouseId, that.wareHouseId) &&
             Objects.equals(productId, that.productId) &&
             Objects.equals(transferId, that.transferId) &&
             Objects.equals(distinct, that.distinct)
@@ -322,7 +303,6 @@ public class TransferDetailsCriteria implements Serializable, Criteria {
             lastModifiedBy,
             isDeleted,
             isActive,
-            wareHouseId,
             productId,
             transferId,
             distinct
@@ -343,7 +323,6 @@ public class TransferDetailsCriteria implements Serializable, Criteria {
             (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +
             (isDeleted != null ? "isDeleted=" + isDeleted + ", " : "") +
             (isActive != null ? "isActive=" + isActive + ", " : "") +
-            (wareHouseId != null ? "wareHouseId=" + wareHouseId + ", " : "") +
             (productId != null ? "productId=" + productId + ", " : "") +
             (transferId != null ? "transferId=" + transferId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +

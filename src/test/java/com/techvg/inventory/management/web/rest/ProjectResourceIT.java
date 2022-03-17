@@ -34,8 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class ProjectResourceIT {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_PROJECT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_PROJECT_NAME = "BBBBBBBBBB";
 
     private static final Instant DEFAULT_START_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_START_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -92,7 +92,7 @@ class ProjectResourceIT {
      */
     public static Project createEntity(EntityManager em) {
         Project project = new Project()
-            .name(DEFAULT_NAME)
+            .projectName(DEFAULT_PROJECT_NAME)
             .startDate(DEFAULT_START_DATE)
             .endDate(DEFAULT_END_DATE)
             .departmentName(DEFAULT_DEPARTMENT_NAME)
@@ -113,7 +113,7 @@ class ProjectResourceIT {
      */
     public static Project createUpdatedEntity(EntityManager em) {
         Project project = new Project()
-            .name(UPDATED_NAME)
+            .projectName(UPDATED_PROJECT_NAME)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
             .departmentName(UPDATED_DEPARTMENT_NAME)
@@ -145,7 +145,7 @@ class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testProject.getProjectName()).isEqualTo(DEFAULT_PROJECT_NAME);
         assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testProject.getDepartmentName()).isEqualTo(DEFAULT_DEPARTMENT_NAME);
@@ -188,7 +188,7 @@ class ProjectResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(project.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].projectName").value(hasItem(DEFAULT_PROJECT_NAME)))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].departmentName").value(hasItem(DEFAULT_DEPARTMENT_NAME)))
@@ -212,7 +212,7 @@ class ProjectResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(project.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.projectName").value(DEFAULT_PROJECT_NAME))
             .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.departmentName").value(DEFAULT_DEPARTMENT_NAME))
@@ -244,80 +244,80 @@ class ProjectResourceIT {
 
     @Test
     @Transactional
-    void getAllProjectsByNameIsEqualToSomething() throws Exception {
+    void getAllProjectsByProjectNameIsEqualToSomething() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 
-        // Get all the projectList where name equals to DEFAULT_NAME
-        defaultProjectShouldBeFound("name.equals=" + DEFAULT_NAME);
+        // Get all the projectList where projectName equals to DEFAULT_PROJECT_NAME
+        defaultProjectShouldBeFound("projectName.equals=" + DEFAULT_PROJECT_NAME);
 
-        // Get all the projectList where name equals to UPDATED_NAME
-        defaultProjectShouldNotBeFound("name.equals=" + UPDATED_NAME);
+        // Get all the projectList where projectName equals to UPDATED_PROJECT_NAME
+        defaultProjectShouldNotBeFound("projectName.equals=" + UPDATED_PROJECT_NAME);
     }
 
     @Test
     @Transactional
-    void getAllProjectsByNameIsNotEqualToSomething() throws Exception {
+    void getAllProjectsByProjectNameIsNotEqualToSomething() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 
-        // Get all the projectList where name not equals to DEFAULT_NAME
-        defaultProjectShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+        // Get all the projectList where projectName not equals to DEFAULT_PROJECT_NAME
+        defaultProjectShouldNotBeFound("projectName.notEquals=" + DEFAULT_PROJECT_NAME);
 
-        // Get all the projectList where name not equals to UPDATED_NAME
-        defaultProjectShouldBeFound("name.notEquals=" + UPDATED_NAME);
+        // Get all the projectList where projectName not equals to UPDATED_PROJECT_NAME
+        defaultProjectShouldBeFound("projectName.notEquals=" + UPDATED_PROJECT_NAME);
     }
 
     @Test
     @Transactional
-    void getAllProjectsByNameIsInShouldWork() throws Exception {
+    void getAllProjectsByProjectNameIsInShouldWork() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 
-        // Get all the projectList where name in DEFAULT_NAME or UPDATED_NAME
-        defaultProjectShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+        // Get all the projectList where projectName in DEFAULT_PROJECT_NAME or UPDATED_PROJECT_NAME
+        defaultProjectShouldBeFound("projectName.in=" + DEFAULT_PROJECT_NAME + "," + UPDATED_PROJECT_NAME);
 
-        // Get all the projectList where name equals to UPDATED_NAME
-        defaultProjectShouldNotBeFound("name.in=" + UPDATED_NAME);
+        // Get all the projectList where projectName equals to UPDATED_PROJECT_NAME
+        defaultProjectShouldNotBeFound("projectName.in=" + UPDATED_PROJECT_NAME);
     }
 
     @Test
     @Transactional
-    void getAllProjectsByNameIsNullOrNotNull() throws Exception {
+    void getAllProjectsByProjectNameIsNullOrNotNull() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 
-        // Get all the projectList where name is not null
-        defaultProjectShouldBeFound("name.specified=true");
+        // Get all the projectList where projectName is not null
+        defaultProjectShouldBeFound("projectName.specified=true");
 
-        // Get all the projectList where name is null
-        defaultProjectShouldNotBeFound("name.specified=false");
+        // Get all the projectList where projectName is null
+        defaultProjectShouldNotBeFound("projectName.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllProjectsByNameContainsSomething() throws Exception {
+    void getAllProjectsByProjectNameContainsSomething() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 
-        // Get all the projectList where name contains DEFAULT_NAME
-        defaultProjectShouldBeFound("name.contains=" + DEFAULT_NAME);
+        // Get all the projectList where projectName contains DEFAULT_PROJECT_NAME
+        defaultProjectShouldBeFound("projectName.contains=" + DEFAULT_PROJECT_NAME);
 
-        // Get all the projectList where name contains UPDATED_NAME
-        defaultProjectShouldNotBeFound("name.contains=" + UPDATED_NAME);
+        // Get all the projectList where projectName contains UPDATED_PROJECT_NAME
+        defaultProjectShouldNotBeFound("projectName.contains=" + UPDATED_PROJECT_NAME);
     }
 
     @Test
     @Transactional
-    void getAllProjectsByNameNotContainsSomething() throws Exception {
+    void getAllProjectsByProjectNameNotContainsSomething() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 
-        // Get all the projectList where name does not contain DEFAULT_NAME
-        defaultProjectShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+        // Get all the projectList where projectName does not contain DEFAULT_PROJECT_NAME
+        defaultProjectShouldNotBeFound("projectName.doesNotContain=" + DEFAULT_PROJECT_NAME);
 
-        // Get all the projectList where name does not contain UPDATED_NAME
-        defaultProjectShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+        // Get all the projectList where projectName does not contain UPDATED_PROJECT_NAME
+        defaultProjectShouldBeFound("projectName.doesNotContain=" + UPDATED_PROJECT_NAME);
     }
 
     @Test
@@ -979,7 +979,7 @@ class ProjectResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(project.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].projectName").value(hasItem(DEFAULT_PROJECT_NAME)))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].departmentName").value(hasItem(DEFAULT_DEPARTMENT_NAME)))
@@ -1037,7 +1037,7 @@ class ProjectResourceIT {
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject);
         updatedProject
-            .name(UPDATED_NAME)
+            .projectName(UPDATED_PROJECT_NAME)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
             .departmentName(UPDATED_DEPARTMENT_NAME)
@@ -1061,7 +1061,7 @@ class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProject.getProjectName()).isEqualTo(UPDATED_PROJECT_NAME);
         assertThat(testProject.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testProject.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testProject.getDepartmentName()).isEqualTo(UPDATED_DEPARTMENT_NAME);
@@ -1151,7 +1151,7 @@ class ProjectResourceIT {
         partialUpdatedProject.setId(project.getId());
 
         partialUpdatedProject
-            .name(UPDATED_NAME)
+            .projectName(UPDATED_PROJECT_NAME)
             .departmentName(UPDATED_DEPARTMENT_NAME)
             .budget(UPDATED_BUDGET)
             .freeField2(UPDATED_FREE_FIELD_2)
@@ -1171,7 +1171,7 @@ class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProject.getProjectName()).isEqualTo(UPDATED_PROJECT_NAME);
         assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testProject.getDepartmentName()).isEqualTo(UPDATED_DEPARTMENT_NAME);
@@ -1196,7 +1196,7 @@ class ProjectResourceIT {
         partialUpdatedProject.setId(project.getId());
 
         partialUpdatedProject
-            .name(UPDATED_NAME)
+            .projectName(UPDATED_PROJECT_NAME)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
             .departmentName(UPDATED_DEPARTMENT_NAME)
@@ -1219,7 +1219,7 @@ class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProject.getProjectName()).isEqualTo(UPDATED_PROJECT_NAME);
         assertThat(testProject.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testProject.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testProject.getDepartmentName()).isEqualTo(UPDATED_DEPARTMENT_NAME);

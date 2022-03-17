@@ -5,7 +5,8 @@ package com.techvg.inventory.management.domain.enumeration;
  */
 public enum OrderType {
     PURCHASE_ORDER("PurchaseOrder"),
-    PRODUCT_QUATATION("ProductQuatation");
+    PRODUCT_QUATATION("ProductQuatation"),
+    TAX_INVOICE("TaxInvoice");
 
     private final String value;
 

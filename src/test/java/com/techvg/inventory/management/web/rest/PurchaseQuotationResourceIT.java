@@ -6,8 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.techvg.inventory.management.IntegrationTest;
+import com.techvg.inventory.management.domain.ClientDetails;
 import com.techvg.inventory.management.domain.GoodsRecived;
-import com.techvg.inventory.management.domain.ProductInventory;
+import com.techvg.inventory.management.domain.Project;
 import com.techvg.inventory.management.domain.PurchaseQuotation;
 import com.techvg.inventory.management.domain.PurchaseQuotationDetails;
 import com.techvg.inventory.management.domain.SecurityUser;
@@ -40,6 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class PurchaseQuotationResourceIT {
 
+    private static final String DEFAULT_REFRENCE_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_REFRENCE_NUMBER = "BBBBBBBBBB";
+
     private static final Double DEFAULT_TOTAL_PO_AMOUNT = 1D;
     private static final Double UPDATED_TOTAL_PO_AMOUNT = 2D;
     private static final Double SMALLER_TOTAL_PO_AMOUNT = 1D - 1D;
@@ -59,15 +63,6 @@ class PurchaseQuotationResourceIT {
 
     private static final Status DEFAULT_ORDER_STATUS = Status.REQUESTED;
     private static final Status UPDATED_ORDER_STATUS = Status.APPROVED;
-
-    private static final String DEFAULT_CLIENT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_CLIENT_NAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_CLIENT_MOBILE = "AAAAAAAAAA";
-    private static final String UPDATED_CLIENT_MOBILE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_CLIENT_EMAIL = "AAAAAAAAAA";
-    private static final String UPDATED_CLIENT_EMAIL = "BBBBBBBBBB";
 
     private static final String DEFAULT_TERMS_AND_CONDITION = "AAAAAAAAAA";
     private static final String UPDATED_TERMS_AND_CONDITION = "BBBBBBBBBB";
@@ -115,15 +110,13 @@ class PurchaseQuotationResourceIT {
      */
     public static PurchaseQuotation createEntity(EntityManager em) {
         PurchaseQuotation purchaseQuotation = new PurchaseQuotation()
+            .refrenceNumber(DEFAULT_REFRENCE_NUMBER)
             .totalPOAmount(DEFAULT_TOTAL_PO_AMOUNT)
             .totalGSTAmount(DEFAULT_TOTAL_GST_AMOUNT)
             .expectedDeliveryDate(DEFAULT_EXPECTED_DELIVERY_DATE)
             .poDate(DEFAULT_PO_DATE)
             .orderType(DEFAULT_ORDER_TYPE)
             .orderStatus(DEFAULT_ORDER_STATUS)
-            .clientName(DEFAULT_CLIENT_NAME)
-            .clientMobile(DEFAULT_CLIENT_MOBILE)
-            .clientEmail(DEFAULT_CLIENT_EMAIL)
             .termsAndCondition(DEFAULT_TERMS_AND_CONDITION)
             .notes(DEFAULT_NOTES)
             .lastModified(DEFAULT_LAST_MODIFIED)
@@ -141,15 +134,13 @@ class PurchaseQuotationResourceIT {
      */
     public static PurchaseQuotation createUpdatedEntity(EntityManager em) {
         PurchaseQuotation purchaseQuotation = new PurchaseQuotation()
+            .refrenceNumber(UPDATED_REFRENCE_NUMBER)
             .totalPOAmount(UPDATED_TOTAL_PO_AMOUNT)
             .totalGSTAmount(UPDATED_TOTAL_GST_AMOUNT)
             .expectedDeliveryDate(UPDATED_EXPECTED_DELIVERY_DATE)
             .poDate(UPDATED_PO_DATE)
             .orderType(UPDATED_ORDER_TYPE)
             .orderStatus(UPDATED_ORDER_STATUS)
-            .clientName(UPDATED_CLIENT_NAME)
-            .clientMobile(UPDATED_CLIENT_MOBILE)
-            .clientEmail(UPDATED_CLIENT_EMAIL)
             .termsAndCondition(UPDATED_TERMS_AND_CONDITION)
             .notes(UPDATED_NOTES)
             .lastModified(UPDATED_LAST_MODIFIED)
@@ -182,15 +173,13 @@ class PurchaseQuotationResourceIT {
         List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll();
         assertThat(purchaseQuotationList).hasSize(databaseSizeBeforeCreate + 1);
         PurchaseQuotation testPurchaseQuotation = purchaseQuotationList.get(purchaseQuotationList.size() - 1);
+        assertThat(testPurchaseQuotation.getRefrenceNumber()).isEqualTo(DEFAULT_REFRENCE_NUMBER);
         assertThat(testPurchaseQuotation.getTotalPOAmount()).isEqualTo(DEFAULT_TOTAL_PO_AMOUNT);
         assertThat(testPurchaseQuotation.getTotalGSTAmount()).isEqualTo(DEFAULT_TOTAL_GST_AMOUNT);
         assertThat(testPurchaseQuotation.getExpectedDeliveryDate()).isEqualTo(DEFAULT_EXPECTED_DELIVERY_DATE);
         assertThat(testPurchaseQuotation.getPoDate()).isEqualTo(DEFAULT_PO_DATE);
         assertThat(testPurchaseQuotation.getOrderType()).isEqualTo(DEFAULT_ORDER_TYPE);
         assertThat(testPurchaseQuotation.getOrderStatus()).isEqualTo(DEFAULT_ORDER_STATUS);
-        assertThat(testPurchaseQuotation.getClientName()).isEqualTo(DEFAULT_CLIENT_NAME);
-        assertThat(testPurchaseQuotation.getClientMobile()).isEqualTo(DEFAULT_CLIENT_MOBILE);
-        assertThat(testPurchaseQuotation.getClientEmail()).isEqualTo(DEFAULT_CLIENT_EMAIL);
         assertThat(testPurchaseQuotation.getTermsAndCondition()).isEqualTo(DEFAULT_TERMS_AND_CONDITION);
         assertThat(testPurchaseQuotation.getNotes()).isEqualTo(DEFAULT_NOTES);
         assertThat(testPurchaseQuotation.getLastModified()).isEqualTo(DEFAULT_LAST_MODIFIED);
@@ -224,50 +213,6 @@ class PurchaseQuotationResourceIT {
 
     @Test
     @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = purchaseQuotationRepository.findAll().size();
-        // set the field null
-        purchaseQuotation.setLastModified(null);
-
-        // Create the PurchaseQuotation, which fails.
-        PurchaseQuotationDTO purchaseQuotationDTO = purchaseQuotationMapper.toDto(purchaseQuotation);
-
-        restPurchaseQuotationMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(purchaseQuotationDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll();
-        assertThat(purchaseQuotationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = purchaseQuotationRepository.findAll().size();
-        // set the field null
-        purchaseQuotation.setLastModifiedBy(null);
-
-        // Create the PurchaseQuotation, which fails.
-        PurchaseQuotationDTO purchaseQuotationDTO = purchaseQuotationMapper.toDto(purchaseQuotation);
-
-        restPurchaseQuotationMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(purchaseQuotationDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll();
-        assertThat(purchaseQuotationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllPurchaseQuotations() throws Exception {
         // Initialize the database
         purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
@@ -278,15 +223,13 @@ class PurchaseQuotationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(purchaseQuotation.getId().intValue())))
+            .andExpect(jsonPath("$.[*].refrenceNumber").value(hasItem(DEFAULT_REFRENCE_NUMBER)))
             .andExpect(jsonPath("$.[*].totalPOAmount").value(hasItem(DEFAULT_TOTAL_PO_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].totalGSTAmount").value(hasItem(DEFAULT_TOTAL_GST_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].expectedDeliveryDate").value(hasItem(DEFAULT_EXPECTED_DELIVERY_DATE.toString())))
             .andExpect(jsonPath("$.[*].poDate").value(hasItem(DEFAULT_PO_DATE.toString())))
             .andExpect(jsonPath("$.[*].orderType").value(hasItem(DEFAULT_ORDER_TYPE.toString())))
             .andExpect(jsonPath("$.[*].orderStatus").value(hasItem(DEFAULT_ORDER_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].clientName").value(hasItem(DEFAULT_CLIENT_NAME)))
-            .andExpect(jsonPath("$.[*].clientMobile").value(hasItem(DEFAULT_CLIENT_MOBILE)))
-            .andExpect(jsonPath("$.[*].clientEmail").value(hasItem(DEFAULT_CLIENT_EMAIL)))
             .andExpect(jsonPath("$.[*].termsAndCondition").value(hasItem(DEFAULT_TERMS_AND_CONDITION)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)))
             .andExpect(jsonPath("$.[*].lastModified").value(hasItem(DEFAULT_LAST_MODIFIED)))
@@ -307,15 +250,13 @@ class PurchaseQuotationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(purchaseQuotation.getId().intValue()))
+            .andExpect(jsonPath("$.refrenceNumber").value(DEFAULT_REFRENCE_NUMBER))
             .andExpect(jsonPath("$.totalPOAmount").value(DEFAULT_TOTAL_PO_AMOUNT.doubleValue()))
             .andExpect(jsonPath("$.totalGSTAmount").value(DEFAULT_TOTAL_GST_AMOUNT.doubleValue()))
             .andExpect(jsonPath("$.expectedDeliveryDate").value(DEFAULT_EXPECTED_DELIVERY_DATE.toString()))
             .andExpect(jsonPath("$.poDate").value(DEFAULT_PO_DATE.toString()))
             .andExpect(jsonPath("$.orderType").value(DEFAULT_ORDER_TYPE.toString()))
             .andExpect(jsonPath("$.orderStatus").value(DEFAULT_ORDER_STATUS.toString()))
-            .andExpect(jsonPath("$.clientName").value(DEFAULT_CLIENT_NAME))
-            .andExpect(jsonPath("$.clientMobile").value(DEFAULT_CLIENT_MOBILE))
-            .andExpect(jsonPath("$.clientEmail").value(DEFAULT_CLIENT_EMAIL))
             .andExpect(jsonPath("$.termsAndCondition").value(DEFAULT_TERMS_AND_CONDITION))
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES))
             .andExpect(jsonPath("$.lastModified").value(DEFAULT_LAST_MODIFIED))
@@ -340,6 +281,84 @@ class PurchaseQuotationResourceIT {
 
         defaultPurchaseQuotationShouldBeFound("id.lessThanOrEqual=" + id);
         defaultPurchaseQuotationShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByRefrenceNumberIsEqualToSomething() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+
+        // Get all the purchaseQuotationList where refrenceNumber equals to DEFAULT_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldBeFound("refrenceNumber.equals=" + DEFAULT_REFRENCE_NUMBER);
+
+        // Get all the purchaseQuotationList where refrenceNumber equals to UPDATED_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldNotBeFound("refrenceNumber.equals=" + UPDATED_REFRENCE_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByRefrenceNumberIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+
+        // Get all the purchaseQuotationList where refrenceNumber not equals to DEFAULT_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldNotBeFound("refrenceNumber.notEquals=" + DEFAULT_REFRENCE_NUMBER);
+
+        // Get all the purchaseQuotationList where refrenceNumber not equals to UPDATED_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldBeFound("refrenceNumber.notEquals=" + UPDATED_REFRENCE_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByRefrenceNumberIsInShouldWork() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+
+        // Get all the purchaseQuotationList where refrenceNumber in DEFAULT_REFRENCE_NUMBER or UPDATED_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldBeFound("refrenceNumber.in=" + DEFAULT_REFRENCE_NUMBER + "," + UPDATED_REFRENCE_NUMBER);
+
+        // Get all the purchaseQuotationList where refrenceNumber equals to UPDATED_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldNotBeFound("refrenceNumber.in=" + UPDATED_REFRENCE_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByRefrenceNumberIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+
+        // Get all the purchaseQuotationList where refrenceNumber is not null
+        defaultPurchaseQuotationShouldBeFound("refrenceNumber.specified=true");
+
+        // Get all the purchaseQuotationList where refrenceNumber is null
+        defaultPurchaseQuotationShouldNotBeFound("refrenceNumber.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByRefrenceNumberContainsSomething() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+
+        // Get all the purchaseQuotationList where refrenceNumber contains DEFAULT_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldBeFound("refrenceNumber.contains=" + DEFAULT_REFRENCE_NUMBER);
+
+        // Get all the purchaseQuotationList where refrenceNumber contains UPDATED_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldNotBeFound("refrenceNumber.contains=" + UPDATED_REFRENCE_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByRefrenceNumberNotContainsSomething() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+
+        // Get all the purchaseQuotationList where refrenceNumber does not contain DEFAULT_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldNotBeFound("refrenceNumber.doesNotContain=" + DEFAULT_REFRENCE_NUMBER);
+
+        // Get all the purchaseQuotationList where refrenceNumber does not contain UPDATED_REFRENCE_NUMBER
+        defaultPurchaseQuotationShouldBeFound("refrenceNumber.doesNotContain=" + UPDATED_REFRENCE_NUMBER);
     }
 
     @Test
@@ -758,240 +777,6 @@ class PurchaseQuotationResourceIT {
 
         // Get all the purchaseQuotationList where orderStatus is null
         defaultPurchaseQuotationShouldNotBeFound("orderStatus.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientNameIsEqualToSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientName equals to DEFAULT_CLIENT_NAME
-        defaultPurchaseQuotationShouldBeFound("clientName.equals=" + DEFAULT_CLIENT_NAME);
-
-        // Get all the purchaseQuotationList where clientName equals to UPDATED_CLIENT_NAME
-        defaultPurchaseQuotationShouldNotBeFound("clientName.equals=" + UPDATED_CLIENT_NAME);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientNameIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientName not equals to DEFAULT_CLIENT_NAME
-        defaultPurchaseQuotationShouldNotBeFound("clientName.notEquals=" + DEFAULT_CLIENT_NAME);
-
-        // Get all the purchaseQuotationList where clientName not equals to UPDATED_CLIENT_NAME
-        defaultPurchaseQuotationShouldBeFound("clientName.notEquals=" + UPDATED_CLIENT_NAME);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientNameIsInShouldWork() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientName in DEFAULT_CLIENT_NAME or UPDATED_CLIENT_NAME
-        defaultPurchaseQuotationShouldBeFound("clientName.in=" + DEFAULT_CLIENT_NAME + "," + UPDATED_CLIENT_NAME);
-
-        // Get all the purchaseQuotationList where clientName equals to UPDATED_CLIENT_NAME
-        defaultPurchaseQuotationShouldNotBeFound("clientName.in=" + UPDATED_CLIENT_NAME);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientNameIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientName is not null
-        defaultPurchaseQuotationShouldBeFound("clientName.specified=true");
-
-        // Get all the purchaseQuotationList where clientName is null
-        defaultPurchaseQuotationShouldNotBeFound("clientName.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientNameContainsSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientName contains DEFAULT_CLIENT_NAME
-        defaultPurchaseQuotationShouldBeFound("clientName.contains=" + DEFAULT_CLIENT_NAME);
-
-        // Get all the purchaseQuotationList where clientName contains UPDATED_CLIENT_NAME
-        defaultPurchaseQuotationShouldNotBeFound("clientName.contains=" + UPDATED_CLIENT_NAME);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientNameNotContainsSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientName does not contain DEFAULT_CLIENT_NAME
-        defaultPurchaseQuotationShouldNotBeFound("clientName.doesNotContain=" + DEFAULT_CLIENT_NAME);
-
-        // Get all the purchaseQuotationList where clientName does not contain UPDATED_CLIENT_NAME
-        defaultPurchaseQuotationShouldBeFound("clientName.doesNotContain=" + UPDATED_CLIENT_NAME);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientMobileIsEqualToSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientMobile equals to DEFAULT_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldBeFound("clientMobile.equals=" + DEFAULT_CLIENT_MOBILE);
-
-        // Get all the purchaseQuotationList where clientMobile equals to UPDATED_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldNotBeFound("clientMobile.equals=" + UPDATED_CLIENT_MOBILE);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientMobileIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientMobile not equals to DEFAULT_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldNotBeFound("clientMobile.notEquals=" + DEFAULT_CLIENT_MOBILE);
-
-        // Get all the purchaseQuotationList where clientMobile not equals to UPDATED_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldBeFound("clientMobile.notEquals=" + UPDATED_CLIENT_MOBILE);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientMobileIsInShouldWork() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientMobile in DEFAULT_CLIENT_MOBILE or UPDATED_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldBeFound("clientMobile.in=" + DEFAULT_CLIENT_MOBILE + "," + UPDATED_CLIENT_MOBILE);
-
-        // Get all the purchaseQuotationList where clientMobile equals to UPDATED_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldNotBeFound("clientMobile.in=" + UPDATED_CLIENT_MOBILE);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientMobileIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientMobile is not null
-        defaultPurchaseQuotationShouldBeFound("clientMobile.specified=true");
-
-        // Get all the purchaseQuotationList where clientMobile is null
-        defaultPurchaseQuotationShouldNotBeFound("clientMobile.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientMobileContainsSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientMobile contains DEFAULT_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldBeFound("clientMobile.contains=" + DEFAULT_CLIENT_MOBILE);
-
-        // Get all the purchaseQuotationList where clientMobile contains UPDATED_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldNotBeFound("clientMobile.contains=" + UPDATED_CLIENT_MOBILE);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientMobileNotContainsSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientMobile does not contain DEFAULT_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldNotBeFound("clientMobile.doesNotContain=" + DEFAULT_CLIENT_MOBILE);
-
-        // Get all the purchaseQuotationList where clientMobile does not contain UPDATED_CLIENT_MOBILE
-        defaultPurchaseQuotationShouldBeFound("clientMobile.doesNotContain=" + UPDATED_CLIENT_MOBILE);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientEmailIsEqualToSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientEmail equals to DEFAULT_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldBeFound("clientEmail.equals=" + DEFAULT_CLIENT_EMAIL);
-
-        // Get all the purchaseQuotationList where clientEmail equals to UPDATED_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldNotBeFound("clientEmail.equals=" + UPDATED_CLIENT_EMAIL);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientEmailIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientEmail not equals to DEFAULT_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldNotBeFound("clientEmail.notEquals=" + DEFAULT_CLIENT_EMAIL);
-
-        // Get all the purchaseQuotationList where clientEmail not equals to UPDATED_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldBeFound("clientEmail.notEquals=" + UPDATED_CLIENT_EMAIL);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientEmailIsInShouldWork() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientEmail in DEFAULT_CLIENT_EMAIL or UPDATED_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldBeFound("clientEmail.in=" + DEFAULT_CLIENT_EMAIL + "," + UPDATED_CLIENT_EMAIL);
-
-        // Get all the purchaseQuotationList where clientEmail equals to UPDATED_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldNotBeFound("clientEmail.in=" + UPDATED_CLIENT_EMAIL);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientEmailIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientEmail is not null
-        defaultPurchaseQuotationShouldBeFound("clientEmail.specified=true");
-
-        // Get all the purchaseQuotationList where clientEmail is null
-        defaultPurchaseQuotationShouldNotBeFound("clientEmail.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientEmailContainsSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientEmail contains DEFAULT_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldBeFound("clientEmail.contains=" + DEFAULT_CLIENT_EMAIL);
-
-        // Get all the purchaseQuotationList where clientEmail contains UPDATED_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldNotBeFound("clientEmail.contains=" + UPDATED_CLIENT_EMAIL);
-    }
-
-    @Test
-    @Transactional
-    void getAllPurchaseQuotationsByClientEmailNotContainsSomething() throws Exception {
-        // Initialize the database
-        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-
-        // Get all the purchaseQuotationList where clientEmail does not contain DEFAULT_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldNotBeFound("clientEmail.doesNotContain=" + DEFAULT_CLIENT_EMAIL);
-
-        // Get all the purchaseQuotationList where clientEmail does not contain UPDATED_CLIENT_EMAIL
-        defaultPurchaseQuotationShouldBeFound("clientEmail.doesNotContain=" + UPDATED_CLIENT_EMAIL);
     }
 
     @Test
@@ -1490,28 +1275,28 @@ class PurchaseQuotationResourceIT {
 
     @Test
     @Transactional
-    void getAllPurchaseQuotationsByGoodRecivedIsEqualToSomething() throws Exception {
+    void getAllPurchaseQuotationsByGoodsRecivedIsEqualToSomething() throws Exception {
         // Initialize the database
         purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-        GoodsRecived goodRecived;
+        GoodsRecived goodsRecived;
         if (TestUtil.findAll(em, GoodsRecived.class).isEmpty()) {
-            goodRecived = GoodsRecivedResourceIT.createEntity(em);
-            em.persist(goodRecived);
+            goodsRecived = GoodsRecivedResourceIT.createEntity(em);
+            em.persist(goodsRecived);
             em.flush();
         } else {
-            goodRecived = TestUtil.findAll(em, GoodsRecived.class).get(0);
+            goodsRecived = TestUtil.findAll(em, GoodsRecived.class).get(0);
         }
-        em.persist(goodRecived);
+        em.persist(goodsRecived);
         em.flush();
-        purchaseQuotation.addGoodRecived(goodRecived);
+        purchaseQuotation.addGoodsRecived(goodsRecived);
         purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-        Long goodRecivedId = goodRecived.getId();
+        Long goodsRecivedId = goodsRecived.getId();
 
-        // Get all the purchaseQuotationList where goodRecived equals to goodRecivedId
-        defaultPurchaseQuotationShouldBeFound("goodRecivedId.equals=" + goodRecivedId);
+        // Get all the purchaseQuotationList where goodsRecived equals to goodsRecivedId
+        defaultPurchaseQuotationShouldBeFound("goodsRecivedId.equals=" + goodsRecivedId);
 
-        // Get all the purchaseQuotationList where goodRecived equals to (goodRecivedId + 1)
-        defaultPurchaseQuotationShouldNotBeFound("goodRecivedId.equals=" + (goodRecivedId + 1));
+        // Get all the purchaseQuotationList where goodsRecived equals to (goodsRecivedId + 1)
+        defaultPurchaseQuotationShouldNotBeFound("goodsRecivedId.equals=" + (goodsRecivedId + 1));
     }
 
     @Test
@@ -1542,28 +1327,54 @@ class PurchaseQuotationResourceIT {
 
     @Test
     @Transactional
-    void getAllPurchaseQuotationsByProductInventoryIsEqualToSomething() throws Exception {
+    void getAllPurchaseQuotationsByProjectIsEqualToSomething() throws Exception {
         // Initialize the database
         purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-        ProductInventory productInventory;
-        if (TestUtil.findAll(em, ProductInventory.class).isEmpty()) {
-            productInventory = ProductInventoryResourceIT.createEntity(em);
-            em.persist(productInventory);
+        Project project;
+        if (TestUtil.findAll(em, Project.class).isEmpty()) {
+            project = ProjectResourceIT.createEntity(em);
+            em.persist(project);
             em.flush();
         } else {
-            productInventory = TestUtil.findAll(em, ProductInventory.class).get(0);
+            project = TestUtil.findAll(em, Project.class).get(0);
         }
-        em.persist(productInventory);
+        em.persist(project);
         em.flush();
-        purchaseQuotation.addProductInventory(productInventory);
+        purchaseQuotation.setProject(project);
         purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
-        Long productInventoryId = productInventory.getId();
+        Long projectId = project.getId();
 
-        // Get all the purchaseQuotationList where productInventory equals to productInventoryId
-        defaultPurchaseQuotationShouldBeFound("productInventoryId.equals=" + productInventoryId);
+        // Get all the purchaseQuotationList where project equals to projectId
+        defaultPurchaseQuotationShouldBeFound("projectId.equals=" + projectId);
 
-        // Get all the purchaseQuotationList where productInventory equals to (productInventoryId + 1)
-        defaultPurchaseQuotationShouldNotBeFound("productInventoryId.equals=" + (productInventoryId + 1));
+        // Get all the purchaseQuotationList where project equals to (projectId + 1)
+        defaultPurchaseQuotationShouldNotBeFound("projectId.equals=" + (projectId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPurchaseQuotationsByClientDetailsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+        ClientDetails clientDetails;
+        if (TestUtil.findAll(em, ClientDetails.class).isEmpty()) {
+            clientDetails = ClientDetailsResourceIT.createEntity(em);
+            em.persist(clientDetails);
+            em.flush();
+        } else {
+            clientDetails = TestUtil.findAll(em, ClientDetails.class).get(0);
+        }
+        em.persist(clientDetails);
+        em.flush();
+        purchaseQuotation.setClientDetails(clientDetails);
+        purchaseQuotationRepository.saveAndFlush(purchaseQuotation);
+        Long clientDetailsId = clientDetails.getId();
+
+        // Get all the purchaseQuotationList where clientDetails equals to clientDetailsId
+        defaultPurchaseQuotationShouldBeFound("clientDetailsId.equals=" + clientDetailsId);
+
+        // Get all the purchaseQuotationList where clientDetails equals to (clientDetailsId + 1)
+        defaultPurchaseQuotationShouldNotBeFound("clientDetailsId.equals=" + (clientDetailsId + 1));
     }
 
     /**
@@ -1575,15 +1386,13 @@ class PurchaseQuotationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(purchaseQuotation.getId().intValue())))
+            .andExpect(jsonPath("$.[*].refrenceNumber").value(hasItem(DEFAULT_REFRENCE_NUMBER)))
             .andExpect(jsonPath("$.[*].totalPOAmount").value(hasItem(DEFAULT_TOTAL_PO_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].totalGSTAmount").value(hasItem(DEFAULT_TOTAL_GST_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].expectedDeliveryDate").value(hasItem(DEFAULT_EXPECTED_DELIVERY_DATE.toString())))
             .andExpect(jsonPath("$.[*].poDate").value(hasItem(DEFAULT_PO_DATE.toString())))
             .andExpect(jsonPath("$.[*].orderType").value(hasItem(DEFAULT_ORDER_TYPE.toString())))
             .andExpect(jsonPath("$.[*].orderStatus").value(hasItem(DEFAULT_ORDER_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].clientName").value(hasItem(DEFAULT_CLIENT_NAME)))
-            .andExpect(jsonPath("$.[*].clientMobile").value(hasItem(DEFAULT_CLIENT_MOBILE)))
-            .andExpect(jsonPath("$.[*].clientEmail").value(hasItem(DEFAULT_CLIENT_EMAIL)))
             .andExpect(jsonPath("$.[*].termsAndCondition").value(hasItem(DEFAULT_TERMS_AND_CONDITION)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)))
             .andExpect(jsonPath("$.[*].lastModified").value(hasItem(DEFAULT_LAST_MODIFIED)))
@@ -1638,15 +1447,13 @@ class PurchaseQuotationResourceIT {
         // Disconnect from session so that the updates on updatedPurchaseQuotation are not directly saved in db
         em.detach(updatedPurchaseQuotation);
         updatedPurchaseQuotation
+            .refrenceNumber(UPDATED_REFRENCE_NUMBER)
             .totalPOAmount(UPDATED_TOTAL_PO_AMOUNT)
             .totalGSTAmount(UPDATED_TOTAL_GST_AMOUNT)
             .expectedDeliveryDate(UPDATED_EXPECTED_DELIVERY_DATE)
             .poDate(UPDATED_PO_DATE)
             .orderType(UPDATED_ORDER_TYPE)
             .orderStatus(UPDATED_ORDER_STATUS)
-            .clientName(UPDATED_CLIENT_NAME)
-            .clientMobile(UPDATED_CLIENT_MOBILE)
-            .clientEmail(UPDATED_CLIENT_EMAIL)
             .termsAndCondition(UPDATED_TERMS_AND_CONDITION)
             .notes(UPDATED_NOTES)
             .lastModified(UPDATED_LAST_MODIFIED)
@@ -1667,15 +1474,13 @@ class PurchaseQuotationResourceIT {
         List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll();
         assertThat(purchaseQuotationList).hasSize(databaseSizeBeforeUpdate);
         PurchaseQuotation testPurchaseQuotation = purchaseQuotationList.get(purchaseQuotationList.size() - 1);
+        assertThat(testPurchaseQuotation.getRefrenceNumber()).isEqualTo(UPDATED_REFRENCE_NUMBER);
         assertThat(testPurchaseQuotation.getTotalPOAmount()).isEqualTo(UPDATED_TOTAL_PO_AMOUNT);
         assertThat(testPurchaseQuotation.getTotalGSTAmount()).isEqualTo(UPDATED_TOTAL_GST_AMOUNT);
         assertThat(testPurchaseQuotation.getExpectedDeliveryDate()).isEqualTo(UPDATED_EXPECTED_DELIVERY_DATE);
         assertThat(testPurchaseQuotation.getPoDate()).isEqualTo(UPDATED_PO_DATE);
         assertThat(testPurchaseQuotation.getOrderType()).isEqualTo(UPDATED_ORDER_TYPE);
         assertThat(testPurchaseQuotation.getOrderStatus()).isEqualTo(UPDATED_ORDER_STATUS);
-        assertThat(testPurchaseQuotation.getClientName()).isEqualTo(UPDATED_CLIENT_NAME);
-        assertThat(testPurchaseQuotation.getClientMobile()).isEqualTo(UPDATED_CLIENT_MOBILE);
-        assertThat(testPurchaseQuotation.getClientEmail()).isEqualTo(UPDATED_CLIENT_EMAIL);
         assertThat(testPurchaseQuotation.getTermsAndCondition()).isEqualTo(UPDATED_TERMS_AND_CONDITION);
         assertThat(testPurchaseQuotation.getNotes()).isEqualTo(UPDATED_NOTES);
         assertThat(testPurchaseQuotation.getLastModified()).isEqualTo(UPDATED_LAST_MODIFIED);
@@ -1764,12 +1569,10 @@ class PurchaseQuotationResourceIT {
         partialUpdatedPurchaseQuotation.setId(purchaseQuotation.getId());
 
         partialUpdatedPurchaseQuotation
-            .poDate(UPDATED_PO_DATE)
-            .orderStatus(UPDATED_ORDER_STATUS)
-            .clientMobile(UPDATED_CLIENT_MOBILE)
-            .clientEmail(UPDATED_CLIENT_EMAIL)
+            .expectedDeliveryDate(UPDATED_EXPECTED_DELIVERY_DATE)
+            .orderType(UPDATED_ORDER_TYPE)
+            .termsAndCondition(UPDATED_TERMS_AND_CONDITION)
             .notes(UPDATED_NOTES)
-            .lastModified(UPDATED_LAST_MODIFIED)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .freeField1(UPDATED_FREE_FIELD_1)
             .freeField2(UPDATED_FREE_FIELD_2);
@@ -1786,18 +1589,16 @@ class PurchaseQuotationResourceIT {
         List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll();
         assertThat(purchaseQuotationList).hasSize(databaseSizeBeforeUpdate);
         PurchaseQuotation testPurchaseQuotation = purchaseQuotationList.get(purchaseQuotationList.size() - 1);
+        assertThat(testPurchaseQuotation.getRefrenceNumber()).isEqualTo(DEFAULT_REFRENCE_NUMBER);
         assertThat(testPurchaseQuotation.getTotalPOAmount()).isEqualTo(DEFAULT_TOTAL_PO_AMOUNT);
         assertThat(testPurchaseQuotation.getTotalGSTAmount()).isEqualTo(DEFAULT_TOTAL_GST_AMOUNT);
-        assertThat(testPurchaseQuotation.getExpectedDeliveryDate()).isEqualTo(DEFAULT_EXPECTED_DELIVERY_DATE);
-        assertThat(testPurchaseQuotation.getPoDate()).isEqualTo(UPDATED_PO_DATE);
-        assertThat(testPurchaseQuotation.getOrderType()).isEqualTo(DEFAULT_ORDER_TYPE);
-        assertThat(testPurchaseQuotation.getOrderStatus()).isEqualTo(UPDATED_ORDER_STATUS);
-        assertThat(testPurchaseQuotation.getClientName()).isEqualTo(DEFAULT_CLIENT_NAME);
-        assertThat(testPurchaseQuotation.getClientMobile()).isEqualTo(UPDATED_CLIENT_MOBILE);
-        assertThat(testPurchaseQuotation.getClientEmail()).isEqualTo(UPDATED_CLIENT_EMAIL);
-        assertThat(testPurchaseQuotation.getTermsAndCondition()).isEqualTo(DEFAULT_TERMS_AND_CONDITION);
+        assertThat(testPurchaseQuotation.getExpectedDeliveryDate()).isEqualTo(UPDATED_EXPECTED_DELIVERY_DATE);
+        assertThat(testPurchaseQuotation.getPoDate()).isEqualTo(DEFAULT_PO_DATE);
+        assertThat(testPurchaseQuotation.getOrderType()).isEqualTo(UPDATED_ORDER_TYPE);
+        assertThat(testPurchaseQuotation.getOrderStatus()).isEqualTo(DEFAULT_ORDER_STATUS);
+        assertThat(testPurchaseQuotation.getTermsAndCondition()).isEqualTo(UPDATED_TERMS_AND_CONDITION);
         assertThat(testPurchaseQuotation.getNotes()).isEqualTo(UPDATED_NOTES);
-        assertThat(testPurchaseQuotation.getLastModified()).isEqualTo(UPDATED_LAST_MODIFIED);
+        assertThat(testPurchaseQuotation.getLastModified()).isEqualTo(DEFAULT_LAST_MODIFIED);
         assertThat(testPurchaseQuotation.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
         assertThat(testPurchaseQuotation.getFreeField1()).isEqualTo(UPDATED_FREE_FIELD_1);
         assertThat(testPurchaseQuotation.getFreeField2()).isEqualTo(UPDATED_FREE_FIELD_2);
@@ -1816,15 +1617,13 @@ class PurchaseQuotationResourceIT {
         partialUpdatedPurchaseQuotation.setId(purchaseQuotation.getId());
 
         partialUpdatedPurchaseQuotation
+            .refrenceNumber(UPDATED_REFRENCE_NUMBER)
             .totalPOAmount(UPDATED_TOTAL_PO_AMOUNT)
             .totalGSTAmount(UPDATED_TOTAL_GST_AMOUNT)
             .expectedDeliveryDate(UPDATED_EXPECTED_DELIVERY_DATE)
             .poDate(UPDATED_PO_DATE)
             .orderType(UPDATED_ORDER_TYPE)
             .orderStatus(UPDATED_ORDER_STATUS)
-            .clientName(UPDATED_CLIENT_NAME)
-            .clientMobile(UPDATED_CLIENT_MOBILE)
-            .clientEmail(UPDATED_CLIENT_EMAIL)
             .termsAndCondition(UPDATED_TERMS_AND_CONDITION)
             .notes(UPDATED_NOTES)
             .lastModified(UPDATED_LAST_MODIFIED)
@@ -1844,15 +1643,13 @@ class PurchaseQuotationResourceIT {
         List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll();
         assertThat(purchaseQuotationList).hasSize(databaseSizeBeforeUpdate);
         PurchaseQuotation testPurchaseQuotation = purchaseQuotationList.get(purchaseQuotationList.size() - 1);
+        assertThat(testPurchaseQuotation.getRefrenceNumber()).isEqualTo(UPDATED_REFRENCE_NUMBER);
         assertThat(testPurchaseQuotation.getTotalPOAmount()).isEqualTo(UPDATED_TOTAL_PO_AMOUNT);
         assertThat(testPurchaseQuotation.getTotalGSTAmount()).isEqualTo(UPDATED_TOTAL_GST_AMOUNT);
         assertThat(testPurchaseQuotation.getExpectedDeliveryDate()).isEqualTo(UPDATED_EXPECTED_DELIVERY_DATE);
         assertThat(testPurchaseQuotation.getPoDate()).isEqualTo(UPDATED_PO_DATE);
         assertThat(testPurchaseQuotation.getOrderType()).isEqualTo(UPDATED_ORDER_TYPE);
         assertThat(testPurchaseQuotation.getOrderStatus()).isEqualTo(UPDATED_ORDER_STATUS);
-        assertThat(testPurchaseQuotation.getClientName()).isEqualTo(UPDATED_CLIENT_NAME);
-        assertThat(testPurchaseQuotation.getClientMobile()).isEqualTo(UPDATED_CLIENT_MOBILE);
-        assertThat(testPurchaseQuotation.getClientEmail()).isEqualTo(UPDATED_CLIENT_EMAIL);
         assertThat(testPurchaseQuotation.getTermsAndCondition()).isEqualTo(UPDATED_TERMS_AND_CONDITION);
         assertThat(testPurchaseQuotation.getNotes()).isEqualTo(UPDATED_NOTES);
         assertThat(testPurchaseQuotation.getLastModified()).isEqualTo(UPDATED_LAST_MODIFIED);

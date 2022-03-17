@@ -10,8 +10,6 @@ import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import { ITransferDetails, TransferDetails } from '../transfer-details.model';
 import { TransferDetailsService } from '../service/transfer-details.service';
-import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
-import { WareHouseService } from 'app/entities/ware-house/service/ware-house.service';
 import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
 import { ITransfer } from 'app/entities/transfer/transfer.model';
@@ -24,7 +22,6 @@ import { TransferService } from 'app/entities/transfer/service/transfer.service'
 export class TransferDetailsUpdateComponent implements OnInit {
   isSaving = false;
 
-  wareHousesSharedCollection: IWareHouse[] = [];
   productsSharedCollection: IProduct[] = [];
   transfersSharedCollection: ITransfer[] = [];
 
@@ -39,14 +36,12 @@ export class TransferDetailsUpdateComponent implements OnInit {
     lastModifiedBy: [],
     isDeleted: [],
     isActive: [],
-    wareHouse: [],
     product: [],
     transfer: [],
   });
 
   constructor(
     protected transferDetailsService: TransferDetailsService,
-    protected wareHouseService: WareHouseService,
     protected productService: ProductService,
     protected transferService: TransferService,
     protected activatedRoute: ActivatedRoute,
@@ -78,10 +73,6 @@ export class TransferDetailsUpdateComponent implements OnInit {
     } else {
       this.subscribeToSaveResponse(this.transferDetailsService.create(transferDetails));
     }
-  }
-
-  trackWareHouseById(index: number, item: IWareHouse): number {
-    return item.id!;
   }
 
   trackProductById(index: number, item: IProduct): number {
@@ -123,15 +114,10 @@ export class TransferDetailsUpdateComponent implements OnInit {
       lastModifiedBy: transferDetails.lastModifiedBy,
       isDeleted: transferDetails.isDeleted,
       isActive: transferDetails.isActive,
-      wareHouse: transferDetails.wareHouse,
       product: transferDetails.product,
       transfer: transferDetails.transfer,
     });
 
-    this.wareHousesSharedCollection = this.wareHouseService.addWareHouseToCollectionIfMissing(
-      this.wareHousesSharedCollection,
-      transferDetails.wareHouse
-    );
     this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(
       this.productsSharedCollection,
       transferDetails.product
@@ -143,16 +129,6 @@ export class TransferDetailsUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.wareHouseService
-      .query()
-      .pipe(map((res: HttpResponse<IWareHouse[]>) => res.body ?? []))
-      .pipe(
-        map((wareHouses: IWareHouse[]) =>
-          this.wareHouseService.addWareHouseToCollectionIfMissing(wareHouses, this.editForm.get('wareHouse')!.value)
-        )
-      )
-      .subscribe((wareHouses: IWareHouse[]) => (this.wareHousesSharedCollection = wareHouses));
-
     this.productService
       .query()
       .pipe(map((res: HttpResponse<IProduct[]>) => res.body ?? []))
@@ -187,7 +163,6 @@ export class TransferDetailsUpdateComponent implements OnInit {
       lastModifiedBy: this.editForm.get(['lastModifiedBy'])!.value,
       isDeleted: this.editForm.get(['isDeleted'])!.value,
       isActive: this.editForm.get(['isActive'])!.value,
-      wareHouse: this.editForm.get(['wareHouse'])!.value,
       product: this.editForm.get(['product'])!.value,
       transfer: this.editForm.get(['transfer'])!.value,
     };

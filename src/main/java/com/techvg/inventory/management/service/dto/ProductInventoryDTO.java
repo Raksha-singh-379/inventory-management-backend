@@ -2,9 +2,7 @@ package com.techvg.inventory.management.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A DTO for the {@link com.techvg.inventory.management.domain.ProductInventory} entity.
@@ -43,13 +41,11 @@ public class ProductInventoryDTO implements Serializable {
 
     private ProductDTO product;
 
-    private PurchaseQuotationDTO purchaseQuotation;
-
     private ProductTransactionDTO productTransaction;
 
-    private Set<WareHouseDTO> wareHouses = new HashSet<>();
+    private SecurityUserDTO securityUser;
 
-    private Set<SecurityUserDTO> securityUsers = new HashSet<>();
+    private WareHouseDTO wareHouse;
 
     public Long getId() {
         return id;
@@ -179,14 +175,6 @@ public class ProductInventoryDTO implements Serializable {
         this.product = product;
     }
 
-    public PurchaseQuotationDTO getPurchaseQuotation() {
-        return purchaseQuotation;
-    }
-
-    public void setPurchaseQuotation(PurchaseQuotationDTO purchaseQuotation) {
-        this.purchaseQuotation = purchaseQuotation;
-    }
-
     public ProductTransactionDTO getProductTransaction() {
         return productTransaction;
     }
@@ -195,20 +183,20 @@ public class ProductInventoryDTO implements Serializable {
         this.productTransaction = productTransaction;
     }
 
-    public Set<WareHouseDTO> getWareHouses() {
-        return wareHouses;
+    public SecurityUserDTO getSecurityUser() {
+        return securityUser;
     }
 
-    public void setWareHouses(Set<WareHouseDTO> wareHouses) {
-        this.wareHouses = wareHouses;
+    public void setSecurityUser(SecurityUserDTO securityUser) {
+        this.securityUser = securityUser;
     }
 
-    public Set<SecurityUserDTO> getSecurityUsers() {
-        return securityUsers;
+    public WareHouseDTO getWareHouse() {
+        return wareHouse;
     }
 
-    public void setSecurityUsers(Set<SecurityUserDTO> securityUsers) {
-        this.securityUsers = securityUsers;
+    public void setWareHouse(WareHouseDTO wareHouse) {
+        this.wareHouse = wareHouse;
     }
 
     @Override
@@ -252,10 +240,9 @@ public class ProductInventoryDTO implements Serializable {
             ", isDeleted='" + getIsDeleted() + "'" +
             ", isActive='" + getIsActive() + "'" +
             ", product=" + getProduct() +
-            ", purchaseQuotation=" + getPurchaseQuotation() +
             ", productTransaction=" + getProductTransaction() +
-            ", wareHouses=" + getWareHouses() +
-            ", securityUsers=" + getSecurityUsers() +
+            ", securityUser=" + getSecurityUser() +
+            ", wareHouse=" + getWareHouse() +
             "}";
     }
 }

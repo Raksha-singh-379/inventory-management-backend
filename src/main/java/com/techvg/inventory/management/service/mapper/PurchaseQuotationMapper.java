@@ -7,9 +7,11 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link PurchaseQuotation} and its DTO {@link PurchaseQuotationDTO}.
  */
-@Mapper(componentModel = "spring", uses = { SecurityUserMapper.class })
+@Mapper(componentModel = "spring", uses = { SecurityUserMapper.class, ProjectMapper.class, ClientDetailsMapper.class })
 public interface PurchaseQuotationMapper extends EntityMapper<PurchaseQuotationDTO, PurchaseQuotation> {
     @Mapping(target = "securityUser", source = "securityUser", qualifiedByName = "login")
+    @Mapping(target = "project", source = "project", qualifiedByName = "id")
+    @Mapping(target = "clientDetails", source = "clientDetails", qualifiedByName = "id")
     PurchaseQuotationDTO toDto(PurchaseQuotation s);
 
     @Named("id")

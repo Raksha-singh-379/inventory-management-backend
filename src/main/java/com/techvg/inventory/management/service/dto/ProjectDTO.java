@@ -11,7 +11,7 @@ public class ProjectDTO implements Serializable {
 
     private Long id;
 
-    private String name;
+    private String projectName;
 
     private Instant startDate;
 
@@ -39,12 +39,12 @@ public class ProjectDTO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public Instant getStartDate() {
@@ -145,7 +145,7 @@ public class ProjectDTO implements Serializable {
     public String toString() {
         return "ProjectDTO{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
+            ", projectName='" + getProjectName() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             ", departmentName='" + getDepartmentName() + "'" +

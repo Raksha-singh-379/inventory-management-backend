@@ -21,10 +21,10 @@
                 <constraints nullable="true" />
             </column>
             <column name="last_modified" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="last_modified_by" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="security_user_id" type="bigint">
                 <constraints nullable="true" />

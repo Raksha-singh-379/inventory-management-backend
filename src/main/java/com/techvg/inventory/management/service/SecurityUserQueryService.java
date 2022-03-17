@@ -171,15 +171,6 @@ public class SecurityUserQueryService extends QueryService<SecurityUser> {
                         )
                     );
             }
-            if (criteria.getProductInventoryId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getProductInventoryId(),
-                            root -> root.join(SecurityUser_.productInventories, JoinType.LEFT).get(ProductInventory_.id)
-                        )
-                    );
-            }
         }
         return specification;
     }

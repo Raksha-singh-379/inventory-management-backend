@@ -185,50 +185,6 @@ class PurchaseQuotationDetailsResourceIT {
 
     @Test
     @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = purchaseQuotationDetailsRepository.findAll().size();
-        // set the field null
-        purchaseQuotationDetails.setLastModified(null);
-
-        // Create the PurchaseQuotationDetails, which fails.
-        PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO = purchaseQuotationDetailsMapper.toDto(purchaseQuotationDetails);
-
-        restPurchaseQuotationDetailsMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(purchaseQuotationDetailsDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<PurchaseQuotationDetails> purchaseQuotationDetailsList = purchaseQuotationDetailsRepository.findAll();
-        assertThat(purchaseQuotationDetailsList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = purchaseQuotationDetailsRepository.findAll().size();
-        // set the field null
-        purchaseQuotationDetails.setLastModifiedBy(null);
-
-        // Create the PurchaseQuotationDetails, which fails.
-        PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO = purchaseQuotationDetailsMapper.toDto(purchaseQuotationDetails);
-
-        restPurchaseQuotationDetailsMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(purchaseQuotationDetailsDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<PurchaseQuotationDetails> purchaseQuotationDetailsList = purchaseQuotationDetailsRepository.findAll();
-        assertThat(purchaseQuotationDetailsList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllPurchaseQuotationDetails() throws Exception {
         // Initialize the database
         purchaseQuotationDetailsRepository.saveAndFlush(purchaseQuotationDetails);

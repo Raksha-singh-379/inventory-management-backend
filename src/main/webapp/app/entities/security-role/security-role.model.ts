@@ -5,8 +5,8 @@ export interface ISecurityRole {
   id?: number;
   name?: string;
   description?: string | null;
-  lastModified?: string;
-  lastModifiedBy?: string;
+  lastModified?: string | null;
+  lastModifiedBy?: string | null;
   securityPermissions?: ISecurityPermission[] | null;
   securityUsers?: ISecurityUser[] | null;
 }
@@ -16,8 +16,8 @@ export class SecurityRole implements ISecurityRole {
     public id?: number,
     public name?: string,
     public description?: string | null,
-    public lastModified?: string,
-    public lastModifiedBy?: string,
+    public lastModified?: string | null,
+    public lastModifiedBy?: string | null,
     public securityPermissions?: ISecurityPermission[] | null,
     public securityUsers?: ISecurityUser[] | null
   ) {}

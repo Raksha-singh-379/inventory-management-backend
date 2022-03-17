@@ -61,13 +61,11 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
 
     private LongFilter productId;
 
-    private LongFilter purchaseQuotationId;
-
     private LongFilter productTransactionId;
 
-    private LongFilter wareHouseId;
-
     private LongFilter securityUserId;
+
+    private LongFilter wareHouseId;
 
     private Boolean distinct;
 
@@ -91,10 +89,9 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
         this.isActive = other.isActive == null ? null : other.isActive.copy();
         this.consumptionDetailsId = other.consumptionDetailsId == null ? null : other.consumptionDetailsId.copy();
         this.productId = other.productId == null ? null : other.productId.copy();
-        this.purchaseQuotationId = other.purchaseQuotationId == null ? null : other.purchaseQuotationId.copy();
         this.productTransactionId = other.productTransactionId == null ? null : other.productTransactionId.copy();
-        this.wareHouseId = other.wareHouseId == null ? null : other.wareHouseId.copy();
         this.securityUserId = other.securityUserId == null ? null : other.securityUserId.copy();
+        this.wareHouseId = other.wareHouseId == null ? null : other.wareHouseId.copy();
         this.distinct = other.distinct;
     }
 
@@ -358,21 +355,6 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
         this.productId = productId;
     }
 
-    public LongFilter getPurchaseQuotationId() {
-        return purchaseQuotationId;
-    }
-
-    public LongFilter purchaseQuotationId() {
-        if (purchaseQuotationId == null) {
-            purchaseQuotationId = new LongFilter();
-        }
-        return purchaseQuotationId;
-    }
-
-    public void setPurchaseQuotationId(LongFilter purchaseQuotationId) {
-        this.purchaseQuotationId = purchaseQuotationId;
-    }
-
     public LongFilter getProductTransactionId() {
         return productTransactionId;
     }
@@ -388,21 +370,6 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
         this.productTransactionId = productTransactionId;
     }
 
-    public LongFilter getWareHouseId() {
-        return wareHouseId;
-    }
-
-    public LongFilter wareHouseId() {
-        if (wareHouseId == null) {
-            wareHouseId = new LongFilter();
-        }
-        return wareHouseId;
-    }
-
-    public void setWareHouseId(LongFilter wareHouseId) {
-        this.wareHouseId = wareHouseId;
-    }
-
     public LongFilter getSecurityUserId() {
         return securityUserId;
     }
@@ -416,6 +383,21 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
 
     public void setSecurityUserId(LongFilter securityUserId) {
         this.securityUserId = securityUserId;
+    }
+
+    public LongFilter getWareHouseId() {
+        return wareHouseId;
+    }
+
+    public LongFilter wareHouseId() {
+        if (wareHouseId == null) {
+            wareHouseId = new LongFilter();
+        }
+        return wareHouseId;
+    }
+
+    public void setWareHouseId(LongFilter wareHouseId) {
+        this.wareHouseId = wareHouseId;
     }
 
     public Boolean getDistinct() {
@@ -453,10 +435,9 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
             Objects.equals(isActive, that.isActive) &&
             Objects.equals(consumptionDetailsId, that.consumptionDetailsId) &&
             Objects.equals(productId, that.productId) &&
-            Objects.equals(purchaseQuotationId, that.purchaseQuotationId) &&
             Objects.equals(productTransactionId, that.productTransactionId) &&
-            Objects.equals(wareHouseId, that.wareHouseId) &&
             Objects.equals(securityUserId, that.securityUserId) &&
+            Objects.equals(wareHouseId, that.wareHouseId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -481,10 +462,9 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
             isActive,
             consumptionDetailsId,
             productId,
-            purchaseQuotationId,
             productTransactionId,
-            wareHouseId,
             securityUserId,
+            wareHouseId,
             distinct
         );
     }
@@ -510,10 +490,9 @@ public class ProductInventoryCriteria implements Serializable, Criteria {
             (isActive != null ? "isActive=" + isActive + ", " : "") +
             (consumptionDetailsId != null ? "consumptionDetailsId=" + consumptionDetailsId + ", " : "") +
             (productId != null ? "productId=" + productId + ", " : "") +
-            (purchaseQuotationId != null ? "purchaseQuotationId=" + purchaseQuotationId + ", " : "") +
             (productTransactionId != null ? "productTransactionId=" + productTransactionId + ", " : "") +
-            (wareHouseId != null ? "wareHouseId=" + wareHouseId + ", " : "") +
             (securityUserId != null ? "securityUserId=" + securityUserId + ", " : "") +
+            (wareHouseId != null ? "wareHouseId=" + wareHouseId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

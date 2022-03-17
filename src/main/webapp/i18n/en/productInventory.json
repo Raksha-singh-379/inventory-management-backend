@@ -34,10 +34,9 @@
       "isActive": "Is Active",
       "consumptionDetails": "Consumption Details",
       "product": "Product",
-      "purchaseQuotation": "Purchase Quotation",
       "productTransaction": "Product Transaction",
-      "wareHouse": "Ware House",
-      "securityUser": "Security User"
+      "securityUser": "Security User",
+      "wareHouse": "Ware House"
     }
   }
 }

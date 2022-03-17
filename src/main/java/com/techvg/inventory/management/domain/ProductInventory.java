@@ -79,32 +79,16 @@ public class ProductInventory implements Serializable {
     private Product product;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "purchaseQuotationDetails", "goodReciveds", "securityUser", "productInventories" }, allowSetters = true)
-    private PurchaseQuotation purchaseQuotation;
-
-    @ManyToOne
     @JsonIgnoreProperties(value = { "securityUser", "wareHouse" }, allowSetters = true)
     private ProductTransaction productTransaction;
 
-    @ManyToMany
-    @JoinTable(
-        name = "rel_product_inventory__ware_house",
-        joinColumns = @JoinColumn(name = "product_inventory_id"),
-        inverseJoinColumns = @JoinColumn(name = "ware_house_id")
-    )
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "productInventories", "securityUsers" }, allowSetters = true)
-    private Set<WareHouse> wareHouses = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
+    private SecurityUser securityUser;
 
-    @ManyToMany
-    @JoinTable(
-        name = "rel_product_inventory__security_user",
-        joinColumns = @JoinColumn(name = "product_inventory_id"),
-        inverseJoinColumns = @JoinColumn(name = "security_user_id")
-    )
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
-    private Set<SecurityUser> securityUsers = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
+    private WareHouse wareHouse;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -347,19 +331,6 @@ public class ProductInventory implements Serializable {
         return this;
     }
 
-    public PurchaseQuotation getPurchaseQuotation() {
-        return this.purchaseQuotation;
-    }
-
-    public void setPurchaseQuotation(PurchaseQuotation purchaseQuotation) {
-        this.purchaseQuotation = purchaseQuotation;
-    }
-
-    public ProductInventory purchaseQuotation(PurchaseQuotation purchaseQuotation) {
-        this.setPurchaseQuotation(purchaseQuotation);
-        return this;
-    }
-
     public ProductTransaction getProductTransaction() {
         return this.productTransaction;
     }
@@ -373,53 +344,29 @@ public class ProductInventory implements Serializable {
         return this;
     }
 
-    public Set<WareHouse> getWareHouses() {
-        return this.wareHouses;
+    public SecurityUser getSecurityUser() {
+        return this.securityUser;
     }
 
-    public void setWareHouses(Set<WareHouse> wareHouses) {
-        this.wareHouses = wareHouses;
+    public void setSecurityUser(SecurityUser securityUser) {
+        this.securityUser = securityUser;
     }
 
-    public ProductInventory wareHouses(Set<WareHouse> wareHouses) {
-        this.setWareHouses(wareHouses);
+    public ProductInventory securityUser(SecurityUser securityUser) {
+        this.setSecurityUser(securityUser);
         return this;
     }
 
-    public ProductInventory addWareHouse(WareHouse wareHouse) {
-        this.wareHouses.add(wareHouse);
-        wareHouse.getProductInventories().add(this);
-        return this;
+    public WareHouse getWareHouse() {
+        return this.wareHouse;
     }
 
-    public ProductInventory removeWareHouse(WareHouse wareHouse) {
-        this.wareHouses.remove(wareHouse);
-        wareHouse.getProductInventories().remove(this);
-        return this;
+    public void setWareHouse(WareHouse wareHouse) {
+        this.wareHouse = wareHouse;
     }
 
-    public Set<SecurityUser> getSecurityUsers() {
-        return this.securityUsers;
-    }
-
-    public void setSecurityUsers(Set<SecurityUser> securityUsers) {
-        this.securityUsers = securityUsers;
-    }
-
-    public ProductInventory securityUsers(Set<SecurityUser> securityUsers) {
-        this.setSecurityUsers(securityUsers);
-        return this;
-    }
-
-    public ProductInventory addSecurityUser(SecurityUser securityUser) {
-        this.securityUsers.add(securityUser);
-        securityUser.getProductInventories().add(this);
-        return this;
-    }
-
-    public ProductInventory removeSecurityUser(SecurityUser securityUser) {
-        this.securityUsers.remove(securityUser);
-        securityUser.getProductInventories().remove(this);
+    public ProductInventory wareHouse(WareHouse wareHouse) {
+        this.setWareHouse(wareHouse);
         return this;
     }
 

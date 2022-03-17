@@ -117,15 +117,6 @@ public class TransferDetailsQueryService extends QueryService<TransferDetails> {
             if (criteria.getIsActive() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsActive(), TransferDetails_.isActive));
             }
-            if (criteria.getWareHouseId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getWareHouseId(),
-                            root -> root.join(TransferDetails_.wareHouse, JoinType.LEFT).get(WareHouse_.id)
-                        )
-                    );
-            }
             if (criteria.getProductId() != null) {
                 specification =
                     specification.and(

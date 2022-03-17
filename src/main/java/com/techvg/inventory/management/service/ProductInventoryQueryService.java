@@ -155,15 +155,6 @@ public class ProductInventoryQueryService extends QueryService<ProductInventory>
                         )
                     );
             }
-            if (criteria.getPurchaseQuotationId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getPurchaseQuotationId(),
-                            root -> root.join(ProductInventory_.purchaseQuotation, JoinType.LEFT).get(PurchaseQuotation_.id)
-                        )
-                    );
-            }
             if (criteria.getProductTransactionId() != null) {
                 specification =
                     specification.and(
@@ -173,21 +164,21 @@ public class ProductInventoryQueryService extends QueryService<ProductInventory>
                         )
                     );
             }
-            if (criteria.getWareHouseId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getWareHouseId(),
-                            root -> root.join(ProductInventory_.wareHouses, JoinType.LEFT).get(WareHouse_.id)
-                        )
-                    );
-            }
             if (criteria.getSecurityUserId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
                             criteria.getSecurityUserId(),
-                            root -> root.join(ProductInventory_.securityUsers, JoinType.LEFT).get(SecurityUser_.id)
+                            root -> root.join(ProductInventory_.securityUser, JoinType.LEFT).get(SecurityUser_.id)
+                        )
+                    );
+            }
+            if (criteria.getWareHouseId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getWareHouseId(),
+                            root -> root.join(ProductInventory_.wareHouse, JoinType.LEFT).get(WareHouse_.id)
                         )
                     );
             }

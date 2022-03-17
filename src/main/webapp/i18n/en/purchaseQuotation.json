@@ -18,15 +18,13 @@
         "title": "Purchase Quotation"
       },
       "id": "ID",
+      "refrenceNumber": "Refrence Number",
       "totalPOAmount": "Total PO Amount",
       "totalGSTAmount": "Total GST Amount",
       "expectedDeliveryDate": "Expected Delivery Date",
       "poDate": "Po Date",
       "orderType": "Order Type",
       "orderStatus": "Order Status",
-      "clientName": "Client Name",
-      "clientMobile": "Client Mobile",
-      "clientEmail": "Client Email",
       "termsAndCondition": "Terms And Condition",
       "notes": "Notes",
       "lastModified": "Last Modified",
@@ -34,9 +32,10 @@
       "freeField1": "Free Field 1",
       "freeField2": "Free Field 2",
       "purchaseQuotationDetails": "Purchase Quotation Details",
-      "goodRecived": "Good Recived",
+      "goodsRecived": "Goods Recived",
       "securityUser": "Security User",
-      "productInventory": "Product Inventory"
+      "project": "Project",
+      "clientDetails": "Client Details"
     }
   }
 }

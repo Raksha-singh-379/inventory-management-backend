@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
@@ -25,8 +25,8 @@ export class UserAccessUpdateComponent implements OnInit {
     id: [],
     level: [],
     accessId: [],
-    lastModified: [null, [Validators.required]],
-    lastModifiedBy: [null, [Validators.required]],
+    lastModified: [],
+    lastModifiedBy: [],
     securityUser: [],
   });
 

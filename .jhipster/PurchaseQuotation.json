@@ -6,6 +6,10 @@
   "entityTableName": "purchase_quotation",
   "fields": [
     {
+      "fieldName": "refrenceNumber",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "totalPOAmount",
       "fieldType": "Double"
     },
@@ -24,24 +28,12 @@
     {
       "fieldName": "orderType",
       "fieldType": "OrderType",
-      "fieldValues": "PURCHASE_ORDER (PurchaseOrder),PRODUCT_QUATATION (ProductQuatation)"
+      "fieldValues": "PURCHASE_ORDER (PurchaseOrder),PRODUCT_QUATATION (ProductQuatation),TAX_INVOICE (TaxInvoice)"
     },
     {
       "fieldName": "orderStatus",
       "fieldType": "Status",
       "fieldValues": "REQUESTED (Requested),APPROVED (Approved),CANCELED (Canceled),RECEIVED (Received),COMPLETED (Completed)"
-    },
-    {
-      "fieldName": "clientName",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "clientMobile",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "clientEmail",
-      "fieldType": "String"
     },
     {
       "fieldName": "termsAndCondition",
@@ -53,13 +45,11 @@
     },
     {
       "fieldName": "lastModified",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "freeField1",
@@ -85,7 +75,7 @@
     {
       "otherEntityName": "goodsRecived",
       "otherEntityRelationshipName": "purchaseQuotation",
-      "relationshipName": "goodRecived",
+      "relationshipName": "goodsRecived",
       "relationshipType": "one-to-many"
     },
     {
@@ -96,10 +86,16 @@
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityName": "productInventory",
+      "otherEntityName": "project",
       "otherEntityRelationshipName": "purchaseQuotation",
-      "relationshipName": "productInventory",
-      "relationshipType": "one-to-many"
+      "relationshipName": "project",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "clientDetails",
+      "otherEntityRelationshipName": "purchaseQuotation",
+      "relationshipName": "clientDetails",
+      "relationshipType": "many-to-one"
     }
   ],
   "service": "serviceClass"

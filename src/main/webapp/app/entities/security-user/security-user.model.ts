@@ -2,7 +2,6 @@ import dayjs from 'dayjs/esm';
 import { ISecurityPermission } from 'app/entities/security-permission/security-permission.model';
 import { ISecurityRole } from 'app/entities/security-role/security-role.model';
 import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
-import { IProductInventory } from 'app/entities/product-inventory/product-inventory.model';
 
 export interface ISecurityUser {
   id?: number;
@@ -27,7 +26,6 @@ export interface ISecurityUser {
   securityPermissions?: ISecurityPermission[] | null;
   securityRoles?: ISecurityRole[] | null;
   wareHouses?: IWareHouse[] | null;
-  productInventories?: IProductInventory[] | null;
 }
 
 export class SecurityUser implements ISecurityUser {
@@ -53,8 +51,7 @@ export class SecurityUser implements ISecurityUser {
     public lastModifiedBy?: string | null,
     public securityPermissions?: ISecurityPermission[] | null,
     public securityRoles?: ISecurityRole[] | null,
-    public wareHouses?: IWareHouse[] | null,
-    public productInventories?: IProductInventory[] | null
+    public wareHouses?: IWareHouse[] | null
   ) {
     this.activated = this.activated ?? false;
   }

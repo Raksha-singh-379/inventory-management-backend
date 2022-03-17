@@ -14,7 +14,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="project_name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="start_date" type="${datetimeType}">
@@ -67,7 +67,7 @@
                   tableName="project"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
-            <column name="name" type="string"/>
+            <column name="project_name" type="string"/>
             <column name="start_date" type="date"/>
             <column name="end_date" type="date"/>
             <column name="department_name" type="string"/>

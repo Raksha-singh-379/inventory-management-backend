@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -66,25 +65,15 @@ public class WareHouse implements Serializable {
     @Column(name = "ware_house_id")
     private Long wareHouseId;
 
-    @NotNull
-    @Column(name = "last_modified", nullable = false)
+    @Column(name = "last_modified")
     private String lastModified;
 
-    @NotNull
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
     @ManyToMany(mappedBy = "wareHouses")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(
-        value = { "consumptionDetails", "product", "purchaseQuotation", "productTransaction", "wareHouses", "securityUsers" },
-        allowSetters = true
-    )
-    private Set<ProductInventory> productInventories = new HashSet<>();
-
-    @ManyToMany(mappedBy = "wareHouses")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private Set<SecurityUser> securityUsers = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -308,37 +297,6 @@ public class WareHouse implements Serializable {
 
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Set<ProductInventory> getProductInventories() {
-        return this.productInventories;
-    }
-
-    public void setProductInventories(Set<ProductInventory> productInventories) {
-        if (this.productInventories != null) {
-            this.productInventories.forEach(i -> i.removeWareHouse(this));
-        }
-        if (productInventories != null) {
-            productInventories.forEach(i -> i.addWareHouse(this));
-        }
-        this.productInventories = productInventories;
-    }
-
-    public WareHouse productInventories(Set<ProductInventory> productInventories) {
-        this.setProductInventories(productInventories);
-        return this;
-    }
-
-    public WareHouse addProductInventory(ProductInventory productInventory) {
-        this.productInventories.add(productInventory);
-        productInventory.getWareHouses().add(this);
-        return this;
-    }
-
-    public WareHouse removeProductInventory(ProductInventory productInventory) {
-        this.productInventories.remove(productInventory);
-        productInventory.getWareHouses().remove(this);
-        return this;
     }
 
     public Set<SecurityUser> getSecurityUsers() {

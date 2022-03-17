@@ -40,9 +40,15 @@
             <span jhiTranslate="inventoryManagementApp.notification.notificationType">Notification Type</span>
             <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="title">
+            <span jhiTranslate="inventoryManagementApp.notification.title">Title</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col" jhiSortBy="isActionRequired">
             <span jhiTranslate="inventoryManagementApp.notification.isActionRequired">Is Action Required</span>
             <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="isRead">
+            <span jhiTranslate="inventoryManagementApp.notification.isRead">Is Read</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="freeField1">
             <span jhiTranslate="inventoryManagementApp.notification.freeField1">Free Field 1</span> <fa-icon icon="sort"></fa-icon>
@@ -74,7 +80,9 @@
           <td jhiTranslate="{{ 'inventoryManagementApp.NotificationType.' + notification.notificationType }}">
             {{ notification.notificationType }}
           </td>
+          <td>{{ notification.title }}</td>
           <td>{{ notification.isActionRequired }}</td>
+          <td>{{ notification.isRead }}</td>
           <td>{{ notification.freeField1 }}</td>
           <td>{{ notification.freeField2 }}</td>
           <td>{{ notification.lastModified }}</td>

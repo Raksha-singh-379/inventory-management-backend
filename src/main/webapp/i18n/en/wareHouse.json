@@ -34,7 +34,6 @@
       "wareHouseId": "Ware House Id",
       "lastModified": "Last Modified",
       "lastModifiedBy": "Last Modified By",
-      "productInventory": "Product Inventory",
       "securityUser": "Security User"
     }
   }

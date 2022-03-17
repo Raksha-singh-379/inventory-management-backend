@@ -16,6 +16,10 @@
         <dd>
           <span>{{ purchaseQuotation.id }}</span>
         </dd>
+        <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.refrenceNumber">Refrence Number</span></dt>
+        <dd>
+          <span>{{ purchaseQuotation.refrenceNumber }}</span>
+        </dd>
         <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.totalPOAmount">Total PO Amount</span></dt>
         <dd>
           <span>{{ purchaseQuotation.totalPOAmount }}</span>
@@ -43,18 +47,6 @@
           <span jhiTranslate="{{ 'inventoryManagementApp.Status.' + purchaseQuotation.orderStatus }}">{{
             purchaseQuotation.orderStatus
           }}</span>
-        </dd>
-        <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientName">Client Name</span></dt>
-        <dd>
-          <span>{{ purchaseQuotation.clientName }}</span>
-        </dd>
-        <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientMobile">Client Mobile</span></dt>
-        <dd>
-          <span>{{ purchaseQuotation.clientMobile }}</span>
-        </dd>
-        <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientEmail">Client Email</span></dt>
-        <dd>
-          <span>{{ purchaseQuotation.clientEmail }}</span>
         </dd>
         <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.termsAndCondition">Terms And Condition</span></dt>
         <dd>
@@ -84,6 +76,18 @@
         <dd>
           <div *ngIf="purchaseQuotation.securityUser">
             <a [routerLink]="['/security-user', purchaseQuotation.securityUser?.id, 'view']">{{ purchaseQuotation.securityUser?.login }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.project">Project</span></dt>
+        <dd>
+          <div *ngIf="purchaseQuotation.project">
+            <a [routerLink]="['/project', purchaseQuotation.project?.id, 'view']">{{ purchaseQuotation.project?.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientDetails">Client Details</span></dt>
+        <dd>
+          <div *ngIf="purchaseQuotation.clientDetails">
+            <a [routerLink]="['/client-details', purchaseQuotation.clientDetails?.id, 'view']">{{ purchaseQuotation.clientDetails?.id }}</a>
           </div>
         </dd>
       </dl>

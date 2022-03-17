@@ -29,7 +29,7 @@ public class ProjectCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private StringFilter name;
+    private StringFilter projectName;
 
     private InstantFilter startDate;
 
@@ -55,7 +55,7 @@ public class ProjectCriteria implements Serializable, Criteria {
 
     public ProjectCriteria(ProjectCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.name = other.name == null ? null : other.name.copy();
+        this.projectName = other.projectName == null ? null : other.projectName.copy();
         this.startDate = other.startDate == null ? null : other.startDate.copy();
         this.endDate = other.endDate == null ? null : other.endDate.copy();
         this.departmentName = other.departmentName == null ? null : other.departmentName.copy();
@@ -88,19 +88,19 @@ public class ProjectCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public StringFilter getName() {
-        return name;
+    public StringFilter getProjectName() {
+        return projectName;
     }
 
-    public StringFilter name() {
-        if (name == null) {
-            name = new StringFilter();
+    public StringFilter projectName() {
+        if (projectName == null) {
+            projectName = new StringFilter();
         }
-        return name;
+        return projectName;
     }
 
-    public void setName(StringFilter name) {
-        this.name = name;
+    public void setProjectName(StringFilter projectName) {
+        this.projectName = projectName;
     }
 
     public InstantFilter getStartDate() {
@@ -257,7 +257,7 @@ public class ProjectCriteria implements Serializable, Criteria {
         final ProjectCriteria that = (ProjectCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(name, that.name) &&
+            Objects.equals(projectName, that.projectName) &&
             Objects.equals(startDate, that.startDate) &&
             Objects.equals(endDate, that.endDate) &&
             Objects.equals(departmentName, that.departmentName) &&
@@ -275,7 +275,7 @@ public class ProjectCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
             id,
-            name,
+            projectName,
             startDate,
             endDate,
             departmentName,
@@ -294,7 +294,7 @@ public class ProjectCriteria implements Serializable, Criteria {
     public String toString() {
         return "ProjectCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
-            (name != null ? "name=" + name + ", " : "") +
+            (projectName != null ? "projectName=" + projectName + ", " : "") +
             (startDate != null ? "startDate=" + startDate + ", " : "") +
             (endDate != null ? "endDate=" + endDate + ", " : "") +
             (departmentName != null ? "departmentName=" + departmentName + ", " : "") +

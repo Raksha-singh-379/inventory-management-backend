@@ -5,7 +5,6 @@ import com.techvg.inventory.management.domain.enumeration.Status;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link com.techvg.inventory.management.domain.PurchaseQuotation} entity.
@@ -13,6 +12,8 @@ import javax.validation.constraints.*;
 public class PurchaseQuotationDTO implements Serializable {
 
     private Long id;
+
+    private String refrenceNumber;
 
     private Double totalPOAmount;
 
@@ -26,20 +27,12 @@ public class PurchaseQuotationDTO implements Serializable {
 
     private Status orderStatus;
 
-    private String clientName;
-
-    private String clientMobile;
-
-    private String clientEmail;
-
     private String termsAndCondition;
 
     private String notes;
 
-    @NotNull
     private String lastModified;
 
-    @NotNull
     private String lastModifiedBy;
 
     private String freeField1;
@@ -48,12 +41,24 @@ public class PurchaseQuotationDTO implements Serializable {
 
     private SecurityUserDTO securityUser;
 
+    private ProjectDTO project;
+
+    private ClientDetailsDTO clientDetails;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRefrenceNumber() {
+        return refrenceNumber;
+    }
+
+    public void setRefrenceNumber(String refrenceNumber) {
+        this.refrenceNumber = refrenceNumber;
     }
 
     public Double getTotalPOAmount() {
@@ -102,30 +107,6 @@ public class PurchaseQuotationDTO implements Serializable {
 
     public void setOrderStatus(Status orderStatus) {
         this.orderStatus = orderStatus;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientMobile() {
-        return clientMobile;
-    }
-
-    public void setClientMobile(String clientMobile) {
-        this.clientMobile = clientMobile;
-    }
-
-    public String getClientEmail() {
-        return clientEmail;
-    }
-
-    public void setClientEmail(String clientEmail) {
-        this.clientEmail = clientEmail;
     }
 
     public String getTermsAndCondition() {
@@ -184,6 +165,22 @@ public class PurchaseQuotationDTO implements Serializable {
         this.securityUser = securityUser;
     }
 
+    public ProjectDTO getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectDTO project) {
+        this.project = project;
+    }
+
+    public ClientDetailsDTO getClientDetails() {
+        return clientDetails;
+    }
+
+    public void setClientDetails(ClientDetailsDTO clientDetails) {
+        this.clientDetails = clientDetails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -210,15 +207,13 @@ public class PurchaseQuotationDTO implements Serializable {
     public String toString() {
         return "PurchaseQuotationDTO{" +
             "id=" + getId() +
+            ", refrenceNumber='" + getRefrenceNumber() + "'" +
             ", totalPOAmount=" + getTotalPOAmount() +
             ", totalGSTAmount=" + getTotalGSTAmount() +
             ", expectedDeliveryDate='" + getExpectedDeliveryDate() + "'" +
             ", poDate='" + getPoDate() + "'" +
             ", orderType='" + getOrderType() + "'" +
             ", orderStatus='" + getOrderStatus() + "'" +
-            ", clientName='" + getClientName() + "'" +
-            ", clientMobile='" + getClientMobile() + "'" +
-            ", clientEmail='" + getClientEmail() + "'" +
             ", termsAndCondition='" + getTermsAndCondition() + "'" +
             ", notes='" + getNotes() + "'" +
             ", lastModified='" + getLastModified() + "'" +
@@ -226,6 +221,8 @@ public class PurchaseQuotationDTO implements Serializable {
             ", freeField1='" + getFreeField1() + "'" +
             ", freeField2='" + getFreeField2() + "'" +
             ", securityUser=" + getSecurityUser() +
+            ", project=" + getProject() +
+            ", clientDetails=" + getClientDetails() +
             "}";
     }
 }

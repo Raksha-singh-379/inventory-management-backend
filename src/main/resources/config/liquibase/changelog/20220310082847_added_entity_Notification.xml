@@ -20,7 +20,13 @@
             <column name="notification_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="is_action_required" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_read" type="boolean">
                 <constraints nullable="true" />
             </column>
             <column name="free_field_1" type="varchar(255)">
@@ -30,10 +36,10 @@
                 <constraints nullable="true" />
             </column>
             <column name="last_modified" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="last_modified_by" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="security_user_id" type="bigint">
                 <constraints nullable="true" />
@@ -64,7 +70,9 @@
             <column name="id" type="numeric"/>
             <column name="massage" type="string"/>
             <column name="notification_type" type="string"/>
+            <column name="title" type="string"/>
             <column name="is_action_required" type="boolean"/>
+            <column name="is_read" type="boolean"/>
             <column name="free_field_1" type="string"/>
             <column name="free_field_2" type="string"/>
             <column name="last_modified" type="string"/>

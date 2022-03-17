@@ -16,7 +16,15 @@
       "fieldValues": "APPROVAL (Apporoval),REQUEST (Request),ALERT (Alert),TRANSFER (Transfer)"
     },
     {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "isActionRequired",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "isRead",
       "fieldType": "Boolean"
     },
     {
@@ -29,13 +37,11 @@
     },
     {
       "fieldName": "lastModified",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     }
   ],
   "fluentMethods": true,

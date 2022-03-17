@@ -3,7 +3,6 @@ package com.techvg.inventory.management.service.dto;
 import com.techvg.inventory.management.domain.enumeration.AccessLevel;
 import java.io.Serializable;
 import java.util.Objects;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link com.techvg.inventory.management.domain.UserAccess} entity.
@@ -16,10 +15,8 @@ public class UserAccessDTO implements Serializable {
 
     private Long accessId;
 
-    @NotNull
     private String lastModified;
 
-    @NotNull
     private String lastModifiedBy;
 
     private SecurityUserDTO securityUser;

@@ -41,9 +41,6 @@
             <column name="is_active" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="ware_house_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
             <column name="product_id" type="bigint">
                 <constraints nullable="true" />
             </column>

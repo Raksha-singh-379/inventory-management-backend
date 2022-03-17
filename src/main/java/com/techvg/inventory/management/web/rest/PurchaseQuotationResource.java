@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +62,7 @@ public class PurchaseQuotationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/purchase-quotations")
-    public ResponseEntity<PurchaseQuotationDTO> createPurchaseQuotation(@Valid @RequestBody PurchaseQuotationDTO purchaseQuotationDTO)
+    public ResponseEntity<PurchaseQuotationDTO> createPurchaseQuotation(@RequestBody PurchaseQuotationDTO purchaseQuotationDTO)
         throws URISyntaxException {
         log.debug("REST request to save PurchaseQuotation : {}", purchaseQuotationDTO);
         if (purchaseQuotationDTO.getId() != null) {
@@ -90,7 +88,7 @@ public class PurchaseQuotationResource {
     @PutMapping("/purchase-quotations/{id}")
     public ResponseEntity<PurchaseQuotationDTO> updatePurchaseQuotation(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody PurchaseQuotationDTO purchaseQuotationDTO
+        @RequestBody PurchaseQuotationDTO purchaseQuotationDTO
     ) throws URISyntaxException {
         log.debug("REST request to update PurchaseQuotation : {}, {}", id, purchaseQuotationDTO);
         if (purchaseQuotationDTO.getId() == null) {
@@ -125,7 +123,7 @@ public class PurchaseQuotationResource {
     @PatchMapping(value = "/purchase-quotations/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<PurchaseQuotationDTO> partialUpdatePurchaseQuotation(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody PurchaseQuotationDTO purchaseQuotationDTO
+        @RequestBody PurchaseQuotationDTO purchaseQuotationDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update PurchaseQuotation partially : {}, {}", id, purchaseQuotationDTO);
         if (purchaseQuotationDTO.getId() == null) {

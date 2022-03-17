@@ -78,14 +78,6 @@
             <a [routerLink]="['/product', productInventory.product?.id, 'view']">{{ productInventory.product?.productName }}</a>
           </div>
         </dd>
-        <dt><span jhiTranslate="inventoryManagementApp.productInventory.purchaseQuotation">Purchase Quotation</span></dt>
-        <dd>
-          <div *ngIf="productInventory.purchaseQuotation">
-            <a [routerLink]="['/purchase-quotation', productInventory.purchaseQuotation?.id, 'view']">{{
-              productInventory.purchaseQuotation?.id
-            }}</a>
-          </div>
-        </dd>
         <dt><span jhiTranslate="inventoryManagementApp.productInventory.productTransaction">Product Transaction</span></dt>
         <dd>
           <div *ngIf="productInventory.productTransaction">
@@ -94,19 +86,17 @@
             }}</a>
           </div>
         </dd>
-        <dt><span jhiTranslate="inventoryManagementApp.productInventory.wareHouse">Ware House</span></dt>
-        <dd>
-          <span *ngFor="let wareHouse of productInventory.wareHouses; let last = last">
-            <a [routerLink]="['/ware-house', wareHouse?.id, 'view']">{{ wareHouse.whName }}</a
-            >{{ last ? '' : ', ' }}
-          </span>
-        </dd>
         <dt><span jhiTranslate="inventoryManagementApp.productInventory.securityUser">Security User</span></dt>
         <dd>
-          <span *ngFor="let securityUser of productInventory.securityUsers; let last = last">
-            <a [routerLink]="['/security-user', securityUser?.id, 'view']">{{ securityUser.login }}</a
-            >{{ last ? '' : ', ' }}
-          </span>
+          <div *ngIf="productInventory.securityUser">
+            <a [routerLink]="['/security-user', productInventory.securityUser?.id, 'view']">{{ productInventory.securityUser?.login }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="inventoryManagementApp.productInventory.wareHouse">Ware House</span></dt>
+        <dd>
+          <div *ngIf="productInventory.wareHouse">
+            <a [routerLink]="['/ware-house', productInventory.wareHouse?.id, 'view']">{{ productInventory.wareHouse?.id }}</a>
+          </div>
         </dd>
       </dl>
 

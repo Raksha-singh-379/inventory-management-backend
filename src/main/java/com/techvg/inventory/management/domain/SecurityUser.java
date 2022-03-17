@@ -109,16 +109,8 @@ public class SecurityUser implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "ware_house_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "productInventories", "securityUsers" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
     private Set<WareHouse> wareHouses = new HashSet<>();
-
-    @ManyToMany(mappedBy = "securityUsers")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(
-        value = { "consumptionDetails", "product", "purchaseQuotation", "productTransaction", "wareHouses", "securityUsers" },
-        allowSetters = true
-    )
-    private Set<ProductInventory> productInventories = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -441,37 +433,6 @@ public class SecurityUser implements Serializable {
     public SecurityUser removeWareHouse(WareHouse wareHouse) {
         this.wareHouses.remove(wareHouse);
         wareHouse.getSecurityUsers().remove(this);
-        return this;
-    }
-
-    public Set<ProductInventory> getProductInventories() {
-        return this.productInventories;
-    }
-
-    public void setProductInventories(Set<ProductInventory> productInventories) {
-        if (this.productInventories != null) {
-            this.productInventories.forEach(i -> i.removeSecurityUser(this));
-        }
-        if (productInventories != null) {
-            productInventories.forEach(i -> i.addSecurityUser(this));
-        }
-        this.productInventories = productInventories;
-    }
-
-    public SecurityUser productInventories(Set<ProductInventory> productInventories) {
-        this.setProductInventories(productInventories);
-        return this;
-    }
-
-    public SecurityUser addProductInventory(ProductInventory productInventory) {
-        this.productInventories.add(productInventory);
-        productInventory.getSecurityUsers().add(this);
-        return this;
-    }
-
-    public SecurityUser removeProductInventory(ProductInventory productInventory) {
-        this.productInventories.remove(productInventory);
-        productInventory.getSecurityUsers().remove(this);
         return this;
     }
 

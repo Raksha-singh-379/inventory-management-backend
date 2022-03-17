@@ -53,11 +53,11 @@ public class ProductTransaction implements Serializable {
     private String lastModifiedBy;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private SecurityUser securityUser;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "productInventories", "securityUsers" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
     private WareHouse wareHouse;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

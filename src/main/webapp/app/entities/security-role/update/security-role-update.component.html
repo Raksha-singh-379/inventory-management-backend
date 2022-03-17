@@ -53,17 +53,6 @@
             data-cy="lastModified"
             formControlName="lastModified"
           />
-          <div
-            *ngIf="editForm.get('lastModified')!.invalid && (editForm.get('lastModified')!.dirty || editForm.get('lastModified')!.touched)"
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('lastModified')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
         </div>
 
         <div class="row mb-3">
@@ -78,19 +67,6 @@
             data-cy="lastModifiedBy"
             formControlName="lastModifiedBy"
           />
-          <div
-            *ngIf="
-              editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('lastModifiedBy')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
         </div>
 
         <div class="row mb-3">

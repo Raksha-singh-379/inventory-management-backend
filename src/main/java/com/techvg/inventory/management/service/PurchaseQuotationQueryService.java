@@ -93,6 +93,10 @@ public class PurchaseQuotationQueryService extends QueryService<PurchaseQuotatio
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), PurchaseQuotation_.id));
             }
+            if (criteria.getRefrenceNumber() != null) {
+                specification =
+                    specification.and(buildStringSpecification(criteria.getRefrenceNumber(), PurchaseQuotation_.refrenceNumber));
+            }
             if (criteria.getTotalPOAmount() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTotalPOAmount(), PurchaseQuotation_.totalPOAmount));
             }
@@ -111,15 +115,6 @@ public class PurchaseQuotationQueryService extends QueryService<PurchaseQuotatio
             }
             if (criteria.getOrderStatus() != null) {
                 specification = specification.and(buildSpecification(criteria.getOrderStatus(), PurchaseQuotation_.orderStatus));
-            }
-            if (criteria.getClientName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getClientName(), PurchaseQuotation_.clientName));
-            }
-            if (criteria.getClientMobile() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getClientMobile(), PurchaseQuotation_.clientMobile));
-            }
-            if (criteria.getClientEmail() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getClientEmail(), PurchaseQuotation_.clientEmail));
             }
             if (criteria.getTermsAndCondition() != null) {
                 specification =
@@ -150,12 +145,12 @@ public class PurchaseQuotationQueryService extends QueryService<PurchaseQuotatio
                         )
                     );
             }
-            if (criteria.getGoodRecivedId() != null) {
+            if (criteria.getGoodsRecivedId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getGoodRecivedId(),
-                            root -> root.join(PurchaseQuotation_.goodReciveds, JoinType.LEFT).get(GoodsRecived_.id)
+                            criteria.getGoodsRecivedId(),
+                            root -> root.join(PurchaseQuotation_.goodsReciveds, JoinType.LEFT).get(GoodsRecived_.id)
                         )
                     );
             }
@@ -168,12 +163,21 @@ public class PurchaseQuotationQueryService extends QueryService<PurchaseQuotatio
                         )
                     );
             }
-            if (criteria.getProductInventoryId() != null) {
+            if (criteria.getProjectId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getProductInventoryId(),
-                            root -> root.join(PurchaseQuotation_.productInventories, JoinType.LEFT).get(ProductInventory_.id)
+                            criteria.getProjectId(),
+                            root -> root.join(PurchaseQuotation_.project, JoinType.LEFT).get(Project_.id)
+                        )
+                    );
+            }
+            if (criteria.getClientDetailsId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getClientDetailsId(),
+                            root -> root.join(PurchaseQuotation_.clientDetails, JoinType.LEFT).get(ClientDetails_.id)
                         )
                     );
             }

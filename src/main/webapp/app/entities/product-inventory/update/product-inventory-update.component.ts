@@ -12,14 +12,12 @@ import { IProductInventory, ProductInventory } from '../product-inventory.model'
 import { ProductInventoryService } from '../service/product-inventory.service';
 import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
-import { IPurchaseQuotation } from 'app/entities/purchase-quotation/purchase-quotation.model';
-import { PurchaseQuotationService } from 'app/entities/purchase-quotation/service/purchase-quotation.service';
 import { IProductTransaction } from 'app/entities/product-transaction/product-transaction.model';
 import { ProductTransactionService } from 'app/entities/product-transaction/service/product-transaction.service';
-import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
-import { WareHouseService } from 'app/entities/ware-house/service/ware-house.service';
 import { ISecurityUser } from 'app/entities/security-user/security-user.model';
 import { SecurityUserService } from 'app/entities/security-user/service/security-user.service';
+import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
+import { WareHouseService } from 'app/entities/ware-house/service/ware-house.service';
 
 @Component({
   selector: 'jhi-product-inventory-update',
@@ -29,10 +27,9 @@ export class ProductInventoryUpdateComponent implements OnInit {
   isSaving = false;
 
   productsSharedCollection: IProduct[] = [];
-  purchaseQuotationsSharedCollection: IPurchaseQuotation[] = [];
   productTransactionsSharedCollection: IProductTransaction[] = [];
-  wareHousesSharedCollection: IWareHouse[] = [];
   securityUsersSharedCollection: ISecurityUser[] = [];
+  wareHousesSharedCollection: IWareHouse[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -51,19 +48,17 @@ export class ProductInventoryUpdateComponent implements OnInit {
     isDeleted: [],
     isActive: [],
     product: [],
-    purchaseQuotation: [],
     productTransaction: [],
-    wareHouses: [],
-    securityUsers: [],
+    securityUser: [],
+    wareHouse: [],
   });
 
   constructor(
     protected productInventoryService: ProductInventoryService,
     protected productService: ProductService,
-    protected purchaseQuotationService: PurchaseQuotationService,
     protected productTransactionService: ProductTransactionService,
-    protected wareHouseService: WareHouseService,
     protected securityUserService: SecurityUserService,
+    protected wareHouseService: WareHouseService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -100,15 +95,7 @@ export class ProductInventoryUpdateComponent implements OnInit {
     return item.id!;
   }
 
-  trackPurchaseQuotationById(index: number, item: IPurchaseQuotation): number {
-    return item.id!;
-  }
-
   trackProductTransactionById(index: number, item: IProductTransaction): number {
-    return item.id!;
-  }
-
-  trackWareHouseById(index: number, item: IWareHouse): number {
     return item.id!;
   }
 
@@ -116,26 +103,8 @@ export class ProductInventoryUpdateComponent implements OnInit {
     return item.id!;
   }
 
-  getSelectedWareHouse(option: IWareHouse, selectedVals?: IWareHouse[]): IWareHouse {
-    if (selectedVals) {
-      for (const selectedVal of selectedVals) {
-        if (option.id === selectedVal.id) {
-          return selectedVal;
-        }
-      }
-    }
-    return option;
-  }
-
-  getSelectedSecurityUser(option: ISecurityUser, selectedVals?: ISecurityUser[]): ISecurityUser {
-    if (selectedVals) {
-      for (const selectedVal of selectedVals) {
-        if (option.id === selectedVal.id) {
-          return selectedVal;
-        }
-      }
-    }
-    return option;
+  trackWareHouseById(index: number, item: IWareHouse): number {
+    return item.id!;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IProductInventory>>): void {
@@ -175,31 +144,26 @@ export class ProductInventoryUpdateComponent implements OnInit {
       isDeleted: productInventory.isDeleted,
       isActive: productInventory.isActive,
       product: productInventory.product,
-      purchaseQuotation: productInventory.purchaseQuotation,
       productTransaction: productInventory.productTransaction,
-      wareHouses: productInventory.wareHouses,
-      securityUsers: productInventory.securityUsers,
+      securityUser: productInventory.securityUser,
+      wareHouse: productInventory.wareHouse,
     });
 
     this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(
       this.productsSharedCollection,
       productInventory.product
     );
-    this.purchaseQuotationsSharedCollection = this.purchaseQuotationService.addPurchaseQuotationToCollectionIfMissing(
-      this.purchaseQuotationsSharedCollection,
-      productInventory.purchaseQuotation
-    );
     this.productTransactionsSharedCollection = this.productTransactionService.addProductTransactionToCollectionIfMissing(
       this.productTransactionsSharedCollection,
       productInventory.productTransaction
     );
-    this.wareHousesSharedCollection = this.wareHouseService.addWareHouseToCollectionIfMissing(
-      this.wareHousesSharedCollection,
-      ...(productInventory.wareHouses ?? [])
-    );
     this.securityUsersSharedCollection = this.securityUserService.addSecurityUserToCollectionIfMissing(
       this.securityUsersSharedCollection,
-      ...(productInventory.securityUsers ?? [])
+      productInventory.securityUser
+    );
+    this.wareHousesSharedCollection = this.wareHouseService.addWareHouseToCollectionIfMissing(
+      this.wareHousesSharedCollection,
+      productInventory.wareHouse
     );
   }
 
@@ -211,19 +175,6 @@ export class ProductInventoryUpdateComponent implements OnInit {
         map((products: IProduct[]) => this.productService.addProductToCollectionIfMissing(products, this.editForm.get('product')!.value))
       )
       .subscribe((products: IProduct[]) => (this.productsSharedCollection = products));
-
-    this.purchaseQuotationService
-      .query()
-      .pipe(map((res: HttpResponse<IPurchaseQuotation[]>) => res.body ?? []))
-      .pipe(
-        map((purchaseQuotations: IPurchaseQuotation[]) =>
-          this.purchaseQuotationService.addPurchaseQuotationToCollectionIfMissing(
-            purchaseQuotations,
-            this.editForm.get('purchaseQuotation')!.value
-          )
-        )
-      )
-      .subscribe((purchaseQuotations: IPurchaseQuotation[]) => (this.purchaseQuotationsSharedCollection = purchaseQuotations));
 
     this.productTransactionService
       .query()
@@ -238,25 +189,25 @@ export class ProductInventoryUpdateComponent implements OnInit {
       )
       .subscribe((productTransactions: IProductTransaction[]) => (this.productTransactionsSharedCollection = productTransactions));
 
-    this.wareHouseService
-      .query()
-      .pipe(map((res: HttpResponse<IWareHouse[]>) => res.body ?? []))
-      .pipe(
-        map((wareHouses: IWareHouse[]) =>
-          this.wareHouseService.addWareHouseToCollectionIfMissing(wareHouses, ...(this.editForm.get('wareHouses')!.value ?? []))
-        )
-      )
-      .subscribe((wareHouses: IWareHouse[]) => (this.wareHousesSharedCollection = wareHouses));
-
     this.securityUserService
       .query()
       .pipe(map((res: HttpResponse<ISecurityUser[]>) => res.body ?? []))
       .pipe(
         map((securityUsers: ISecurityUser[]) =>
-          this.securityUserService.addSecurityUserToCollectionIfMissing(securityUsers, ...(this.editForm.get('securityUsers')!.value ?? []))
+          this.securityUserService.addSecurityUserToCollectionIfMissing(securityUsers, this.editForm.get('securityUser')!.value)
         )
       )
       .subscribe((securityUsers: ISecurityUser[]) => (this.securityUsersSharedCollection = securityUsers));
+
+    this.wareHouseService
+      .query()
+      .pipe(map((res: HttpResponse<IWareHouse[]>) => res.body ?? []))
+      .pipe(
+        map((wareHouses: IWareHouse[]) =>
+          this.wareHouseService.addWareHouseToCollectionIfMissing(wareHouses, this.editForm.get('wareHouse')!.value)
+        )
+      )
+      .subscribe((wareHouses: IWareHouse[]) => (this.wareHousesSharedCollection = wareHouses));
   }
 
   protected createFromForm(): IProductInventory {
@@ -280,10 +231,9 @@ export class ProductInventoryUpdateComponent implements OnInit {
       isDeleted: this.editForm.get(['isDeleted'])!.value,
       isActive: this.editForm.get(['isActive'])!.value,
       product: this.editForm.get(['product'])!.value,
-      purchaseQuotation: this.editForm.get(['purchaseQuotation'])!.value,
       productTransaction: this.editForm.get(['productTransaction'])!.value,
-      wareHouses: this.editForm.get(['wareHouses'])!.value,
-      securityUsers: this.editForm.get(['securityUsers'])!.value,
+      securityUser: this.editForm.get(['securityUser'])!.value,
+      wareHouse: this.editForm.get(['wareHouse'])!.value,
     };
   }
 }

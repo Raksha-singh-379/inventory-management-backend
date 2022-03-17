@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
@@ -12,6 +12,10 @@ import { IPurchaseQuotation, PurchaseQuotation } from '../purchase-quotation.mod
 import { PurchaseQuotationService } from '../service/purchase-quotation.service';
 import { ISecurityUser } from 'app/entities/security-user/security-user.model';
 import { SecurityUserService } from 'app/entities/security-user/service/security-user.service';
+import { IProject } from 'app/entities/project/project.model';
+import { ProjectService } from 'app/entities/project/service/project.service';
+import { IClientDetails } from 'app/entities/client-details/client-details.model';
+import { ClientDetailsService } from 'app/entities/client-details/service/client-details.service';
 import { OrderType } from 'app/entities/enumerations/order-type.model';
 import { Status } from 'app/entities/enumerations/status.model';
 
@@ -25,30 +29,34 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
   statusValues = Object.keys(Status);
 
   securityUsersSharedCollection: ISecurityUser[] = [];
+  projectsSharedCollection: IProject[] = [];
+  clientDetailsSharedCollection: IClientDetails[] = [];
 
   editForm = this.fb.group({
     id: [],
+    refrenceNumber: [],
     totalPOAmount: [],
     totalGSTAmount: [],
     expectedDeliveryDate: [],
     poDate: [],
     orderType: [],
     orderStatus: [],
-    clientName: [],
-    clientMobile: [],
-    clientEmail: [],
     termsAndCondition: [],
     notes: [],
-    lastModified: [null, [Validators.required]],
-    lastModifiedBy: [null, [Validators.required]],
+    lastModified: [],
+    lastModifiedBy: [],
     freeField1: [],
     freeField2: [],
     securityUser: [],
+    project: [],
+    clientDetails: [],
   });
 
   constructor(
     protected purchaseQuotationService: PurchaseQuotationService,
     protected securityUserService: SecurityUserService,
+    protected projectService: ProjectService,
+    protected clientDetailsService: ClientDetailsService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -85,6 +93,14 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
     return item.id!;
   }
 
+  trackProjectById(index: number, item: IProject): number {
+    return item.id!;
+  }
+
+  trackClientDetailsById(index: number, item: IClientDetails): number {
+    return item.id!;
+  }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IPurchaseQuotation>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
@@ -107,15 +123,13 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
   protected updateForm(purchaseQuotation: IPurchaseQuotation): void {
     this.editForm.patchValue({
       id: purchaseQuotation.id,
+      refrenceNumber: purchaseQuotation.refrenceNumber,
       totalPOAmount: purchaseQuotation.totalPOAmount,
       totalGSTAmount: purchaseQuotation.totalGSTAmount,
       expectedDeliveryDate: purchaseQuotation.expectedDeliveryDate ? purchaseQuotation.expectedDeliveryDate.format(DATE_TIME_FORMAT) : null,
       poDate: purchaseQuotation.poDate ? purchaseQuotation.poDate.format(DATE_TIME_FORMAT) : null,
       orderType: purchaseQuotation.orderType,
       orderStatus: purchaseQuotation.orderStatus,
-      clientName: purchaseQuotation.clientName,
-      clientMobile: purchaseQuotation.clientMobile,
-      clientEmail: purchaseQuotation.clientEmail,
       termsAndCondition: purchaseQuotation.termsAndCondition,
       notes: purchaseQuotation.notes,
       lastModified: purchaseQuotation.lastModified,
@@ -123,11 +137,21 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
       freeField1: purchaseQuotation.freeField1,
       freeField2: purchaseQuotation.freeField2,
       securityUser: purchaseQuotation.securityUser,
+      project: purchaseQuotation.project,
+      clientDetails: purchaseQuotation.clientDetails,
     });
 
     this.securityUsersSharedCollection = this.securityUserService.addSecurityUserToCollectionIfMissing(
       this.securityUsersSharedCollection,
       purchaseQuotation.securityUser
+    );
+    this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing(
+      this.projectsSharedCollection,
+      purchaseQuotation.project
+    );
+    this.clientDetailsSharedCollection = this.clientDetailsService.addClientDetailsToCollectionIfMissing(
+      this.clientDetailsSharedCollection,
+      purchaseQuotation.clientDetails
     );
   }
 
@@ -141,12 +165,31 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
         )
       )
       .subscribe((securityUsers: ISecurityUser[]) => (this.securityUsersSharedCollection = securityUsers));
+
+    this.projectService
+      .query()
+      .pipe(map((res: HttpResponse<IProject[]>) => res.body ?? []))
+      .pipe(
+        map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing(projects, this.editForm.get('project')!.value))
+      )
+      .subscribe((projects: IProject[]) => (this.projectsSharedCollection = projects));
+
+    this.clientDetailsService
+      .query()
+      .pipe(map((res: HttpResponse<IClientDetails[]>) => res.body ?? []))
+      .pipe(
+        map((clientDetails: IClientDetails[]) =>
+          this.clientDetailsService.addClientDetailsToCollectionIfMissing(clientDetails, this.editForm.get('clientDetails')!.value)
+        )
+      )
+      .subscribe((clientDetails: IClientDetails[]) => (this.clientDetailsSharedCollection = clientDetails));
   }
 
   protected createFromForm(): IPurchaseQuotation {
     return {
       ...new PurchaseQuotation(),
       id: this.editForm.get(['id'])!.value,
+      refrenceNumber: this.editForm.get(['refrenceNumber'])!.value,
       totalPOAmount: this.editForm.get(['totalPOAmount'])!.value,
       totalGSTAmount: this.editForm.get(['totalGSTAmount'])!.value,
       expectedDeliveryDate: this.editForm.get(['expectedDeliveryDate'])!.value
@@ -155,9 +198,6 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
       poDate: this.editForm.get(['poDate'])!.value ? dayjs(this.editForm.get(['poDate'])!.value, DATE_TIME_FORMAT) : undefined,
       orderType: this.editForm.get(['orderType'])!.value,
       orderStatus: this.editForm.get(['orderStatus'])!.value,
-      clientName: this.editForm.get(['clientName'])!.value,
-      clientMobile: this.editForm.get(['clientMobile'])!.value,
-      clientEmail: this.editForm.get(['clientEmail'])!.value,
       termsAndCondition: this.editForm.get(['termsAndCondition'])!.value,
       notes: this.editForm.get(['notes'])!.value,
       lastModified: this.editForm.get(['lastModified'])!.value,
@@ -165,6 +205,8 @@ export class PurchaseQuotationUpdateComponent implements OnInit {
       freeField1: this.editForm.get(['freeField1'])!.value,
       freeField2: this.editForm.get(['freeField2'])!.value,
       securityUser: this.editForm.get(['securityUser'])!.value,
+      project: this.editForm.get(['project'])!.value,
+      clientDetails: this.editForm.get(['clientDetails'])!.value,
     };
   }
 }

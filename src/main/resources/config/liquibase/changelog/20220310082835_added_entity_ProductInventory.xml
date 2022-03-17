@@ -59,41 +59,19 @@
             <column name="product_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="purchase_quotation_id" type="bigint">
+            <column name="product_transaction_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="product_transaction_id" type="bigint">
+            <column name="security_user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="ware_house_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="product_inventory" columnName="inward_outward_date" columnDataType="${datetimeType}"/>
         <dropDefaultValue tableName="product_inventory" columnName="expiry_date" columnDataType="${datetimeType}"/>
-    </changeSet>
-
-    <changeSet id="20220310082835-1-relations" author="jhipster">
-
-        <createTable tableName="rel_product_inventory__ware_house">
-            <column name="ware_house_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_inventory_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="product_inventory_id, ware_house_id" tableName="rel_product_inventory__ware_house"/>
-
-        <createTable tableName="rel_product_inventory__security_user">
-            <column name="security_user_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_inventory_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="product_inventory_id, security_user_id" tableName="rel_product_inventory__security_user"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

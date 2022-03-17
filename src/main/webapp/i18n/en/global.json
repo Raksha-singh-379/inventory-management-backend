@@ -27,6 +27,7 @@
         "securityRole": "Security Role",
         "securityPermission": "Security Permission",
         "userAccess": "User Access",
+        "clientDetails": "Client Details",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

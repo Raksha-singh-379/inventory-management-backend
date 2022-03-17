@@ -100,7 +100,7 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "wareHouse", "product", "transfer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "product", "transfer" }, allowSetters = true)
     private Set<TransferDetails> transferDetails = new HashSet<>();
 
     @ManyToOne
@@ -110,7 +110,7 @@ public class Product implements Serializable {
     private Unit unit;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private SecurityUser securityUser;
 
     @ManyToOne

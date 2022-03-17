@@ -18,7 +18,7 @@
         "title": "Project"
       },
       "id": "ID",
-      "name": "Name",
+      "projectName": "Project Name",
       "startDate": "Start Date",
       "endDate": "End Date",
       "departmentName": "Department Name",

@@ -50,7 +50,11 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     private NotificationTypeFilter notificationType;
 
+    private StringFilter title;
+
     private BooleanFilter isActionRequired;
+
+    private BooleanFilter isRead;
 
     private StringFilter freeField1;
 
@@ -72,7 +76,9 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.massage = other.massage == null ? null : other.massage.copy();
         this.notificationType = other.notificationType == null ? null : other.notificationType.copy();
+        this.title = other.title == null ? null : other.title.copy();
         this.isActionRequired = other.isActionRequired == null ? null : other.isActionRequired.copy();
+        this.isRead = other.isRead == null ? null : other.isRead.copy();
         this.freeField1 = other.freeField1 == null ? null : other.freeField1.copy();
         this.freeField2 = other.freeField2 == null ? null : other.freeField2.copy();
         this.lastModified = other.lastModified == null ? null : other.lastModified.copy();
@@ -132,6 +138,21 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.notificationType = notificationType;
     }
 
+    public StringFilter getTitle() {
+        return title;
+    }
+
+    public StringFilter title() {
+        if (title == null) {
+            title = new StringFilter();
+        }
+        return title;
+    }
+
+    public void setTitle(StringFilter title) {
+        this.title = title;
+    }
+
     public BooleanFilter getIsActionRequired() {
         return isActionRequired;
     }
@@ -145,6 +166,21 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     public void setIsActionRequired(BooleanFilter isActionRequired) {
         this.isActionRequired = isActionRequired;
+    }
+
+    public BooleanFilter getIsRead() {
+        return isRead;
+    }
+
+    public BooleanFilter isRead() {
+        if (isRead == null) {
+            isRead = new BooleanFilter();
+        }
+        return isRead;
+    }
+
+    public void setIsRead(BooleanFilter isRead) {
+        this.isRead = isRead;
     }
 
     public StringFilter getFreeField1() {
@@ -258,7 +294,9 @@ public class NotificationCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(massage, that.massage) &&
             Objects.equals(notificationType, that.notificationType) &&
+            Objects.equals(title, that.title) &&
             Objects.equals(isActionRequired, that.isActionRequired) &&
+            Objects.equals(isRead, that.isRead) &&
             Objects.equals(freeField1, that.freeField1) &&
             Objects.equals(freeField2, that.freeField2) &&
             Objects.equals(lastModified, that.lastModified) &&
@@ -275,7 +313,9 @@ public class NotificationCriteria implements Serializable, Criteria {
             id,
             massage,
             notificationType,
+            title,
             isActionRequired,
+            isRead,
             freeField1,
             freeField2,
             lastModified,
@@ -293,7 +333,9 @@ public class NotificationCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (massage != null ? "massage=" + massage + ", " : "") +
             (notificationType != null ? "notificationType=" + notificationType + ", " : "") +
+            (title != null ? "title=" + title + ", " : "") +
             (isActionRequired != null ? "isActionRequired=" + isActionRequired + ", " : "") +
+            (isRead != null ? "isRead=" + isRead + ", " : "") +
             (freeField1 != null ? "freeField1=" + freeField1 + ", " : "") +
             (freeField2 != null ? "freeField2=" + freeField2 + ", " : "") +
             (lastModified != null ? "lastModified=" + lastModified + ", " : "") +

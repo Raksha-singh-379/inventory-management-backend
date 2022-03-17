@@ -35,6 +35,7 @@
     <include file="config/liquibase/changelog/20220310082848_added_entity_SecurityRole.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220310082849_added_entity_SecurityPermission.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220310082850_added_entity_UserAccess.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220317085454_added_entity_ClientDetails.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20220310082831_added_entity_constraints_Product.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220310082835_added_entity_constraints_ProductInventory.xml" relativeToChangelogFile="false"/>

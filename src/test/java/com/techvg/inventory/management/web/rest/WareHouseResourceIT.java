@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.techvg.inventory.management.IntegrationTest;
-import com.techvg.inventory.management.domain.ProductInventory;
 import com.techvg.inventory.management.domain.SecurityUser;
 import com.techvg.inventory.management.domain.WareHouse;
 import com.techvg.inventory.management.repository.WareHouseRepository;
@@ -212,42 +211,6 @@ class WareHouseResourceIT {
         // Validate the WareHouse in the database
         List<WareHouse> wareHouseList = wareHouseRepository.findAll();
         assertThat(wareHouseList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = wareHouseRepository.findAll().size();
-        // set the field null
-        wareHouse.setLastModified(null);
-
-        // Create the WareHouse, which fails.
-        WareHouseDTO wareHouseDTO = wareHouseMapper.toDto(wareHouse);
-
-        restWareHouseMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(wareHouseDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<WareHouse> wareHouseList = wareHouseRepository.findAll();
-        assertThat(wareHouseList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = wareHouseRepository.findAll().size();
-        // set the field null
-        wareHouse.setLastModifiedBy(null);
-
-        // Create the WareHouse, which fails.
-        WareHouseDTO wareHouseDTO = wareHouseMapper.toDto(wareHouse);
-
-        restWareHouseMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(wareHouseDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<WareHouse> wareHouseList = wareHouseRepository.findAll();
-        assertThat(wareHouseList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -1574,32 +1537,6 @@ class WareHouseResourceIT {
 
         // Get all the wareHouseList where lastModifiedBy does not contain UPDATED_LAST_MODIFIED_BY
         defaultWareHouseShouldBeFound("lastModifiedBy.doesNotContain=" + UPDATED_LAST_MODIFIED_BY);
-    }
-
-    @Test
-    @Transactional
-    void getAllWareHousesByProductInventoryIsEqualToSomething() throws Exception {
-        // Initialize the database
-        wareHouseRepository.saveAndFlush(wareHouse);
-        ProductInventory productInventory;
-        if (TestUtil.findAll(em, ProductInventory.class).isEmpty()) {
-            productInventory = ProductInventoryResourceIT.createEntity(em);
-            em.persist(productInventory);
-            em.flush();
-        } else {
-            productInventory = TestUtil.findAll(em, ProductInventory.class).get(0);
-        }
-        em.persist(productInventory);
-        em.flush();
-        wareHouse.addProductInventory(productInventory);
-        wareHouseRepository.saveAndFlush(wareHouse);
-        Long productInventoryId = productInventory.getId();
-
-        // Get all the wareHouseList where productInventory equals to productInventoryId
-        defaultWareHouseShouldBeFound("productInventoryId.equals=" + productInventoryId);
-
-        // Get all the wareHouseList where productInventory equals to (productInventoryId + 1)
-        defaultWareHouseShouldNotBeFound("productInventoryId.equals=" + (productInventoryId + 1));
     }
 
     @Test

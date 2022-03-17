@@ -181,46 +181,6 @@ class SecurityRoleResourceIT {
 
     @Test
     @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = securityRoleRepository.findAll().size();
-        // set the field null
-        securityRole.setLastModified(null);
-
-        // Create the SecurityRole, which fails.
-        SecurityRoleDTO securityRoleDTO = securityRoleMapper.toDto(securityRole);
-
-        restSecurityRoleMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(securityRoleDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<SecurityRole> securityRoleList = securityRoleRepository.findAll();
-        assertThat(securityRoleList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = securityRoleRepository.findAll().size();
-        // set the field null
-        securityRole.setLastModifiedBy(null);
-
-        // Create the SecurityRole, which fails.
-        SecurityRoleDTO securityRoleDTO = securityRoleMapper.toDto(securityRole);
-
-        restSecurityRoleMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(securityRoleDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<SecurityRole> securityRoleList = securityRoleRepository.findAll();
-        assertThat(securityRoleList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllSecurityRoles() throws Exception {
         // Initialize the database
         securityRoleRepository.saveAndFlush(securityRole);
