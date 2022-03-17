@@ -9,7 +9,6 @@ import com.techvg.inventory.management.IntegrationTest;
 import com.techvg.inventory.management.domain.Product;
 import com.techvg.inventory.management.domain.Transfer;
 import com.techvg.inventory.management.domain.TransferDetails;
-import com.techvg.inventory.management.domain.WareHouse;
 import com.techvg.inventory.management.repository.TransferDetailsRepository;
 import com.techvg.inventory.management.service.criteria.TransferDetailsCriteria;
 import com.techvg.inventory.management.service.dto.TransferDetailsDTO;
@@ -890,32 +889,6 @@ class TransferDetailsResourceIT {
 
         // Get all the transferDetailsList where isActive is null
         defaultTransferDetailsShouldNotBeFound("isActive.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllTransferDetailsByWareHouseIsEqualToSomething() throws Exception {
-        // Initialize the database
-        transferDetailsRepository.saveAndFlush(transferDetails);
-        WareHouse wareHouse;
-        if (TestUtil.findAll(em, WareHouse.class).isEmpty()) {
-            wareHouse = WareHouseResourceIT.createEntity(em);
-            em.persist(wareHouse);
-            em.flush();
-        } else {
-            wareHouse = TestUtil.findAll(em, WareHouse.class).get(0);
-        }
-        em.persist(wareHouse);
-        em.flush();
-        transferDetails.setWareHouse(wareHouse);
-        transferDetailsRepository.saveAndFlush(transferDetails);
-        Long wareHouseId = wareHouse.getId();
-
-        // Get all the transferDetailsList where wareHouse equals to wareHouseId
-        defaultTransferDetailsShouldBeFound("wareHouseId.equals=" + wareHouseId);
-
-        // Get all the transferDetailsList where wareHouse equals to (wareHouseId + 1)
-        defaultTransferDetailsShouldNotBeFound("wareHouseId.equals=" + (wareHouseId + 1));
     }
 
     @Test

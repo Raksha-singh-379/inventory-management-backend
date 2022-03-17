@@ -172,50 +172,6 @@ class SecurityPermissionResourceIT {
 
     @Test
     @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = securityPermissionRepository.findAll().size();
-        // set the field null
-        securityPermission.setLastModified(null);
-
-        // Create the SecurityPermission, which fails.
-        SecurityPermissionDTO securityPermissionDTO = securityPermissionMapper.toDto(securityPermission);
-
-        restSecurityPermissionMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(securityPermissionDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<SecurityPermission> securityPermissionList = securityPermissionRepository.findAll();
-        assertThat(securityPermissionList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = securityPermissionRepository.findAll().size();
-        // set the field null
-        securityPermission.setLastModifiedBy(null);
-
-        // Create the SecurityPermission, which fails.
-        SecurityPermissionDTO securityPermissionDTO = securityPermissionMapper.toDto(securityPermission);
-
-        restSecurityPermissionMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(securityPermissionDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<SecurityPermission> securityPermissionList = securityPermissionRepository.findAll();
-        assertThat(securityPermissionList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllSecurityPermissions() throws Exception {
         // Initialize the database
         securityPermissionRepository.saveAndFlush(securityPermission);

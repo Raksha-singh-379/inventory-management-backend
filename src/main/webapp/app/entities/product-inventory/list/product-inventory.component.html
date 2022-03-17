@@ -81,13 +81,15 @@
           <th scope="col" jhiSortBy="product.productName">
             <span jhiTranslate="inventoryManagementApp.productInventory.product">Product</span> <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="purchaseQuotation.id">
-            <span jhiTranslate="inventoryManagementApp.productInventory.purchaseQuotation">Purchase Quotation</span>
-            <fa-icon icon="sort"></fa-icon>
-          </th>
           <th scope="col" jhiSortBy="productTransaction.id">
             <span jhiTranslate="inventoryManagementApp.productInventory.productTransaction">Product Transaction</span>
             <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="securityUser.login">
+            <span jhiTranslate="inventoryManagementApp.productInventory.securityUser">Security User</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="wareHouse.id">
+            <span jhiTranslate="inventoryManagementApp.productInventory.wareHouse">Ware House</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col"></th>
         </tr>
@@ -117,17 +119,20 @@
             </div>
           </td>
           <td>
-            <div *ngIf="productInventory.purchaseQuotation">
-              <a [routerLink]="['/purchase-quotation', productInventory.purchaseQuotation?.id, 'view']">{{
-                productInventory.purchaseQuotation?.id
-              }}</a>
-            </div>
-          </td>
-          <td>
             <div *ngIf="productInventory.productTransaction">
               <a [routerLink]="['/product-transaction', productInventory.productTransaction?.id, 'view']">{{
                 productInventory.productTransaction?.id
               }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="productInventory.securityUser">
+              <a [routerLink]="['/security-user', productInventory.securityUser?.id, 'view']">{{ productInventory.securityUser?.login }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="productInventory.wareHouse">
+              <a [routerLink]="['/ware-house', productInventory.wareHouse?.id, 'view']">{{ productInventory.wareHouse?.id }}</a>
             </div>
           </td>
           <td class="text-end">

@@ -111,19 +111,6 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="inventoryManagementApp.transferDetails.wareHouse" for="field_wareHouse">Ware House</label>
-          <select class="form-control" id="field_wareHouse" data-cy="wareHouse" name="wareHouse" formControlName="wareHouse">
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="wareHouseOption.id === editForm.get('wareHouse')!.value?.id ? editForm.get('wareHouse')!.value : wareHouseOption"
-              *ngFor="let wareHouseOption of wareHousesSharedCollection; trackBy: trackWareHouseById"
-            >
-              {{ wareHouseOption.whName }}
-            </option>
-          </select>
-        </div>
-
-        <div class="row mb-3">
           <label class="form-label" jhiTranslate="inventoryManagementApp.transferDetails.product" for="field_product">Product</label>
           <select class="form-control" id="field_product" data-cy="product" name="product" formControlName="product">
             <option [ngValue]="null"></option>

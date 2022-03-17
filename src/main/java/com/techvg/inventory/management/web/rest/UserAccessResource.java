@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +62,7 @@ public class UserAccessResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/user-accesses")
-    public ResponseEntity<UserAccessDTO> createUserAccess(@Valid @RequestBody UserAccessDTO userAccessDTO) throws URISyntaxException {
+    public ResponseEntity<UserAccessDTO> createUserAccess(@RequestBody UserAccessDTO userAccessDTO) throws URISyntaxException {
         log.debug("REST request to save UserAccess : {}", userAccessDTO);
         if (userAccessDTO.getId() != null) {
             throw new BadRequestAlertException("A new userAccess cannot already have an ID", ENTITY_NAME, "idexists");
@@ -89,7 +87,7 @@ public class UserAccessResource {
     @PutMapping("/user-accesses/{id}")
     public ResponseEntity<UserAccessDTO> updateUserAccess(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody UserAccessDTO userAccessDTO
+        @RequestBody UserAccessDTO userAccessDTO
     ) throws URISyntaxException {
         log.debug("REST request to update UserAccess : {}, {}", id, userAccessDTO);
         if (userAccessDTO.getId() == null) {
@@ -124,7 +122,7 @@ public class UserAccessResource {
     @PatchMapping(value = "/user-accesses/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<UserAccessDTO> partialUpdateUserAccess(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody UserAccessDTO userAccessDTO
+        @RequestBody UserAccessDTO userAccessDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update UserAccess partially : {}, {}", id, userAccessDTO);
         if (userAccessDTO.getId() == null) {

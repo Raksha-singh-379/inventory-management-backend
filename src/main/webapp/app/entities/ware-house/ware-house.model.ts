@@ -1,4 +1,3 @@
-import { IProductInventory } from 'app/entities/product-inventory/product-inventory.model';
 import { ISecurityUser } from 'app/entities/security-user/security-user.model';
 
 export interface IWareHouse {
@@ -17,9 +16,8 @@ export interface IWareHouse {
   isDeleted?: boolean | null;
   isActive?: boolean | null;
   wareHouseId?: number | null;
-  lastModified?: string;
-  lastModifiedBy?: string;
-  productInventories?: IProductInventory[] | null;
+  lastModified?: string | null;
+  lastModifiedBy?: string | null;
   securityUsers?: ISecurityUser[] | null;
 }
 
@@ -40,9 +38,8 @@ export class WareHouse implements IWareHouse {
     public isDeleted?: boolean | null,
     public isActive?: boolean | null,
     public wareHouseId?: number | null,
-    public lastModified?: string,
-    public lastModifiedBy?: string,
-    public productInventories?: IProductInventory[] | null,
+    public lastModified?: string | null,
+    public lastModifiedBy?: string | null,
     public securityUsers?: ISecurityUser[] | null
   ) {
     this.isDeleted = this.isDeleted ?? false;

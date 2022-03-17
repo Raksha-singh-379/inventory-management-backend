@@ -60,8 +60,6 @@ public class WareHouseCriteria implements Serializable, Criteria {
 
     private StringFilter lastModifiedBy;
 
-    private LongFilter productInventoryId;
-
     private LongFilter securityUserId;
 
     private Boolean distinct;
@@ -86,7 +84,6 @@ public class WareHouseCriteria implements Serializable, Criteria {
         this.wareHouseId = other.wareHouseId == null ? null : other.wareHouseId.copy();
         this.lastModified = other.lastModified == null ? null : other.lastModified.copy();
         this.lastModifiedBy = other.lastModifiedBy == null ? null : other.lastModifiedBy.copy();
-        this.productInventoryId = other.productInventoryId == null ? null : other.productInventoryId.copy();
         this.securityUserId = other.securityUserId == null ? null : other.securityUserId.copy();
         this.distinct = other.distinct;
     }
@@ -351,21 +348,6 @@ public class WareHouseCriteria implements Serializable, Criteria {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public LongFilter getProductInventoryId() {
-        return productInventoryId;
-    }
-
-    public LongFilter productInventoryId() {
-        if (productInventoryId == null) {
-            productInventoryId = new LongFilter();
-        }
-        return productInventoryId;
-    }
-
-    public void setProductInventoryId(LongFilter productInventoryId) {
-        this.productInventoryId = productInventoryId;
-    }
-
     public LongFilter getSecurityUserId() {
         return securityUserId;
     }
@@ -416,7 +398,6 @@ public class WareHouseCriteria implements Serializable, Criteria {
             Objects.equals(wareHouseId, that.wareHouseId) &&
             Objects.equals(lastModified, that.lastModified) &&
             Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(productInventoryId, that.productInventoryId) &&
             Objects.equals(securityUserId, that.securityUserId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -442,7 +423,6 @@ public class WareHouseCriteria implements Serializable, Criteria {
             wareHouseId,
             lastModified,
             lastModifiedBy,
-            productInventoryId,
             securityUserId,
             distinct
         );
@@ -469,7 +449,6 @@ public class WareHouseCriteria implements Serializable, Criteria {
             (wareHouseId != null ? "wareHouseId=" + wareHouseId + ", " : "") +
             (lastModified != null ? "lastModified=" + lastModified + ", " : "") +
             (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +
-            (productInventoryId != null ? "productInventoryId=" + productInventoryId + ", " : "") +
             (securityUserId != null ? "securityUserId=" + securityUserId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";

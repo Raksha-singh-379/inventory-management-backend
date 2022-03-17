@@ -71,8 +71,6 @@ public class SecurityUserCriteria implements Serializable, Criteria {
 
     private LongFilter wareHouseId;
 
-    private LongFilter productInventoryId;
-
     private Boolean distinct;
 
     public SecurityUserCriteria() {}
@@ -100,7 +98,6 @@ public class SecurityUserCriteria implements Serializable, Criteria {
         this.securityPermissionId = other.securityPermissionId == null ? null : other.securityPermissionId.copy();
         this.securityRoleId = other.securityRoleId == null ? null : other.securityRoleId.copy();
         this.wareHouseId = other.wareHouseId == null ? null : other.wareHouseId.copy();
-        this.productInventoryId = other.productInventoryId == null ? null : other.productInventoryId.copy();
         this.distinct = other.distinct;
     }
 
@@ -439,21 +436,6 @@ public class SecurityUserCriteria implements Serializable, Criteria {
         this.wareHouseId = wareHouseId;
     }
 
-    public LongFilter getProductInventoryId() {
-        return productInventoryId;
-    }
-
-    public LongFilter productInventoryId() {
-        if (productInventoryId == null) {
-            productInventoryId = new LongFilter();
-        }
-        return productInventoryId;
-    }
-
-    public void setProductInventoryId(LongFilter productInventoryId) {
-        this.productInventoryId = productInventoryId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -494,7 +476,6 @@ public class SecurityUserCriteria implements Serializable, Criteria {
             Objects.equals(securityPermissionId, that.securityPermissionId) &&
             Objects.equals(securityRoleId, that.securityRoleId) &&
             Objects.equals(wareHouseId, that.wareHouseId) &&
-            Objects.equals(productInventoryId, that.productInventoryId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -524,7 +505,6 @@ public class SecurityUserCriteria implements Serializable, Criteria {
             securityPermissionId,
             securityRoleId,
             wareHouseId,
-            productInventoryId,
             distinct
         );
     }
@@ -555,7 +535,6 @@ public class SecurityUserCriteria implements Serializable, Criteria {
             (securityPermissionId != null ? "securityPermissionId=" + securityPermissionId + ", " : "") +
             (securityRoleId != null ? "securityRoleId=" + securityRoleId + ", " : "") +
             (wareHouseId != null ? "wareHouseId=" + wareHouseId + ", " : "") +
-            (productInventoryId != null ? "productInventoryId=" + productInventoryId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

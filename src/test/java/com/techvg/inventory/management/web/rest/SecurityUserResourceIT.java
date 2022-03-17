@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.techvg.inventory.management.IntegrationTest;
-import com.techvg.inventory.management.domain.ProductInventory;
 import com.techvg.inventory.management.domain.SecurityPermission;
 import com.techvg.inventory.management.domain.SecurityRole;
 import com.techvg.inventory.management.domain.SecurityUser;
@@ -1809,32 +1808,6 @@ class SecurityUserResourceIT {
 
         // Get all the securityUserList where wareHouse equals to (wareHouseId + 1)
         defaultSecurityUserShouldNotBeFound("wareHouseId.equals=" + (wareHouseId + 1));
-    }
-
-    @Test
-    @Transactional
-    void getAllSecurityUsersByProductInventoryIsEqualToSomething() throws Exception {
-        // Initialize the database
-        securityUserRepository.saveAndFlush(securityUser);
-        ProductInventory productInventory;
-        if (TestUtil.findAll(em, ProductInventory.class).isEmpty()) {
-            productInventory = ProductInventoryResourceIT.createEntity(em);
-            em.persist(productInventory);
-            em.flush();
-        } else {
-            productInventory = TestUtil.findAll(em, ProductInventory.class).get(0);
-        }
-        em.persist(productInventory);
-        em.flush();
-        securityUser.addProductInventory(productInventory);
-        securityUserRepository.saveAndFlush(securityUser);
-        Long productInventoryId = productInventory.getId();
-
-        // Get all the securityUserList where productInventory equals to productInventoryId
-        defaultSecurityUserShouldBeFound("productInventoryId.equals=" + productInventoryId);
-
-        // Get all the securityUserList where productInventory equals to (productInventoryId + 1)
-        defaultSecurityUserShouldNotBeFound("productInventoryId.equals=" + (productInventoryId + 1));
     }
 
     /**

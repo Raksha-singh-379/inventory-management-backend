@@ -5,8 +5,8 @@ export interface IUserAccess {
   id?: number;
   level?: AccessLevel | null;
   accessId?: number | null;
-  lastModified?: string;
-  lastModifiedBy?: string;
+  lastModified?: string | null;
+  lastModifiedBy?: string | null;
   securityUser?: ISecurityUser | null;
 }
 
@@ -15,8 +15,8 @@ export class UserAccess implements IUserAccess {
     public id?: number,
     public level?: AccessLevel | null,
     public accessId?: number | null,
-    public lastModified?: string,
-    public lastModifiedBy?: string,
+    public lastModified?: string | null,
+    public lastModifiedBy?: string | null,
     public securityUser?: ISecurityUser | null
   ) {}
 }

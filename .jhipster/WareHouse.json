@@ -63,13 +63,11 @@
     },
     {
       "fieldName": "lastModified",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     }
   ],
   "fluentMethods": true,
@@ -78,13 +76,6 @@
   "pagination": "pagination",
   "readOnly": false,
   "relationships": [
-    {
-      "otherEntityName": "productInventory",
-      "otherEntityRelationshipName": "wareHouse",
-      "ownerSide": false,
-      "relationshipName": "productInventory",
-      "relationshipType": "many-to-many"
-    },
     {
       "otherEntityField": "login",
       "otherEntityName": "securityUser",

@@ -33,8 +33,8 @@
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="name">
-            <span jhiTranslate="inventoryManagementApp.project.name">Name</span> <fa-icon icon="sort"></fa-icon>
+          <th scope="col" jhiSortBy="projectName">
+            <span jhiTranslate="inventoryManagementApp.project.projectName">Project Name</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="startDate">
             <span jhiTranslate="inventoryManagementApp.project.startDate">Start Date</span> <fa-icon icon="sort"></fa-icon>
@@ -71,7 +71,7 @@
           <td>
             <a [routerLink]="['/project', project.id, 'view']">{{ project.id }}</a>
           </td>
-          <td>{{ project.name }}</td>
+          <td>{{ project.projectName }}</td>
           <td>{{ project.startDate | formatMediumDatetime }}</td>
           <td>{{ project.endDate | formatMediumDatetime }}</td>
           <td>{{ project.departmentName }}</td>

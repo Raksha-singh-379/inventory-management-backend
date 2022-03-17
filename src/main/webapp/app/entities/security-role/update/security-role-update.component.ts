@@ -23,8 +23,8 @@ export class SecurityRoleUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required]],
     description: [],
-    lastModified: [null, [Validators.required]],
-    lastModifiedBy: [null, [Validators.required]],
+    lastModified: [],
+    lastModifiedBy: [],
     securityPermissions: [],
   });
 

@@ -38,8 +38,7 @@
       "lastModifiedBy": "Last Modified By",
       "securityPermission": "Security Permission",
       "securityRole": "Security Role",
-      "wareHouse": "Ware House",
-      "productInventory": "Product Inventory"
+      "wareHouse": "Ware House"
     }
   }
 }

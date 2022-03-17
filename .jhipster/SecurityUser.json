@@ -111,13 +111,6 @@
       "ownerSide": true,
       "relationshipName": "wareHouse",
       "relationshipType": "many-to-many"
-    },
-    {
-      "otherEntityName": "productInventory",
-      "otherEntityRelationshipName": "securityUser",
-      "ownerSide": false,
-      "relationshipName": "productInventory",
-      "relationshipType": "many-to-many"
     }
   ],
   "service": "serviceClass"

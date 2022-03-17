@@ -33,6 +33,10 @@
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="refrenceNumber">
+            <span jhiTranslate="inventoryManagementApp.purchaseQuotation.refrenceNumber">Refrence Number</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col" jhiSortBy="totalPOAmount">
             <span jhiTranslate="inventoryManagementApp.purchaseQuotation.totalPOAmount">Total PO Amount</span>
             <fa-icon icon="sort"></fa-icon>
@@ -53,15 +57,6 @@
           </th>
           <th scope="col" jhiSortBy="orderStatus">
             <span jhiTranslate="inventoryManagementApp.purchaseQuotation.orderStatus">Order Status</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col" jhiSortBy="clientName">
-            <span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientName">Client Name</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col" jhiSortBy="clientMobile">
-            <span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientMobile">Client Mobile</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col" jhiSortBy="clientEmail">
-            <span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientEmail">Client Email</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="termsAndCondition">
             <span jhiTranslate="inventoryManagementApp.purchaseQuotation.termsAndCondition">Terms And Condition</span>
@@ -86,6 +81,13 @@
           <th scope="col" jhiSortBy="securityUser.login">
             <span jhiTranslate="inventoryManagementApp.purchaseQuotation.securityUser">Security User</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="project.id">
+            <span jhiTranslate="inventoryManagementApp.purchaseQuotation.project">Project</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="clientDetails.id">
+            <span jhiTranslate="inventoryManagementApp.purchaseQuotation.clientDetails">Client Details</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -94,15 +96,13 @@
           <td>
             <a [routerLink]="['/purchase-quotation', purchaseQuotation.id, 'view']">{{ purchaseQuotation.id }}</a>
           </td>
+          <td>{{ purchaseQuotation.refrenceNumber }}</td>
           <td>{{ purchaseQuotation.totalPOAmount }}</td>
           <td>{{ purchaseQuotation.totalGSTAmount }}</td>
           <td>{{ purchaseQuotation.expectedDeliveryDate | formatMediumDatetime }}</td>
           <td>{{ purchaseQuotation.poDate | formatMediumDatetime }}</td>
           <td jhiTranslate="{{ 'inventoryManagementApp.OrderType.' + purchaseQuotation.orderType }}">{{ purchaseQuotation.orderType }}</td>
           <td jhiTranslate="{{ 'inventoryManagementApp.Status.' + purchaseQuotation.orderStatus }}">{{ purchaseQuotation.orderStatus }}</td>
-          <td>{{ purchaseQuotation.clientName }}</td>
-          <td>{{ purchaseQuotation.clientMobile }}</td>
-          <td>{{ purchaseQuotation.clientEmail }}</td>
           <td>{{ purchaseQuotation.termsAndCondition }}</td>
           <td>{{ purchaseQuotation.notes }}</td>
           <td>{{ purchaseQuotation.lastModified }}</td>
@@ -113,6 +113,18 @@
             <div *ngIf="purchaseQuotation.securityUser">
               <a [routerLink]="['/security-user', purchaseQuotation.securityUser?.id, 'view']">{{
                 purchaseQuotation.securityUser?.login
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="purchaseQuotation.project">
+              <a [routerLink]="['/project', purchaseQuotation.project?.id, 'view']">{{ purchaseQuotation.project?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="purchaseQuotation.clientDetails">
+              <a [routerLink]="['/client-details', purchaseQuotation.clientDetails?.id, 'view']">{{
+                purchaseQuotation.clientDetails?.id
               }}</a>
             </div>
           </td>

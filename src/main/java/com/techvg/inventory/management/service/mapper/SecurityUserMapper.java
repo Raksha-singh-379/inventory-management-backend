@@ -25,10 +25,4 @@ public interface SecurityUserMapper extends EntityMapper<SecurityUserDTO, Securi
     @Mapping(target = "id", source = "id")
     @Mapping(target = "login", source = "login")
     SecurityUserDTO toDtoLogin(SecurityUser securityUser);
-
-    @Named("loginSet")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "login", source = "login")
-    Set<SecurityUserDTO> toDtoLoginSet(Set<SecurityUser> securityUser);
 }

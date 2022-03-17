@@ -10,14 +10,12 @@ import { ProductInventoryService } from '../service/product-inventory.service';
 import { IProductInventory, ProductInventory } from '../product-inventory.model';
 import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
-import { IPurchaseQuotation } from 'app/entities/purchase-quotation/purchase-quotation.model';
-import { PurchaseQuotationService } from 'app/entities/purchase-quotation/service/purchase-quotation.service';
 import { IProductTransaction } from 'app/entities/product-transaction/product-transaction.model';
 import { ProductTransactionService } from 'app/entities/product-transaction/service/product-transaction.service';
-import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
-import { WareHouseService } from 'app/entities/ware-house/service/ware-house.service';
 import { ISecurityUser } from 'app/entities/security-user/security-user.model';
 import { SecurityUserService } from 'app/entities/security-user/service/security-user.service';
+import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
+import { WareHouseService } from 'app/entities/ware-house/service/ware-house.service';
 
 import { ProductInventoryUpdateComponent } from './product-inventory-update.component';
 
@@ -27,10 +25,9 @@ describe('ProductInventory Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let productInventoryService: ProductInventoryService;
   let productService: ProductService;
-  let purchaseQuotationService: PurchaseQuotationService;
   let productTransactionService: ProductTransactionService;
-  let wareHouseService: WareHouseService;
   let securityUserService: SecurityUserService;
+  let wareHouseService: WareHouseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -53,10 +50,9 @@ describe('ProductInventory Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     productInventoryService = TestBed.inject(ProductInventoryService);
     productService = TestBed.inject(ProductService);
-    purchaseQuotationService = TestBed.inject(PurchaseQuotationService);
     productTransactionService = TestBed.inject(ProductTransactionService);
-    wareHouseService = TestBed.inject(WareHouseService);
     securityUserService = TestBed.inject(SecurityUserService);
+    wareHouseService = TestBed.inject(WareHouseService);
 
     comp = fixture.componentInstance;
   });
@@ -81,28 +77,6 @@ describe('ProductInventory Management Update Component', () => {
       expect(comp.productsSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call PurchaseQuotation query and add missing value', () => {
-      const productInventory: IProductInventory = { id: 456 };
-      const purchaseQuotation: IPurchaseQuotation = { id: 38752 };
-      productInventory.purchaseQuotation = purchaseQuotation;
-
-      const purchaseQuotationCollection: IPurchaseQuotation[] = [{ id: 55336 }];
-      jest.spyOn(purchaseQuotationService, 'query').mockReturnValue(of(new HttpResponse({ body: purchaseQuotationCollection })));
-      const additionalPurchaseQuotations = [purchaseQuotation];
-      const expectedCollection: IPurchaseQuotation[] = [...additionalPurchaseQuotations, ...purchaseQuotationCollection];
-      jest.spyOn(purchaseQuotationService, 'addPurchaseQuotationToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ productInventory });
-      comp.ngOnInit();
-
-      expect(purchaseQuotationService.query).toHaveBeenCalled();
-      expect(purchaseQuotationService.addPurchaseQuotationToCollectionIfMissing).toHaveBeenCalledWith(
-        purchaseQuotationCollection,
-        ...additionalPurchaseQuotations
-      );
-      expect(comp.purchaseQuotationsSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call ProductTransaction query and add missing value', () => {
       const productInventory: IProductInventory = { id: 456 };
       const productTransaction: IProductTransaction = { id: 72208 };
@@ -125,33 +99,14 @@ describe('ProductInventory Management Update Component', () => {
       expect(comp.productTransactionsSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call WareHouse query and add missing value', () => {
-      const productInventory: IProductInventory = { id: 456 };
-      const wareHouses: IWareHouse[] = [{ id: 91935 }];
-      productInventory.wareHouses = wareHouses;
-
-      const wareHouseCollection: IWareHouse[] = [{ id: 1014 }];
-      jest.spyOn(wareHouseService, 'query').mockReturnValue(of(new HttpResponse({ body: wareHouseCollection })));
-      const additionalWareHouses = [...wareHouses];
-      const expectedCollection: IWareHouse[] = [...additionalWareHouses, ...wareHouseCollection];
-      jest.spyOn(wareHouseService, 'addWareHouseToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ productInventory });
-      comp.ngOnInit();
-
-      expect(wareHouseService.query).toHaveBeenCalled();
-      expect(wareHouseService.addWareHouseToCollectionIfMissing).toHaveBeenCalledWith(wareHouseCollection, ...additionalWareHouses);
-      expect(comp.wareHousesSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call SecurityUser query and add missing value', () => {
       const productInventory: IProductInventory = { id: 456 };
-      const securityUsers: ISecurityUser[] = [{ id: 35139 }];
-      productInventory.securityUsers = securityUsers;
+      const securityUser: ISecurityUser = { id: 35139 };
+      productInventory.securityUser = securityUser;
 
       const securityUserCollection: ISecurityUser[] = [{ id: 61561 }];
       jest.spyOn(securityUserService, 'query').mockReturnValue(of(new HttpResponse({ body: securityUserCollection })));
-      const additionalSecurityUsers = [...securityUsers];
+      const additionalSecurityUsers = [securityUser];
       const expectedCollection: ISecurityUser[] = [...additionalSecurityUsers, ...securityUserCollection];
       jest.spyOn(securityUserService, 'addSecurityUserToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -166,28 +121,44 @@ describe('ProductInventory Management Update Component', () => {
       expect(comp.securityUsersSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call WareHouse query and add missing value', () => {
+      const productInventory: IProductInventory = { id: 456 };
+      const wareHouse: IWareHouse = { id: 91935 };
+      productInventory.wareHouse = wareHouse;
+
+      const wareHouseCollection: IWareHouse[] = [{ id: 1014 }];
+      jest.spyOn(wareHouseService, 'query').mockReturnValue(of(new HttpResponse({ body: wareHouseCollection })));
+      const additionalWareHouses = [wareHouse];
+      const expectedCollection: IWareHouse[] = [...additionalWareHouses, ...wareHouseCollection];
+      jest.spyOn(wareHouseService, 'addWareHouseToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ productInventory });
+      comp.ngOnInit();
+
+      expect(wareHouseService.query).toHaveBeenCalled();
+      expect(wareHouseService.addWareHouseToCollectionIfMissing).toHaveBeenCalledWith(wareHouseCollection, ...additionalWareHouses);
+      expect(comp.wareHousesSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const productInventory: IProductInventory = { id: 456 };
       const product: IProduct = { id: 5809 };
       productInventory.product = product;
-      const purchaseQuotation: IPurchaseQuotation = { id: 98667 };
-      productInventory.purchaseQuotation = purchaseQuotation;
       const productTransaction: IProductTransaction = { id: 26716 };
       productInventory.productTransaction = productTransaction;
-      const wareHouses: IWareHouse = { id: 51611 };
-      productInventory.wareHouses = [wareHouses];
-      const securityUsers: ISecurityUser = { id: 64290 };
-      productInventory.securityUsers = [securityUsers];
+      const securityUser: ISecurityUser = { id: 64290 };
+      productInventory.securityUser = securityUser;
+      const wareHouse: IWareHouse = { id: 51611 };
+      productInventory.wareHouse = wareHouse;
 
       activatedRoute.data = of({ productInventory });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(productInventory));
       expect(comp.productsSharedCollection).toContain(product);
-      expect(comp.purchaseQuotationsSharedCollection).toContain(purchaseQuotation);
       expect(comp.productTransactionsSharedCollection).toContain(productTransaction);
-      expect(comp.wareHousesSharedCollection).toContain(wareHouses);
-      expect(comp.securityUsersSharedCollection).toContain(securityUsers);
+      expect(comp.securityUsersSharedCollection).toContain(securityUser);
+      expect(comp.wareHousesSharedCollection).toContain(wareHouse);
     });
   });
 
@@ -264,26 +235,10 @@ describe('ProductInventory Management Update Component', () => {
       });
     });
 
-    describe('trackPurchaseQuotationById', () => {
-      it('Should return tracked PurchaseQuotation primary key', () => {
-        const entity = { id: 123 };
-        const trackResult = comp.trackPurchaseQuotationById(0, entity);
-        expect(trackResult).toEqual(entity.id);
-      });
-    });
-
     describe('trackProductTransactionById', () => {
       it('Should return tracked ProductTransaction primary key', () => {
         const entity = { id: 123 };
         const trackResult = comp.trackProductTransactionById(0, entity);
-        expect(trackResult).toEqual(entity.id);
-      });
-    });
-
-    describe('trackWareHouseById', () => {
-      it('Should return tracked WareHouse primary key', () => {
-        const entity = { id: 123 };
-        const trackResult = comp.trackWareHouseById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });
     });
@@ -295,58 +250,12 @@ describe('ProductInventory Management Update Component', () => {
         expect(trackResult).toEqual(entity.id);
       });
     });
-  });
 
-  describe('Getting selected relationships', () => {
-    describe('getSelectedWareHouse', () => {
-      it('Should return option if no WareHouse is selected', () => {
-        const option = { id: 123 };
-        const result = comp.getSelectedWareHouse(option);
-        expect(result === option).toEqual(true);
-      });
-
-      it('Should return selected WareHouse for according option', () => {
-        const option = { id: 123 };
-        const selected = { id: 123 };
-        const selected2 = { id: 456 };
-        const result = comp.getSelectedWareHouse(option, [selected2, selected]);
-        expect(result === selected).toEqual(true);
-        expect(result === selected2).toEqual(false);
-        expect(result === option).toEqual(false);
-      });
-
-      it('Should return option if this WareHouse is not selected', () => {
-        const option = { id: 123 };
-        const selected = { id: 456 };
-        const result = comp.getSelectedWareHouse(option, [selected]);
-        expect(result === option).toEqual(true);
-        expect(result === selected).toEqual(false);
-      });
-    });
-
-    describe('getSelectedSecurityUser', () => {
-      it('Should return option if no SecurityUser is selected', () => {
-        const option = { id: 123 };
-        const result = comp.getSelectedSecurityUser(option);
-        expect(result === option).toEqual(true);
-      });
-
-      it('Should return selected SecurityUser for according option', () => {
-        const option = { id: 123 };
-        const selected = { id: 123 };
-        const selected2 = { id: 456 };
-        const result = comp.getSelectedSecurityUser(option, [selected2, selected]);
-        expect(result === selected).toEqual(true);
-        expect(result === selected2).toEqual(false);
-        expect(result === option).toEqual(false);
-      });
-
-      it('Should return option if this SecurityUser is not selected', () => {
-        const option = { id: 123 };
-        const selected = { id: 456 };
-        const result = comp.getSelectedSecurityUser(option, [selected]);
-        expect(result === option).toEqual(true);
-        expect(result === selected).toEqual(false);
+    describe('trackWareHouseById', () => {
+      it('Should return tracked WareHouse primary key', () => {
+        const entity = { id: 123 };
+        const trackResult = comp.trackWareHouseById(0, entity);
+        expect(trackResult).toEqual(entity.id);
       });
     });
   });

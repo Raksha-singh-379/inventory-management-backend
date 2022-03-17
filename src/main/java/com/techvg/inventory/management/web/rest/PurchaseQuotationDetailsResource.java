@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +63,7 @@ public class PurchaseQuotationDetailsResource {
      */
     @PostMapping("/purchase-quotation-details")
     public ResponseEntity<PurchaseQuotationDetailsDTO> createPurchaseQuotationDetails(
-        @Valid @RequestBody PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO
+        @RequestBody PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO
     ) throws URISyntaxException {
         log.debug("REST request to save PurchaseQuotationDetails : {}", purchaseQuotationDetailsDTO);
         if (purchaseQuotationDetailsDTO.getId() != null) {
@@ -91,7 +89,7 @@ public class PurchaseQuotationDetailsResource {
     @PutMapping("/purchase-quotation-details/{id}")
     public ResponseEntity<PurchaseQuotationDetailsDTO> updatePurchaseQuotationDetails(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO
+        @RequestBody PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO
     ) throws URISyntaxException {
         log.debug("REST request to update PurchaseQuotationDetails : {}, {}", id, purchaseQuotationDetailsDTO);
         if (purchaseQuotationDetailsDTO.getId() == null) {
@@ -126,7 +124,7 @@ public class PurchaseQuotationDetailsResource {
     @PatchMapping(value = "/purchase-quotation-details/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<PurchaseQuotationDetailsDTO> partialUpdatePurchaseQuotationDetails(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO
+        @RequestBody PurchaseQuotationDetailsDTO purchaseQuotationDetailsDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update PurchaseQuotationDetails partially : {}, {}", id, purchaseQuotationDetailsDTO);
         if (purchaseQuotationDetailsDTO.getId() == null) {

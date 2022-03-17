@@ -21,8 +21,8 @@ public class Project implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "project_name")
+    private String projectName;
 
     @Column(name = "start_date")
     private Instant startDate;
@@ -66,17 +66,17 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getProjectName() {
+        return this.projectName;
     }
 
-    public Project name(String name) {
-        this.setName(name);
+    public Project projectName(String projectName) {
+        this.setProjectName(projectName);
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public Instant getStartDate() {
@@ -220,7 +220,7 @@ public class Project implements Serializable {
     public String toString() {
         return "Project{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
+            ", projectName='" + getProjectName() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             ", departmentName='" + getDepartmentName() + "'" +

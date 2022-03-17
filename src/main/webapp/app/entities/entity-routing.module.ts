@@ -106,6 +106,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'inventoryManagementApp.userAccess.home.title' },
         loadChildren: () => import('./user-access/user-access.module').then(m => m.UserAccessModule),
       },
+      {
+        path: 'client-details',
+        data: { pageTitle: 'inventoryManagementApp.clientDetails.home.title' },
+        loadChildren: () => import('./client-details/client-details.module').then(m => m.ClientDetailsModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

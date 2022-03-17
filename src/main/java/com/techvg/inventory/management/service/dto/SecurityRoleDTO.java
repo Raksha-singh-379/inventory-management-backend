@@ -18,10 +18,8 @@ public class SecurityRoleDTO implements Serializable {
 
     private String description;
 
-    @NotNull
     private String lastModified;
 
-    @NotNull
     private String lastModifiedBy;
 
     private Set<SecurityPermissionDTO> securityPermissions = new HashSet<>();

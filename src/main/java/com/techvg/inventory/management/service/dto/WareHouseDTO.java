@@ -2,7 +2,6 @@ package com.techvg.inventory.management.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link com.techvg.inventory.management.domain.WareHouse} entity.
@@ -39,10 +38,8 @@ public class WareHouseDTO implements Serializable {
 
     private Long wareHouseId;
 
-    @NotNull
     private String lastModified;
 
-    @NotNull
     private String lastModifiedBy;
 
     public Long getId() {

@@ -39,7 +39,8 @@
       "Notification",
       "SecurityRole",
       "SecurityPermission",
-      "UserAccess"
+      "UserAccess",
+      "ClientDetails"
     ],
     "entitySuffix": "",
     "gitCompany": "",
@@ -47,7 +48,7 @@
     "jhipsterVersion": "7.7.0",
     "jwtSecretKey": "YzU0YzYwZDg5OGFiZDc4N2Q4NmUwNWVmZjBkMzBkYzU5MWY5ZmVhODRlM2Y3MTk5NjIzOTMyOGJlMzk3OGRiYmI5NjVkZDdkZmFiNTkwYzk1NDBkMGY3MDVjZDBjYmFkMDMxMzQ0ODQxZjc4MjVhZDhjZWY0OGM5ODI0YjQ3NmQ=",
     "languages": ["en"],
-    "lastLiquibaseTimestamp": 1646900930000,
+    "lastLiquibaseTimestamp": 1647507294000,
     "messageBroker": false,
     "nativeLanguage": "en",
     "otherModules": [],

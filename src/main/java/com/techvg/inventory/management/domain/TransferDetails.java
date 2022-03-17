@@ -50,10 +50,6 @@ public class TransferDetails implements Serializable {
     private Boolean isActive;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "productInventories", "securityUsers" }, allowSetters = true)
-    private WareHouse wareHouse;
-
-    @ManyToOne
     @JsonIgnoreProperties(
         value = { "transferDetails", "categories", "unit", "securityUser", "purchaseQuotationDetails" },
         allowSetters = true
@@ -197,19 +193,6 @@ public class TransferDetails implements Serializable {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    public WareHouse getWareHouse() {
-        return this.wareHouse;
-    }
-
-    public void setWareHouse(WareHouse wareHouse) {
-        this.wareHouse = wareHouse;
-    }
-
-    public TransferDetails wareHouse(WareHouse wareHouse) {
-        this.setWareHouse(wareHouse);
-        return this;
     }
 
     public Product getProduct() {

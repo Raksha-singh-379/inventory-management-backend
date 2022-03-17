@@ -17,16 +17,18 @@ public class NotificationDTO implements Serializable {
 
     private NotificationType notificationType;
 
+    private String title;
+
     private Boolean isActionRequired;
+
+    private Boolean isRead;
 
     private String freeField1;
 
     private String freeField2;
 
-    @NotNull
     private String lastModified;
 
-    @NotNull
     private String lastModifiedBy;
 
     private SecurityUserDTO securityUser;
@@ -57,12 +59,28 @@ public class NotificationDTO implements Serializable {
         this.notificationType = notificationType;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Boolean getIsActionRequired() {
         return isActionRequired;
     }
 
     public void setIsActionRequired(Boolean isActionRequired) {
         this.isActionRequired = isActionRequired;
+    }
+
+    public Boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 
     public String getFreeField1() {
@@ -141,7 +159,9 @@ public class NotificationDTO implements Serializable {
             "id=" + getId() +
             ", massage='" + getMassage() + "'" +
             ", notificationType='" + getNotificationType() + "'" +
+            ", title='" + getTitle() + "'" +
             ", isActionRequired='" + getIsActionRequired() + "'" +
+            ", isRead='" + getIsRead() + "'" +
             ", freeField1='" + getFreeField1() + "'" +
             ", freeField2='" + getFreeField2() + "'" +
             ", lastModified='" + getLastModified() + "'" +

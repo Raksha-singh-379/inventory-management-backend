@@ -41,8 +41,14 @@ class NotificationResourceIT {
     private static final NotificationType DEFAULT_NOTIFICATION_TYPE = NotificationType.APPROVAL;
     private static final NotificationType UPDATED_NOTIFICATION_TYPE = NotificationType.REQUEST;
 
+    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
+    private static final String UPDATED_TITLE = "BBBBBBBBBB";
+
     private static final Boolean DEFAULT_IS_ACTION_REQUIRED = false;
     private static final Boolean UPDATED_IS_ACTION_REQUIRED = true;
+
+    private static final Boolean DEFAULT_IS_READ = false;
+    private static final Boolean UPDATED_IS_READ = true;
 
     private static final String DEFAULT_FREE_FIELD_1 = "AAAAAAAAAA";
     private static final String UPDATED_FREE_FIELD_1 = "BBBBBBBBBB";
@@ -86,7 +92,9 @@ class NotificationResourceIT {
         Notification notification = new Notification()
             .massage(DEFAULT_MASSAGE)
             .notificationType(DEFAULT_NOTIFICATION_TYPE)
+            .title(DEFAULT_TITLE)
             .isActionRequired(DEFAULT_IS_ACTION_REQUIRED)
+            .isRead(DEFAULT_IS_READ)
             .freeField1(DEFAULT_FREE_FIELD_1)
             .freeField2(DEFAULT_FREE_FIELD_2)
             .lastModified(DEFAULT_LAST_MODIFIED)
@@ -104,7 +112,9 @@ class NotificationResourceIT {
         Notification notification = new Notification()
             .massage(UPDATED_MASSAGE)
             .notificationType(UPDATED_NOTIFICATION_TYPE)
+            .title(UPDATED_TITLE)
             .isActionRequired(UPDATED_IS_ACTION_REQUIRED)
+            .isRead(UPDATED_IS_READ)
             .freeField1(UPDATED_FREE_FIELD_1)
             .freeField2(UPDATED_FREE_FIELD_2)
             .lastModified(UPDATED_LAST_MODIFIED)
@@ -135,7 +145,9 @@ class NotificationResourceIT {
         Notification testNotification = notificationList.get(notificationList.size() - 1);
         assertThat(testNotification.getMassage()).isEqualTo(DEFAULT_MASSAGE);
         assertThat(testNotification.getNotificationType()).isEqualTo(DEFAULT_NOTIFICATION_TYPE);
+        assertThat(testNotification.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testNotification.getIsActionRequired()).isEqualTo(DEFAULT_IS_ACTION_REQUIRED);
+        assertThat(testNotification.getIsRead()).isEqualTo(DEFAULT_IS_READ);
         assertThat(testNotification.getFreeField1()).isEqualTo(DEFAULT_FREE_FIELD_1);
         assertThat(testNotification.getFreeField2()).isEqualTo(DEFAULT_FREE_FIELD_2);
         assertThat(testNotification.getLastModified()).isEqualTo(DEFAULT_LAST_MODIFIED);
@@ -185,46 +197,6 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
-        // set the field null
-        notification.setLastModified(null);
-
-        // Create the Notification, which fails.
-        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
-
-        restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
-        // set the field null
-        notification.setLastModifiedBy(null);
-
-        // Create the Notification, which fails.
-        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
-
-        restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllNotifications() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -237,7 +209,9 @@ class NotificationResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(notification.getId().intValue())))
             .andExpect(jsonPath("$.[*].massage").value(hasItem(DEFAULT_MASSAGE)))
             .andExpect(jsonPath("$.[*].notificationType").value(hasItem(DEFAULT_NOTIFICATION_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].isActionRequired").value(hasItem(DEFAULT_IS_ACTION_REQUIRED.booleanValue())))
+            .andExpect(jsonPath("$.[*].isRead").value(hasItem(DEFAULT_IS_READ.booleanValue())))
             .andExpect(jsonPath("$.[*].freeField1").value(hasItem(DEFAULT_FREE_FIELD_1)))
             .andExpect(jsonPath("$.[*].freeField2").value(hasItem(DEFAULT_FREE_FIELD_2)))
             .andExpect(jsonPath("$.[*].lastModified").value(hasItem(DEFAULT_LAST_MODIFIED)))
@@ -258,7 +232,9 @@ class NotificationResourceIT {
             .andExpect(jsonPath("$.id").value(notification.getId().intValue()))
             .andExpect(jsonPath("$.massage").value(DEFAULT_MASSAGE))
             .andExpect(jsonPath("$.notificationType").value(DEFAULT_NOTIFICATION_TYPE.toString()))
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.isActionRequired").value(DEFAULT_IS_ACTION_REQUIRED.booleanValue()))
+            .andExpect(jsonPath("$.isRead").value(DEFAULT_IS_READ.booleanValue()))
             .andExpect(jsonPath("$.freeField1").value(DEFAULT_FREE_FIELD_1))
             .andExpect(jsonPath("$.freeField2").value(DEFAULT_FREE_FIELD_2))
             .andExpect(jsonPath("$.lastModified").value(DEFAULT_LAST_MODIFIED))
@@ -415,6 +391,84 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
+    void getAllNotificationsByTitleIsEqualToSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where title equals to DEFAULT_TITLE
+        defaultNotificationShouldBeFound("title.equals=" + DEFAULT_TITLE);
+
+        // Get all the notificationList where title equals to UPDATED_TITLE
+        defaultNotificationShouldNotBeFound("title.equals=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByTitleIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where title not equals to DEFAULT_TITLE
+        defaultNotificationShouldNotBeFound("title.notEquals=" + DEFAULT_TITLE);
+
+        // Get all the notificationList where title not equals to UPDATED_TITLE
+        defaultNotificationShouldBeFound("title.notEquals=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByTitleIsInShouldWork() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where title in DEFAULT_TITLE or UPDATED_TITLE
+        defaultNotificationShouldBeFound("title.in=" + DEFAULT_TITLE + "," + UPDATED_TITLE);
+
+        // Get all the notificationList where title equals to UPDATED_TITLE
+        defaultNotificationShouldNotBeFound("title.in=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByTitleIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where title is not null
+        defaultNotificationShouldBeFound("title.specified=true");
+
+        // Get all the notificationList where title is null
+        defaultNotificationShouldNotBeFound("title.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByTitleContainsSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where title contains DEFAULT_TITLE
+        defaultNotificationShouldBeFound("title.contains=" + DEFAULT_TITLE);
+
+        // Get all the notificationList where title contains UPDATED_TITLE
+        defaultNotificationShouldNotBeFound("title.contains=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByTitleNotContainsSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where title does not contain DEFAULT_TITLE
+        defaultNotificationShouldNotBeFound("title.doesNotContain=" + DEFAULT_TITLE);
+
+        // Get all the notificationList where title does not contain UPDATED_TITLE
+        defaultNotificationShouldBeFound("title.doesNotContain=" + UPDATED_TITLE);
+    }
+
+    @Test
+    @Transactional
     void getAllNotificationsByIsActionRequiredIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -463,6 +517,58 @@ class NotificationResourceIT {
 
         // Get all the notificationList where isActionRequired is null
         defaultNotificationShouldNotBeFound("isActionRequired.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByIsReadIsEqualToSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where isRead equals to DEFAULT_IS_READ
+        defaultNotificationShouldBeFound("isRead.equals=" + DEFAULT_IS_READ);
+
+        // Get all the notificationList where isRead equals to UPDATED_IS_READ
+        defaultNotificationShouldNotBeFound("isRead.equals=" + UPDATED_IS_READ);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByIsReadIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where isRead not equals to DEFAULT_IS_READ
+        defaultNotificationShouldNotBeFound("isRead.notEquals=" + DEFAULT_IS_READ);
+
+        // Get all the notificationList where isRead not equals to UPDATED_IS_READ
+        defaultNotificationShouldBeFound("isRead.notEquals=" + UPDATED_IS_READ);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByIsReadIsInShouldWork() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where isRead in DEFAULT_IS_READ or UPDATED_IS_READ
+        defaultNotificationShouldBeFound("isRead.in=" + DEFAULT_IS_READ + "," + UPDATED_IS_READ);
+
+        // Get all the notificationList where isRead equals to UPDATED_IS_READ
+        defaultNotificationShouldNotBeFound("isRead.in=" + UPDATED_IS_READ);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByIsReadIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList where isRead is not null
+        defaultNotificationShouldBeFound("isRead.specified=true");
+
+        // Get all the notificationList where isRead is null
+        defaultNotificationShouldNotBeFound("isRead.specified=false");
     }
 
     @Test
@@ -840,7 +946,9 @@ class NotificationResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(notification.getId().intValue())))
             .andExpect(jsonPath("$.[*].massage").value(hasItem(DEFAULT_MASSAGE)))
             .andExpect(jsonPath("$.[*].notificationType").value(hasItem(DEFAULT_NOTIFICATION_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].isActionRequired").value(hasItem(DEFAULT_IS_ACTION_REQUIRED.booleanValue())))
+            .andExpect(jsonPath("$.[*].isRead").value(hasItem(DEFAULT_IS_READ.booleanValue())))
             .andExpect(jsonPath("$.[*].freeField1").value(hasItem(DEFAULT_FREE_FIELD_1)))
             .andExpect(jsonPath("$.[*].freeField2").value(hasItem(DEFAULT_FREE_FIELD_2)))
             .andExpect(jsonPath("$.[*].lastModified").value(hasItem(DEFAULT_LAST_MODIFIED)))
@@ -895,7 +1003,9 @@ class NotificationResourceIT {
         updatedNotification
             .massage(UPDATED_MASSAGE)
             .notificationType(UPDATED_NOTIFICATION_TYPE)
+            .title(UPDATED_TITLE)
             .isActionRequired(UPDATED_IS_ACTION_REQUIRED)
+            .isRead(UPDATED_IS_READ)
             .freeField1(UPDATED_FREE_FIELD_1)
             .freeField2(UPDATED_FREE_FIELD_2)
             .lastModified(UPDATED_LAST_MODIFIED)
@@ -916,7 +1026,9 @@ class NotificationResourceIT {
         Notification testNotification = notificationList.get(notificationList.size() - 1);
         assertThat(testNotification.getMassage()).isEqualTo(UPDATED_MASSAGE);
         assertThat(testNotification.getNotificationType()).isEqualTo(UPDATED_NOTIFICATION_TYPE);
+        assertThat(testNotification.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testNotification.getIsActionRequired()).isEqualTo(UPDATED_IS_ACTION_REQUIRED);
+        assertThat(testNotification.getIsRead()).isEqualTo(UPDATED_IS_READ);
         assertThat(testNotification.getFreeField1()).isEqualTo(UPDATED_FREE_FIELD_1);
         assertThat(testNotification.getFreeField2()).isEqualTo(UPDATED_FREE_FIELD_2);
         assertThat(testNotification.getLastModified()).isEqualTo(UPDATED_LAST_MODIFIED);
@@ -1003,10 +1115,11 @@ class NotificationResourceIT {
         partialUpdatedNotification.setId(notification.getId());
 
         partialUpdatedNotification
+            .title(UPDATED_TITLE)
             .isActionRequired(UPDATED_IS_ACTION_REQUIRED)
+            .isRead(UPDATED_IS_READ)
             .freeField1(UPDATED_FREE_FIELD_1)
             .freeField2(UPDATED_FREE_FIELD_2)
-            .lastModified(UPDATED_LAST_MODIFIED)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restNotificationMockMvc
@@ -1023,10 +1136,12 @@ class NotificationResourceIT {
         Notification testNotification = notificationList.get(notificationList.size() - 1);
         assertThat(testNotification.getMassage()).isEqualTo(DEFAULT_MASSAGE);
         assertThat(testNotification.getNotificationType()).isEqualTo(DEFAULT_NOTIFICATION_TYPE);
+        assertThat(testNotification.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testNotification.getIsActionRequired()).isEqualTo(UPDATED_IS_ACTION_REQUIRED);
+        assertThat(testNotification.getIsRead()).isEqualTo(UPDATED_IS_READ);
         assertThat(testNotification.getFreeField1()).isEqualTo(UPDATED_FREE_FIELD_1);
         assertThat(testNotification.getFreeField2()).isEqualTo(UPDATED_FREE_FIELD_2);
-        assertThat(testNotification.getLastModified()).isEqualTo(UPDATED_LAST_MODIFIED);
+        assertThat(testNotification.getLastModified()).isEqualTo(DEFAULT_LAST_MODIFIED);
         assertThat(testNotification.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
     }
 
@@ -1045,7 +1160,9 @@ class NotificationResourceIT {
         partialUpdatedNotification
             .massage(UPDATED_MASSAGE)
             .notificationType(UPDATED_NOTIFICATION_TYPE)
+            .title(UPDATED_TITLE)
             .isActionRequired(UPDATED_IS_ACTION_REQUIRED)
+            .isRead(UPDATED_IS_READ)
             .freeField1(UPDATED_FREE_FIELD_1)
             .freeField2(UPDATED_FREE_FIELD_2)
             .lastModified(UPDATED_LAST_MODIFIED)
@@ -1065,7 +1182,9 @@ class NotificationResourceIT {
         Notification testNotification = notificationList.get(notificationList.size() - 1);
         assertThat(testNotification.getMassage()).isEqualTo(UPDATED_MASSAGE);
         assertThat(testNotification.getNotificationType()).isEqualTo(UPDATED_NOTIFICATION_TYPE);
+        assertThat(testNotification.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testNotification.getIsActionRequired()).isEqualTo(UPDATED_IS_ACTION_REQUIRED);
+        assertThat(testNotification.getIsRead()).isEqualTo(UPDATED_IS_READ);
         assertThat(testNotification.getFreeField1()).isEqualTo(UPDATED_FREE_FIELD_1);
         assertThat(testNotification.getFreeField2()).isEqualTo(UPDATED_FREE_FIELD_2);
         assertThat(testNotification.getLastModified()).isEqualTo(UPDATED_LAST_MODIFIED);

@@ -29,8 +29,6 @@ public class TransferDetailsDTO implements Serializable {
 
     private Boolean isActive;
 
-    private WareHouseDTO wareHouse;
-
     private ProductDTO product;
 
     private TransferDTO transfer;
@@ -115,14 +113,6 @@ public class TransferDetailsDTO implements Serializable {
         this.isActive = isActive;
     }
 
-    public WareHouseDTO getWareHouse() {
-        return wareHouse;
-    }
-
-    public void setWareHouse(WareHouseDTO wareHouse) {
-        this.wareHouse = wareHouse;
-    }
-
     public ProductDTO getProduct() {
         return product;
     }
@@ -174,7 +164,6 @@ public class TransferDetailsDTO implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", isDeleted='" + getIsDeleted() + "'" +
             ", isActive='" + getIsActive() + "'" +
-            ", wareHouse=" + getWareHouse() +
             ", product=" + getProduct() +
             ", transfer=" + getTransfer() +
             "}";

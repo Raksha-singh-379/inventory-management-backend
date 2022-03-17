@@ -18,6 +18,20 @@
         </div>
 
         <div class="row mb-3">
+          <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.refrenceNumber" for="field_refrenceNumber"
+            >Refrence Number</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="refrenceNumber"
+            id="field_refrenceNumber"
+            data-cy="refrenceNumber"
+            formControlName="refrenceNumber"
+          />
+        </div>
+
+        <div class="row mb-3">
           <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.totalPOAmount" for="field_totalPOAmount"
             >Total PO Amount</label
           >
@@ -105,48 +119,6 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.clientName" for="field_clientName"
-            >Client Name</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="clientName"
-            id="field_clientName"
-            data-cy="clientName"
-            formControlName="clientName"
-          />
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.clientMobile" for="field_clientMobile"
-            >Client Mobile</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="clientMobile"
-            id="field_clientMobile"
-            data-cy="clientMobile"
-            formControlName="clientMobile"
-          />
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.clientEmail" for="field_clientEmail"
-            >Client Email</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="clientEmail"
-            id="field_clientEmail"
-            data-cy="clientEmail"
-            formControlName="clientEmail"
-          />
-        </div>
-
-        <div class="row mb-3">
           <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.termsAndCondition" for="field_termsAndCondition"
             >Terms And Condition</label
           >
@@ -177,17 +149,6 @@
             data-cy="lastModified"
             formControlName="lastModified"
           />
-          <div
-            *ngIf="editForm.get('lastModified')!.invalid && (editForm.get('lastModified')!.dirty || editForm.get('lastModified')!.touched)"
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('lastModified')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
         </div>
 
         <div class="row mb-3">
@@ -202,19 +163,6 @@
             data-cy="lastModifiedBy"
             formControlName="lastModifiedBy"
           />
-          <div
-            *ngIf="
-              editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('lastModifiedBy')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
         </div>
 
         <div class="row mb-3">
@@ -258,6 +206,44 @@
               *ngFor="let securityUserOption of securityUsersSharedCollection; trackBy: trackSecurityUserById"
             >
               {{ securityUserOption.login }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.project" for="field_project">Project</label>
+          <select class="form-control" id="field_project" data-cy="project" name="project" formControlName="project">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="projectOption.id === editForm.get('project')!.value?.id ? editForm.get('project')!.value : projectOption"
+              *ngFor="let projectOption of projectsSharedCollection; trackBy: trackProjectById"
+            >
+              {{ projectOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="inventoryManagementApp.purchaseQuotation.clientDetails" for="field_clientDetails"
+            >Client Details</label
+          >
+          <select
+            class="form-control"
+            id="field_clientDetails"
+            data-cy="clientDetails"
+            name="clientDetails"
+            formControlName="clientDetails"
+          >
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                clientDetailsOption.id === editForm.get('clientDetails')!.value?.id
+                  ? editForm.get('clientDetails')!.value
+                  : clientDetailsOption
+              "
+              *ngFor="let clientDetailsOption of clientDetailsSharedCollection; trackBy: trackClientDetailsById"
+            >
+              {{ clientDetailsOption.id }}
             </option>
           </select>
         </div>

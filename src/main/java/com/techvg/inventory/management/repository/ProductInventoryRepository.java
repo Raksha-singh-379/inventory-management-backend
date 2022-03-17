@@ -13,32 +13,32 @@ import org.springframework.stereotype.Repository;
  * Spring Data SQL repository for the ProductInventory entity.
  */
 @Repository
-public interface ProductInventoryRepository
-    extends
-        ProductInventoryRepositoryWithBagRelationships, JpaRepository<ProductInventory, Long>, JpaSpecificationExecutor<ProductInventory> {
+public interface ProductInventoryRepository extends JpaRepository<ProductInventory, Long>, JpaSpecificationExecutor<ProductInventory> {
     default Optional<ProductInventory> findOneWithEagerRelationships(Long id) {
-        return this.fetchBagRelationships(this.findOneWithToOneRelationships(id));
+        return this.findOneWithToOneRelationships(id);
     }
 
     default List<ProductInventory> findAllWithEagerRelationships() {
-        return this.fetchBagRelationships(this.findAllWithToOneRelationships());
+        return this.findAllWithToOneRelationships();
     }
 
     default Page<ProductInventory> findAllWithEagerRelationships(Pageable pageable) {
-        return this.fetchBagRelationships(this.findAllWithToOneRelationships(pageable));
+        return this.findAllWithToOneRelationships(pageable);
     }
 
     @Query(
-        value = "select distinct productInventory from ProductInventory productInventory left join fetch productInventory.product",
+        value = "select distinct productInventory from ProductInventory productInventory left join fetch productInventory.product left join fetch productInventory.securityUser",
         countQuery = "select count(distinct productInventory) from ProductInventory productInventory"
     )
     Page<ProductInventory> findAllWithToOneRelationships(Pageable pageable);
 
-    @Query("select distinct productInventory from ProductInventory productInventory left join fetch productInventory.product")
+    @Query(
+        "select distinct productInventory from ProductInventory productInventory left join fetch productInventory.product left join fetch productInventory.securityUser"
+    )
     List<ProductInventory> findAllWithToOneRelationships();
 
     @Query(
-        "select productInventory from ProductInventory productInventory left join fetch productInventory.product where productInventory.id =:id"
+        "select productInventory from ProductInventory productInventory left join fetch productInventory.product left join fetch productInventory.securityUser where productInventory.id =:id"
     )
     Optional<ProductInventory> findOneWithToOneRelationships(@Param("id") Long id);
 }

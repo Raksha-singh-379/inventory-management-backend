@@ -16,10 +16,8 @@ public class SecurityPermissionDTO implements Serializable {
 
     private String description;
 
-    @NotNull
     private String lastModified;
 
-    @NotNull
     private String lastModifiedBy;
 
     public Long getId() {

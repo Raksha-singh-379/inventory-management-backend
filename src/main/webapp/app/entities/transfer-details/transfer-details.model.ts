@@ -1,5 +1,4 @@
 import dayjs from 'dayjs/esm';
-import { IWareHouse } from 'app/entities/ware-house/ware-house.model';
 import { IProduct } from 'app/entities/product/product.model';
 import { ITransfer } from 'app/entities/transfer/transfer.model';
 
@@ -14,7 +13,6 @@ export interface ITransferDetails {
   lastModifiedBy?: string | null;
   isDeleted?: boolean | null;
   isActive?: boolean | null;
-  wareHouse?: IWareHouse | null;
   product?: IProduct | null;
   transfer?: ITransfer | null;
 }
@@ -31,7 +29,6 @@ export class TransferDetails implements ITransferDetails {
     public lastModifiedBy?: string | null,
     public isDeleted?: boolean | null,
     public isActive?: boolean | null,
-    public wareHouse?: IWareHouse | null,
     public product?: IProduct | null,
     public transfer?: ITransfer | null
   ) {

@@ -138,15 +138,6 @@ public class WareHouseQueryService extends QueryService<WareHouse> {
             if (criteria.getLastModifiedBy() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), WareHouse_.lastModifiedBy));
             }
-            if (criteria.getProductInventoryId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getProductInventoryId(),
-                            root -> root.join(WareHouse_.productInventories, JoinType.LEFT).get(ProductInventory_.id)
-                        )
-                    );
-            }
             if (criteria.getSecurityUserId() != null) {
                 specification =
                     specification.and(

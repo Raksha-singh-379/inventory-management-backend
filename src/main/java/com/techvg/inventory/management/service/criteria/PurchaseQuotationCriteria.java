@@ -65,6 +65,8 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
+    private StringFilter refrenceNumber;
+
     private DoubleFilter totalPOAmount;
 
     private DoubleFilter totalGSTAmount;
@@ -76,12 +78,6 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
     private OrderTypeFilter orderType;
 
     private StatusFilter orderStatus;
-
-    private StringFilter clientName;
-
-    private StringFilter clientMobile;
-
-    private StringFilter clientEmail;
 
     private StringFilter termsAndCondition;
 
@@ -97,11 +93,13 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
 
     private LongFilter purchaseQuotationDetailsId;
 
-    private LongFilter goodRecivedId;
+    private LongFilter goodsRecivedId;
 
     private LongFilter securityUserId;
 
-    private LongFilter productInventoryId;
+    private LongFilter projectId;
+
+    private LongFilter clientDetailsId;
 
     private Boolean distinct;
 
@@ -109,15 +107,13 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
 
     public PurchaseQuotationCriteria(PurchaseQuotationCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
+        this.refrenceNumber = other.refrenceNumber == null ? null : other.refrenceNumber.copy();
         this.totalPOAmount = other.totalPOAmount == null ? null : other.totalPOAmount.copy();
         this.totalGSTAmount = other.totalGSTAmount == null ? null : other.totalGSTAmount.copy();
         this.expectedDeliveryDate = other.expectedDeliveryDate == null ? null : other.expectedDeliveryDate.copy();
         this.poDate = other.poDate == null ? null : other.poDate.copy();
         this.orderType = other.orderType == null ? null : other.orderType.copy();
         this.orderStatus = other.orderStatus == null ? null : other.orderStatus.copy();
-        this.clientName = other.clientName == null ? null : other.clientName.copy();
-        this.clientMobile = other.clientMobile == null ? null : other.clientMobile.copy();
-        this.clientEmail = other.clientEmail == null ? null : other.clientEmail.copy();
         this.termsAndCondition = other.termsAndCondition == null ? null : other.termsAndCondition.copy();
         this.notes = other.notes == null ? null : other.notes.copy();
         this.lastModified = other.lastModified == null ? null : other.lastModified.copy();
@@ -125,9 +121,10 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
         this.freeField1 = other.freeField1 == null ? null : other.freeField1.copy();
         this.freeField2 = other.freeField2 == null ? null : other.freeField2.copy();
         this.purchaseQuotationDetailsId = other.purchaseQuotationDetailsId == null ? null : other.purchaseQuotationDetailsId.copy();
-        this.goodRecivedId = other.goodRecivedId == null ? null : other.goodRecivedId.copy();
+        this.goodsRecivedId = other.goodsRecivedId == null ? null : other.goodsRecivedId.copy();
         this.securityUserId = other.securityUserId == null ? null : other.securityUserId.copy();
-        this.productInventoryId = other.productInventoryId == null ? null : other.productInventoryId.copy();
+        this.projectId = other.projectId == null ? null : other.projectId.copy();
+        this.clientDetailsId = other.clientDetailsId == null ? null : other.clientDetailsId.copy();
         this.distinct = other.distinct;
     }
 
@@ -149,6 +146,21 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
+    }
+
+    public StringFilter getRefrenceNumber() {
+        return refrenceNumber;
+    }
+
+    public StringFilter refrenceNumber() {
+        if (refrenceNumber == null) {
+            refrenceNumber = new StringFilter();
+        }
+        return refrenceNumber;
+    }
+
+    public void setRefrenceNumber(StringFilter refrenceNumber) {
+        this.refrenceNumber = refrenceNumber;
     }
 
     public DoubleFilter getTotalPOAmount() {
@@ -239,51 +251,6 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
 
     public void setOrderStatus(StatusFilter orderStatus) {
         this.orderStatus = orderStatus;
-    }
-
-    public StringFilter getClientName() {
-        return clientName;
-    }
-
-    public StringFilter clientName() {
-        if (clientName == null) {
-            clientName = new StringFilter();
-        }
-        return clientName;
-    }
-
-    public void setClientName(StringFilter clientName) {
-        this.clientName = clientName;
-    }
-
-    public StringFilter getClientMobile() {
-        return clientMobile;
-    }
-
-    public StringFilter clientMobile() {
-        if (clientMobile == null) {
-            clientMobile = new StringFilter();
-        }
-        return clientMobile;
-    }
-
-    public void setClientMobile(StringFilter clientMobile) {
-        this.clientMobile = clientMobile;
-    }
-
-    public StringFilter getClientEmail() {
-        return clientEmail;
-    }
-
-    public StringFilter clientEmail() {
-        if (clientEmail == null) {
-            clientEmail = new StringFilter();
-        }
-        return clientEmail;
-    }
-
-    public void setClientEmail(StringFilter clientEmail) {
-        this.clientEmail = clientEmail;
     }
 
     public StringFilter getTermsAndCondition() {
@@ -391,19 +358,19 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
         this.purchaseQuotationDetailsId = purchaseQuotationDetailsId;
     }
 
-    public LongFilter getGoodRecivedId() {
-        return goodRecivedId;
+    public LongFilter getGoodsRecivedId() {
+        return goodsRecivedId;
     }
 
-    public LongFilter goodRecivedId() {
-        if (goodRecivedId == null) {
-            goodRecivedId = new LongFilter();
+    public LongFilter goodsRecivedId() {
+        if (goodsRecivedId == null) {
+            goodsRecivedId = new LongFilter();
         }
-        return goodRecivedId;
+        return goodsRecivedId;
     }
 
-    public void setGoodRecivedId(LongFilter goodRecivedId) {
-        this.goodRecivedId = goodRecivedId;
+    public void setGoodsRecivedId(LongFilter goodsRecivedId) {
+        this.goodsRecivedId = goodsRecivedId;
     }
 
     public LongFilter getSecurityUserId() {
@@ -421,19 +388,34 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
         this.securityUserId = securityUserId;
     }
 
-    public LongFilter getProductInventoryId() {
-        return productInventoryId;
+    public LongFilter getProjectId() {
+        return projectId;
     }
 
-    public LongFilter productInventoryId() {
-        if (productInventoryId == null) {
-            productInventoryId = new LongFilter();
+    public LongFilter projectId() {
+        if (projectId == null) {
+            projectId = new LongFilter();
         }
-        return productInventoryId;
+        return projectId;
     }
 
-    public void setProductInventoryId(LongFilter productInventoryId) {
-        this.productInventoryId = productInventoryId;
+    public void setProjectId(LongFilter projectId) {
+        this.projectId = projectId;
+    }
+
+    public LongFilter getClientDetailsId() {
+        return clientDetailsId;
+    }
+
+    public LongFilter clientDetailsId() {
+        if (clientDetailsId == null) {
+            clientDetailsId = new LongFilter();
+        }
+        return clientDetailsId;
+    }
+
+    public void setClientDetailsId(LongFilter clientDetailsId) {
+        this.clientDetailsId = clientDetailsId;
     }
 
     public Boolean getDistinct() {
@@ -455,15 +437,13 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
         final PurchaseQuotationCriteria that = (PurchaseQuotationCriteria) o;
         return (
             Objects.equals(id, that.id) &&
+            Objects.equals(refrenceNumber, that.refrenceNumber) &&
             Objects.equals(totalPOAmount, that.totalPOAmount) &&
             Objects.equals(totalGSTAmount, that.totalGSTAmount) &&
             Objects.equals(expectedDeliveryDate, that.expectedDeliveryDate) &&
             Objects.equals(poDate, that.poDate) &&
             Objects.equals(orderType, that.orderType) &&
             Objects.equals(orderStatus, that.orderStatus) &&
-            Objects.equals(clientName, that.clientName) &&
-            Objects.equals(clientMobile, that.clientMobile) &&
-            Objects.equals(clientEmail, that.clientEmail) &&
             Objects.equals(termsAndCondition, that.termsAndCondition) &&
             Objects.equals(notes, that.notes) &&
             Objects.equals(lastModified, that.lastModified) &&
@@ -471,9 +451,10 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
             Objects.equals(freeField1, that.freeField1) &&
             Objects.equals(freeField2, that.freeField2) &&
             Objects.equals(purchaseQuotationDetailsId, that.purchaseQuotationDetailsId) &&
-            Objects.equals(goodRecivedId, that.goodRecivedId) &&
+            Objects.equals(goodsRecivedId, that.goodsRecivedId) &&
             Objects.equals(securityUserId, that.securityUserId) &&
-            Objects.equals(productInventoryId, that.productInventoryId) &&
+            Objects.equals(projectId, that.projectId) &&
+            Objects.equals(clientDetailsId, that.clientDetailsId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -482,15 +463,13 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
             id,
+            refrenceNumber,
             totalPOAmount,
             totalGSTAmount,
             expectedDeliveryDate,
             poDate,
             orderType,
             orderStatus,
-            clientName,
-            clientMobile,
-            clientEmail,
             termsAndCondition,
             notes,
             lastModified,
@@ -498,9 +477,10 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
             freeField1,
             freeField2,
             purchaseQuotationDetailsId,
-            goodRecivedId,
+            goodsRecivedId,
             securityUserId,
-            productInventoryId,
+            projectId,
+            clientDetailsId,
             distinct
         );
     }
@@ -510,15 +490,13 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
     public String toString() {
         return "PurchaseQuotationCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
+            (refrenceNumber != null ? "refrenceNumber=" + refrenceNumber + ", " : "") +
             (totalPOAmount != null ? "totalPOAmount=" + totalPOAmount + ", " : "") +
             (totalGSTAmount != null ? "totalGSTAmount=" + totalGSTAmount + ", " : "") +
             (expectedDeliveryDate != null ? "expectedDeliveryDate=" + expectedDeliveryDate + ", " : "") +
             (poDate != null ? "poDate=" + poDate + ", " : "") +
             (orderType != null ? "orderType=" + orderType + ", " : "") +
             (orderStatus != null ? "orderStatus=" + orderStatus + ", " : "") +
-            (clientName != null ? "clientName=" + clientName + ", " : "") +
-            (clientMobile != null ? "clientMobile=" + clientMobile + ", " : "") +
-            (clientEmail != null ? "clientEmail=" + clientEmail + ", " : "") +
             (termsAndCondition != null ? "termsAndCondition=" + termsAndCondition + ", " : "") +
             (notes != null ? "notes=" + notes + ", " : "") +
             (lastModified != null ? "lastModified=" + lastModified + ", " : "") +
@@ -526,9 +504,10 @@ public class PurchaseQuotationCriteria implements Serializable, Criteria {
             (freeField1 != null ? "freeField1=" + freeField1 + ", " : "") +
             (freeField2 != null ? "freeField2=" + freeField2 + ", " : "") +
             (purchaseQuotationDetailsId != null ? "purchaseQuotationDetailsId=" + purchaseQuotationDetailsId + ", " : "") +
-            (goodRecivedId != null ? "goodRecivedId=" + goodRecivedId + ", " : "") +
+            (goodsRecivedId != null ? "goodsRecivedId=" + goodsRecivedId + ", " : "") +
             (securityUserId != null ? "securityUserId=" + securityUserId + ", " : "") +
-            (productInventoryId != null ? "productInventoryId=" + productInventoryId + ", " : "") +
+            (projectId != null ? "projectId=" + projectId + ", " : "") +
+            (clientDetailsId != null ? "clientDetailsId=" + clientDetailsId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

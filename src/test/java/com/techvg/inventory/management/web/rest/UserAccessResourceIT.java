@@ -143,42 +143,6 @@ class UserAccessResourceIT {
 
     @Test
     @Transactional
-    void checkLastModifiedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = userAccessRepository.findAll().size();
-        // set the field null
-        userAccess.setLastModified(null);
-
-        // Create the UserAccess, which fails.
-        UserAccessDTO userAccessDTO = userAccessMapper.toDto(userAccess);
-
-        restUserAccessMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userAccessDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<UserAccess> userAccessList = userAccessRepository.findAll();
-        assertThat(userAccessList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkLastModifiedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = userAccessRepository.findAll().size();
-        // set the field null
-        userAccess.setLastModifiedBy(null);
-
-        // Create the UserAccess, which fails.
-        UserAccessDTO userAccessDTO = userAccessMapper.toDto(userAccess);
-
-        restUserAccessMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userAccessDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<UserAccess> userAccessList = userAccessRepository.findAll();
-        assertThat(userAccessList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllUserAccesses() throws Exception {
         // Initialize the database
         userAccessRepository.saveAndFlush(userAccess);

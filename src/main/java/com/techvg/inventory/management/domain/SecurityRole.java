@@ -31,12 +31,10 @@ public class SecurityRole implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @Column(name = "last_modified", nullable = false)
+    @Column(name = "last_modified")
     private String lastModified;
 
-    @NotNull
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
     @ManyToMany
@@ -51,7 +49,7 @@ public class SecurityRole implements Serializable {
 
     @ManyToMany(mappedBy = "securityRoles")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private Set<SecurityUser> securityUsers = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

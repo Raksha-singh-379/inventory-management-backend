@@ -52,7 +52,7 @@ public class Transfer implements Serializable {
 
     @OneToMany(mappedBy = "transfer")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "wareHouse", "product", "transfer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "product", "transfer" }, allowSetters = true)
     private Set<TransferDetails> transferDetails = new HashSet<>();
 
     @OneToMany(mappedBy = "transfer")
@@ -66,11 +66,11 @@ public class Transfer implements Serializable {
     private Set<TransferDetailsApprovals> transferDetailsApprovals = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private SecurityUser securityUser;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "productInventories", "securityUsers" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
     private WareHouse wareHouse;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

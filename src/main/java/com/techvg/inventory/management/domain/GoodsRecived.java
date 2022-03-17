@@ -50,7 +50,10 @@ public class GoodsRecived implements Serializable {
     private String freeField3;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "purchaseQuotationDetails", "goodReciveds", "securityUser", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "purchaseQuotationDetails", "goodsReciveds", "securityUser", "project", "clientDetails" },
+        allowSetters = true
+    )
     private PurchaseQuotation purchaseQuotation;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

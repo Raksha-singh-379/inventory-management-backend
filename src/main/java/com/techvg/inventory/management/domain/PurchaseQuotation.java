@@ -8,7 +8,6 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,6 +25,9 @@ public class PurchaseQuotation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "refrence_number")
+    private String refrenceNumber;
 
     @Column(name = "total_po_amount")
     private Double totalPOAmount;
@@ -47,27 +49,16 @@ public class PurchaseQuotation implements Serializable {
     @Column(name = "order_status")
     private Status orderStatus;
 
-    @Column(name = "client_name")
-    private String clientName;
-
-    @Column(name = "client_mobile")
-    private String clientMobile;
-
-    @Column(name = "client_email")
-    private String clientEmail;
-
     @Column(name = "terms_and_condition")
     private String termsAndCondition;
 
     @Column(name = "notes")
     private String notes;
 
-    @NotNull
-    @Column(name = "last_modified", nullable = false)
+    @Column(name = "last_modified")
     private String lastModified;
 
-    @NotNull
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
     @Column(name = "free_field_1")
@@ -84,19 +75,17 @@ public class PurchaseQuotation implements Serializable {
     @OneToMany(mappedBy = "purchaseQuotation")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "purchaseQuotation" }, allowSetters = true)
-    private Set<GoodsRecived> goodReciveds = new HashSet<>();
+    private Set<GoodsRecived> goodsReciveds = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private SecurityUser securityUser;
 
-    @OneToMany(mappedBy = "purchaseQuotation")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(
-        value = { "consumptionDetails", "product", "purchaseQuotation", "productTransaction", "wareHouses", "securityUsers" },
-        allowSetters = true
-    )
-    private Set<ProductInventory> productInventories = new HashSet<>();
+    @ManyToOne
+    private Project project;
+
+    @ManyToOne
+    private ClientDetails clientDetails;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -111,6 +100,19 @@ public class PurchaseQuotation implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRefrenceNumber() {
+        return this.refrenceNumber;
+    }
+
+    public PurchaseQuotation refrenceNumber(String refrenceNumber) {
+        this.setRefrenceNumber(refrenceNumber);
+        return this;
+    }
+
+    public void setRefrenceNumber(String refrenceNumber) {
+        this.refrenceNumber = refrenceNumber;
     }
 
     public Double getTotalPOAmount() {
@@ -189,45 +191,6 @@ public class PurchaseQuotation implements Serializable {
 
     public void setOrderStatus(Status orderStatus) {
         this.orderStatus = orderStatus;
-    }
-
-    public String getClientName() {
-        return this.clientName;
-    }
-
-    public PurchaseQuotation clientName(String clientName) {
-        this.setClientName(clientName);
-        return this;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientMobile() {
-        return this.clientMobile;
-    }
-
-    public PurchaseQuotation clientMobile(String clientMobile) {
-        this.setClientMobile(clientMobile);
-        return this;
-    }
-
-    public void setClientMobile(String clientMobile) {
-        this.clientMobile = clientMobile;
-    }
-
-    public String getClientEmail() {
-        return this.clientEmail;
-    }
-
-    public PurchaseQuotation clientEmail(String clientEmail) {
-        this.setClientEmail(clientEmail);
-        return this;
-    }
-
-    public void setClientEmail(String clientEmail) {
-        this.clientEmail = clientEmail;
     }
 
     public String getTermsAndCondition() {
@@ -339,33 +302,33 @@ public class PurchaseQuotation implements Serializable {
         return this;
     }
 
-    public Set<GoodsRecived> getGoodReciveds() {
-        return this.goodReciveds;
+    public Set<GoodsRecived> getGoodsReciveds() {
+        return this.goodsReciveds;
     }
 
-    public void setGoodReciveds(Set<GoodsRecived> goodsReciveds) {
-        if (this.goodReciveds != null) {
-            this.goodReciveds.forEach(i -> i.setPurchaseQuotation(null));
+    public void setGoodsReciveds(Set<GoodsRecived> goodsReciveds) {
+        if (this.goodsReciveds != null) {
+            this.goodsReciveds.forEach(i -> i.setPurchaseQuotation(null));
         }
         if (goodsReciveds != null) {
             goodsReciveds.forEach(i -> i.setPurchaseQuotation(this));
         }
-        this.goodReciveds = goodsReciveds;
+        this.goodsReciveds = goodsReciveds;
     }
 
-    public PurchaseQuotation goodReciveds(Set<GoodsRecived> goodsReciveds) {
-        this.setGoodReciveds(goodsReciveds);
+    public PurchaseQuotation goodsReciveds(Set<GoodsRecived> goodsReciveds) {
+        this.setGoodsReciveds(goodsReciveds);
         return this;
     }
 
-    public PurchaseQuotation addGoodRecived(GoodsRecived goodsRecived) {
-        this.goodReciveds.add(goodsRecived);
+    public PurchaseQuotation addGoodsRecived(GoodsRecived goodsRecived) {
+        this.goodsReciveds.add(goodsRecived);
         goodsRecived.setPurchaseQuotation(this);
         return this;
     }
 
-    public PurchaseQuotation removeGoodRecived(GoodsRecived goodsRecived) {
-        this.goodReciveds.remove(goodsRecived);
+    public PurchaseQuotation removeGoodsRecived(GoodsRecived goodsRecived) {
+        this.goodsReciveds.remove(goodsRecived);
         goodsRecived.setPurchaseQuotation(null);
         return this;
     }
@@ -383,34 +346,29 @@ public class PurchaseQuotation implements Serializable {
         return this;
     }
 
-    public Set<ProductInventory> getProductInventories() {
-        return this.productInventories;
+    public Project getProject() {
+        return this.project;
     }
 
-    public void setProductInventories(Set<ProductInventory> productInventories) {
-        if (this.productInventories != null) {
-            this.productInventories.forEach(i -> i.setPurchaseQuotation(null));
-        }
-        if (productInventories != null) {
-            productInventories.forEach(i -> i.setPurchaseQuotation(this));
-        }
-        this.productInventories = productInventories;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public PurchaseQuotation productInventories(Set<ProductInventory> productInventories) {
-        this.setProductInventories(productInventories);
+    public PurchaseQuotation project(Project project) {
+        this.setProject(project);
         return this;
     }
 
-    public PurchaseQuotation addProductInventory(ProductInventory productInventory) {
-        this.productInventories.add(productInventory);
-        productInventory.setPurchaseQuotation(this);
-        return this;
+    public ClientDetails getClientDetails() {
+        return this.clientDetails;
     }
 
-    public PurchaseQuotation removeProductInventory(ProductInventory productInventory) {
-        this.productInventories.remove(productInventory);
-        productInventory.setPurchaseQuotation(null);
+    public void setClientDetails(ClientDetails clientDetails) {
+        this.clientDetails = clientDetails;
+    }
+
+    public PurchaseQuotation clientDetails(ClientDetails clientDetails) {
+        this.setClientDetails(clientDetails);
         return this;
     }
 
@@ -438,15 +396,13 @@ public class PurchaseQuotation implements Serializable {
     public String toString() {
         return "PurchaseQuotation{" +
             "id=" + getId() +
+            ", refrenceNumber='" + getRefrenceNumber() + "'" +
             ", totalPOAmount=" + getTotalPOAmount() +
             ", totalGSTAmount=" + getTotalGSTAmount() +
             ", expectedDeliveryDate='" + getExpectedDeliveryDate() + "'" +
             ", poDate='" + getPoDate() + "'" +
             ", orderType='" + getOrderType() + "'" +
             ", orderStatus='" + getOrderStatus() + "'" +
-            ", clientName='" + getClientName() + "'" +
-            ", clientMobile='" + getClientMobile() + "'" +
-            ", clientEmail='" + getClientEmail() + "'" +
             ", termsAndCondition='" + getTermsAndCondition() + "'" +
             ", notes='" + getNotes() + "'" +
             ", lastModified='" + getLastModified() + "'" +

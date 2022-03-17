@@ -2,7 +2,6 @@ package com.techvg.inventory.management.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -11,30 +10,22 @@ import com.techvg.inventory.management.domain.ConsumptionDetails;
 import com.techvg.inventory.management.domain.Product;
 import com.techvg.inventory.management.domain.ProductInventory;
 import com.techvg.inventory.management.domain.ProductTransaction;
-import com.techvg.inventory.management.domain.PurchaseQuotation;
 import com.techvg.inventory.management.domain.SecurityUser;
 import com.techvg.inventory.management.domain.WareHouse;
 import com.techvg.inventory.management.repository.ProductInventoryRepository;
-import com.techvg.inventory.management.service.ProductInventoryService;
 import com.techvg.inventory.management.service.criteria.ProductInventoryCriteria;
 import com.techvg.inventory.management.service.dto.ProductInventoryDTO;
 import com.techvg.inventory.management.service.mapper.ProductInventoryMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link ProductInventoryResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class ProductInventoryResourceIT {
@@ -101,14 +91,8 @@ class ProductInventoryResourceIT {
     @Autowired
     private ProductInventoryRepository productInventoryRepository;
 
-    @Mock
-    private ProductInventoryRepository productInventoryRepositoryMock;
-
     @Autowired
     private ProductInventoryMapper productInventoryMapper;
-
-    @Mock
-    private ProductInventoryService productInventoryServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -252,24 +236,6 @@ class ProductInventoryResourceIT {
             .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
             .andExpect(jsonPath("$.[*].isDeleted").value(hasItem(DEFAULT_IS_DELETED.booleanValue())))
             .andExpect(jsonPath("$.[*].isActive").value(hasItem(DEFAULT_IS_ACTIVE.booleanValue())));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllProductInventoriesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(productInventoryServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProductInventoryMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(productInventoryServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllProductInventoriesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(productInventoryServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProductInventoryMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(productInventoryServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -1386,32 +1352,6 @@ class ProductInventoryResourceIT {
 
     @Test
     @Transactional
-    void getAllProductInventoriesByPurchaseQuotationIsEqualToSomething() throws Exception {
-        // Initialize the database
-        productInventoryRepository.saveAndFlush(productInventory);
-        PurchaseQuotation purchaseQuotation;
-        if (TestUtil.findAll(em, PurchaseQuotation.class).isEmpty()) {
-            purchaseQuotation = PurchaseQuotationResourceIT.createEntity(em);
-            em.persist(purchaseQuotation);
-            em.flush();
-        } else {
-            purchaseQuotation = TestUtil.findAll(em, PurchaseQuotation.class).get(0);
-        }
-        em.persist(purchaseQuotation);
-        em.flush();
-        productInventory.setPurchaseQuotation(purchaseQuotation);
-        productInventoryRepository.saveAndFlush(productInventory);
-        Long purchaseQuotationId = purchaseQuotation.getId();
-
-        // Get all the productInventoryList where purchaseQuotation equals to purchaseQuotationId
-        defaultProductInventoryShouldBeFound("purchaseQuotationId.equals=" + purchaseQuotationId);
-
-        // Get all the productInventoryList where purchaseQuotation equals to (purchaseQuotationId + 1)
-        defaultProductInventoryShouldNotBeFound("purchaseQuotationId.equals=" + (purchaseQuotationId + 1));
-    }
-
-    @Test
-    @Transactional
     void getAllProductInventoriesByProductTransactionIsEqualToSomething() throws Exception {
         // Initialize the database
         productInventoryRepository.saveAndFlush(productInventory);
@@ -1438,32 +1378,6 @@ class ProductInventoryResourceIT {
 
     @Test
     @Transactional
-    void getAllProductInventoriesByWareHouseIsEqualToSomething() throws Exception {
-        // Initialize the database
-        productInventoryRepository.saveAndFlush(productInventory);
-        WareHouse wareHouse;
-        if (TestUtil.findAll(em, WareHouse.class).isEmpty()) {
-            wareHouse = WareHouseResourceIT.createEntity(em);
-            em.persist(wareHouse);
-            em.flush();
-        } else {
-            wareHouse = TestUtil.findAll(em, WareHouse.class).get(0);
-        }
-        em.persist(wareHouse);
-        em.flush();
-        productInventory.addWareHouse(wareHouse);
-        productInventoryRepository.saveAndFlush(productInventory);
-        Long wareHouseId = wareHouse.getId();
-
-        // Get all the productInventoryList where wareHouse equals to wareHouseId
-        defaultProductInventoryShouldBeFound("wareHouseId.equals=" + wareHouseId);
-
-        // Get all the productInventoryList where wareHouse equals to (wareHouseId + 1)
-        defaultProductInventoryShouldNotBeFound("wareHouseId.equals=" + (wareHouseId + 1));
-    }
-
-    @Test
-    @Transactional
     void getAllProductInventoriesBySecurityUserIsEqualToSomething() throws Exception {
         // Initialize the database
         productInventoryRepository.saveAndFlush(productInventory);
@@ -1477,7 +1391,7 @@ class ProductInventoryResourceIT {
         }
         em.persist(securityUser);
         em.flush();
-        productInventory.addSecurityUser(securityUser);
+        productInventory.setSecurityUser(securityUser);
         productInventoryRepository.saveAndFlush(productInventory);
         Long securityUserId = securityUser.getId();
 
@@ -1486,6 +1400,32 @@ class ProductInventoryResourceIT {
 
         // Get all the productInventoryList where securityUser equals to (securityUserId + 1)
         defaultProductInventoryShouldNotBeFound("securityUserId.equals=" + (securityUserId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllProductInventoriesByWareHouseIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productInventoryRepository.saveAndFlush(productInventory);
+        WareHouse wareHouse;
+        if (TestUtil.findAll(em, WareHouse.class).isEmpty()) {
+            wareHouse = WareHouseResourceIT.createEntity(em);
+            em.persist(wareHouse);
+            em.flush();
+        } else {
+            wareHouse = TestUtil.findAll(em, WareHouse.class).get(0);
+        }
+        em.persist(wareHouse);
+        em.flush();
+        productInventory.setWareHouse(wareHouse);
+        productInventoryRepository.saveAndFlush(productInventory);
+        Long wareHouseId = wareHouse.getId();
+
+        // Get all the productInventoryList where wareHouse equals to wareHouseId
+        defaultProductInventoryShouldBeFound("wareHouseId.equals=" + wareHouseId);
+
+        // Get all the productInventoryList where wareHouse equals to (wareHouseId + 1)
+        defaultProductInventoryShouldNotBeFound("wareHouseId.equals=" + (wareHouseId + 1));
     }
 
     /**

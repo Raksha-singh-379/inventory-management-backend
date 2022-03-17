@@ -76,15 +76,6 @@ public class TransferDetailsService {
     }
 
     /**
-     * Get all the transferDetails with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<TransferDetailsDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return transferDetailsRepository.findAllWithEagerRelationships(pageable).map(transferDetailsMapper::toDto);
-    }
-
-    /**
      * Get one transferDetails by id.
      *
      * @param id the id of the entity.
@@ -93,7 +84,7 @@ public class TransferDetailsService {
     @Transactional(readOnly = true)
     public Optional<TransferDetailsDTO> findOne(Long id) {
         log.debug("Request to get TransferDetails : {}", id);
-        return transferDetailsRepository.findOneWithEagerRelationships(id).map(transferDetailsMapper::toDto);
+        return transferDetailsRepository.findById(id).map(transferDetailsMapper::toDto);
     }
 
     /**

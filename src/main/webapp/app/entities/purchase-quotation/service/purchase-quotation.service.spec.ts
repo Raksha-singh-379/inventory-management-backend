@@ -27,15 +27,13 @@ describe('PurchaseQuotation Service', () => {
 
     elemDefault = {
       id: 0,
+      refrenceNumber: 'AAAAAAA',
       totalPOAmount: 0,
       totalGSTAmount: 0,
       expectedDeliveryDate: currentDate,
       poDate: currentDate,
       orderType: OrderType.PURCHASE_ORDER,
       orderStatus: Status.REQUESTED,
-      clientName: 'AAAAAAA',
-      clientMobile: 'AAAAAAA',
-      clientEmail: 'AAAAAAA',
       termsAndCondition: 'AAAAAAA',
       notes: 'AAAAAAA',
       lastModified: 'AAAAAAA',
@@ -91,15 +89,13 @@ describe('PurchaseQuotation Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
+          refrenceNumber: 'BBBBBB',
           totalPOAmount: 1,
           totalGSTAmount: 1,
           expectedDeliveryDate: currentDate.format(DATE_TIME_FORMAT),
           poDate: currentDate.format(DATE_TIME_FORMAT),
           orderType: 'BBBBBB',
           orderStatus: 'BBBBBB',
-          clientName: 'BBBBBB',
-          clientMobile: 'BBBBBB',
-          clientEmail: 'BBBBBB',
           termsAndCondition: 'BBBBBB',
           notes: 'BBBBBB',
           lastModified: 'BBBBBB',
@@ -128,11 +124,9 @@ describe('PurchaseQuotation Service', () => {
     it('should partial update a PurchaseQuotation', () => {
       const patchObject = Object.assign(
         {
+          totalGSTAmount: 1,
           expectedDeliveryDate: currentDate.format(DATE_TIME_FORMAT),
-          poDate: currentDate.format(DATE_TIME_FORMAT),
-          termsAndCondition: 'BBBBBB',
-          lastModifiedBy: 'BBBBBB',
-          freeField1: 'BBBBBB',
+          lastModified: 'BBBBBB',
           freeField2: 'BBBBBB',
         },
         new PurchaseQuotation()
@@ -159,15 +153,13 @@ describe('PurchaseQuotation Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
+          refrenceNumber: 'BBBBBB',
           totalPOAmount: 1,
           totalGSTAmount: 1,
           expectedDeliveryDate: currentDate.format(DATE_TIME_FORMAT),
           poDate: currentDate.format(DATE_TIME_FORMAT),
           orderType: 'BBBBBB',
           orderStatus: 'BBBBBB',
-          clientName: 'BBBBBB',
-          clientMobile: 'BBBBBB',
-          clientEmail: 'BBBBBB',
           termsAndCondition: 'BBBBBB',
           notes: 'BBBBBB',
           lastModified: 'BBBBBB',
@@ -231,7 +223,7 @@ describe('PurchaseQuotation Service', () => {
       });
 
       it('should add only unique PurchaseQuotation to an array', () => {
-        const purchaseQuotationArray: IPurchaseQuotation[] = [{ id: 123 }, { id: 456 }, { id: 32379 }];
+        const purchaseQuotationArray: IPurchaseQuotation[] = [{ id: 123 }, { id: 456 }, { id: 84439 }];
         const purchaseQuotationCollection: IPurchaseQuotation[] = [{ id: 123 }];
         expectedResult = service.addPurchaseQuotationToCollectionIfMissing(purchaseQuotationCollection, ...purchaseQuotationArray);
         expect(expectedResult).toHaveLength(3);

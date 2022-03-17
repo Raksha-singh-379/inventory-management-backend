@@ -30,10 +30,10 @@
                 <constraints nullable="true" />
             </column>
             <column name="last_modified" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="last_modified_by" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="free_field_1" type="varchar(255)">
                 <constraints nullable="true" />

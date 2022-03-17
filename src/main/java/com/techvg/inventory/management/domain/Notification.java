@@ -31,8 +31,14 @@ public class Notification implements Serializable {
     @Column(name = "notification_type")
     private NotificationType notificationType;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "is_action_required")
     private Boolean isActionRequired;
+
+    @Column(name = "is_read")
+    private Boolean isRead;
 
     @Column(name = "free_field_1")
     private String freeField1;
@@ -40,20 +46,18 @@ public class Notification implements Serializable {
     @Column(name = "free_field_2")
     private String freeField2;
 
-    @NotNull
-    @Column(name = "last_modified", nullable = false)
+    @Column(name = "last_modified")
     private String lastModified;
 
-    @NotNull
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
     private SecurityUser securityUser;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "productInventories", "securityUsers" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
     private WareHouse wareHouse;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -97,6 +101,19 @@ public class Notification implements Serializable {
         this.notificationType = notificationType;
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
+    public Notification title(String title) {
+        this.setTitle(title);
+        return this;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Boolean getIsActionRequired() {
         return this.isActionRequired;
     }
@@ -108,6 +125,19 @@ public class Notification implements Serializable {
 
     public void setIsActionRequired(Boolean isActionRequired) {
         this.isActionRequired = isActionRequired;
+    }
+
+    public Boolean getIsRead() {
+        return this.isRead;
+    }
+
+    public Notification isRead(Boolean isRead) {
+        this.setIsRead(isRead);
+        return this;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 
     public String getFreeField1() {
@@ -214,7 +244,9 @@ public class Notification implements Serializable {
             "id=" + getId() +
             ", massage='" + getMassage() + "'" +
             ", notificationType='" + getNotificationType() + "'" +
+            ", title='" + getTitle() + "'" +
             ", isActionRequired='" + getIsActionRequired() + "'" +
+            ", isRead='" + getIsRead() + "'" +
             ", freeField1='" + getFreeField1() + "'" +
             ", freeField2='" + getFreeField2() + "'" +
             ", lastModified='" + getLastModified() + "'" +
