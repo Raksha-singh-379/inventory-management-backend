@@ -1,12 +1,21 @@
 package com.techvg.inventory.management.service;
 
 import com.techvg.inventory.management.domain.PurchaseQuotation;
+import com.techvg.inventory.management.domain.PurchaseQuotationDetails;
+import com.techvg.inventory.management.repository.PurchaseQuotationDetailsRepository;
 import com.techvg.inventory.management.repository.PurchaseQuotationRepository;
 import com.techvg.inventory.management.service.dto.PurchaseQuotationDTO;
+import com.techvg.inventory.management.service.dto.PurchaseQuotationDetailsDTO;
+import com.techvg.inventory.management.service.mapper.PurchaseQuotationDetailsMapper;
 import com.techvg.inventory.management.service.mapper.PurchaseQuotationMapper;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +33,15 @@ public class PurchaseQuotationService {
     private final PurchaseQuotationRepository purchaseQuotationRepository;
 
     private final PurchaseQuotationMapper purchaseQuotationMapper;
+
+    @Autowired
+    private PurchaseQuotationDetailsRepository purchaseQuotationDetailsRepository;
+
+    @Autowired
+    private PurchaseQuotationDetailsMapper purchaseQuotationDetailsMapper;
+
+    @Autowired
+    private PurchaseQuotationDetailsService purchaseQuotationDetailsService;
 
     public PurchaseQuotationService(
         PurchaseQuotationRepository purchaseQuotationRepository,
@@ -43,7 +61,32 @@ public class PurchaseQuotationService {
         log.debug("Request to save PurchaseQuotation : {}", purchaseQuotationDTO);
         PurchaseQuotation purchaseQuotation = purchaseQuotationMapper.toEntity(purchaseQuotationDTO);
         purchaseQuotation = purchaseQuotationRepository.save(purchaseQuotation);
-        return purchaseQuotationMapper.toDto(purchaseQuotation);
+
+        Set<PurchaseQuotationDetails> pqDetailList = new HashSet<PurchaseQuotationDetails>();
+        if (!purchaseQuotationDTO.getPurchaseQuotationDetails().isEmpty()) {
+            List<PurchaseQuotationDetailsDTO> quotationDetailsList = purchaseQuotationDTO.getPurchaseQuotationDetails();
+
+            for (int i = 0; i < quotationDetailsList.size(); i++) {
+                //    for (PurchaseQuotationDetailsDTO detailsDto : quotationDetailsList) {
+                PurchaseQuotationDetailsDTO detailsDto = quotationDetailsList.get(i);
+
+                log.debug("Request to save PurchaseQuotationDetails : {}", detailsDto);
+
+                if (detailsDto != null) {
+                    PurchaseQuotationDTO pqDTO = new PurchaseQuotationDTO();
+                    pqDTO.setId(purchaseQuotation.getId());
+                    detailsDto.setPurchaseQuotation(pqDTO);
+                    PurchaseQuotationDetails purchaseQuotationDetails = purchaseQuotationDetailsMapper.toEntity(detailsDto);
+                    purchaseQuotationDetails = purchaseQuotationDetailsRepository.save(purchaseQuotationDetails);
+
+                    //   PurchaseQuotationDetailsDTO result = purchaseQuotationDetailsService.save(detailsDto);
+                    pqDetailList.add(purchaseQuotationDetails);
+                }
+            }
+        }
+        purchaseQuotation.setPurchaseQuotationDetails(pqDetailList);
+        purchaseQuotationDTO.setId(purchaseQuotation.getId());
+        return purchaseQuotationDTO;
     }
 
     /**

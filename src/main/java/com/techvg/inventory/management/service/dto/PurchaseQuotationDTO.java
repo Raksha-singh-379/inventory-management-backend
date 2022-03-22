@@ -4,6 +4,7 @@ import com.techvg.inventory.management.domain.enumeration.OrderType;
 import com.techvg.inventory.management.domain.enumeration.Status;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -44,6 +45,8 @@ public class PurchaseQuotationDTO implements Serializable {
     private ProjectDTO project;
 
     private ClientDetailsDTO clientDetails;
+
+    private List<PurchaseQuotationDetailsDTO> purchaseQuotationDetails;
 
     public Long getId() {
         return id;
@@ -224,5 +227,13 @@ public class PurchaseQuotationDTO implements Serializable {
             ", project=" + getProject() +
             ", clientDetails=" + getClientDetails() +
             "}";
+    }
+
+    public List<PurchaseQuotationDetailsDTO> getPurchaseQuotationDetails() {
+        return purchaseQuotationDetails;
+    }
+
+    public void setPurchaseQuotationDetails(List<PurchaseQuotationDetailsDTO> purchaseQuotationDetails) {
+        this.purchaseQuotationDetails = purchaseQuotationDetails;
     }
 }
