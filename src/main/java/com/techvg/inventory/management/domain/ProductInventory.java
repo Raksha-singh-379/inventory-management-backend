@@ -84,7 +84,7 @@ public class ProductInventory implements Serializable {
     private SecurityUser securityUser;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityUser" }, allowSetters = true)
     private WareHouse wareHouse;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

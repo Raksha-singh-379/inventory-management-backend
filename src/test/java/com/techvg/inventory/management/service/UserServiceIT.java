@@ -7,7 +7,6 @@ import com.techvg.inventory.management.IntegrationTest;
 import com.techvg.inventory.management.config.Constants;
 import com.techvg.inventory.management.domain.User;
 import com.techvg.inventory.management.repository.UserRepository;
-import com.techvg.inventory.management.service.dto.AdminUserDTO;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

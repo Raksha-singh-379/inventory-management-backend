@@ -3,7 +3,9 @@ package com.techvg.inventory.management.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -16,7 +18,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "security_user")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SecurityUser implements Serializable {
+public class SecurityUser extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -111,6 +113,9 @@ public class SecurityUser implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "securityUsers" }, allowSetters = true)
     private Set<WareHouse> wareHouses = new HashSet<>();
+
+    @OneToMany(mappedBy = "securityUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserAccess> userAccess = new ArrayList<UserAccess>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -231,8 +236,8 @@ public class SecurityUser implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Boolean getActivated() {
-        return this.activated;
+    public Boolean isActivated() {
+        return activated;
     }
 
     public SecurityUser activated(Boolean activated) {
@@ -468,7 +473,7 @@ public class SecurityUser implements Serializable {
             ", passwordHash='" + getPasswordHash() + "'" +
             ", email='" + getEmail() + "'" +
             ", imageUrl='" + getImageUrl() + "'" +
-            ", activated='" + getActivated() + "'" +
+            ", activated='" + isActivated() + "'" +
             ", langKey='" + getLangKey() + "'" +
             ", activationKey='" + getActivationKey() + "'" +
             ", resetKey='" + getResetKey() + "'" +
@@ -479,5 +484,13 @@ public class SecurityUser implements Serializable {
             ", lastModified='" + getLastModified() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             "}";
+    }
+
+    public List<UserAccess> getUserAccess() {
+        return userAccess;
+    }
+
+    public void setUserAccess(List<UserAccess> userAccess) {
+        this.userAccess = userAccess;
     }
 }

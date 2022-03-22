@@ -2,7 +2,9 @@ package com.techvg.inventory.management.service.dto;
 
 import com.techvg.inventory.management.domain.enumeration.AccessLevel;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link com.techvg.inventory.management.domain.UserAccess} entity.
@@ -19,7 +21,9 @@ public class UserAccessDTO implements Serializable {
 
     private String lastModifiedBy;
 
-    private SecurityUserDTO securityUser;
+    private Long securityUserId;
+
+    private String securityUserLogin;
 
     public Long getId() {
         return id;
@@ -61,12 +65,20 @@ public class UserAccessDTO implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public SecurityUserDTO getSecurityUser() {
-        return securityUser;
+    public Long getSecurityUserId() {
+        return securityUserId;
     }
 
-    public void setSecurityUser(SecurityUserDTO securityUser) {
-        this.securityUser = securityUser;
+    public void setSecurityUserId(Long securityUserId) {
+        this.securityUserId = securityUserId;
+    }
+
+    public String getSecurityUserLogin() {
+        return securityUserLogin;
+    }
+
+    public void setSecurityUserLogin(String securityUserLogin) {
+        this.securityUserLogin = securityUserLogin;
     }
 
     @Override
@@ -78,16 +90,12 @@ public class UserAccessDTO implements Serializable {
             return false;
         }
 
-        UserAccessDTO userAccessDTO = (UserAccessDTO) o;
-        if (this.id == null) {
-            return false;
-        }
-        return Objects.equals(this.id, userAccessDTO.id);
+        return id != null && id.equals(((UserAccessDTO) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id);
+        return 31;
     }
 
     // prettier-ignore
@@ -99,7 +107,8 @@ public class UserAccessDTO implements Serializable {
             ", accessId=" + getAccessId() +
             ", lastModified='" + getLastModified() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", securityUser=" + getSecurityUser() +
+            ", securityUserId=" + getSecurityUserId() +
+            ", securityUserLogin='" + getSecurityUserLogin() + "'" +
             "}";
     }
 }

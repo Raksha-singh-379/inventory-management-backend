@@ -9,6 +9,19 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { SecurityUserMapper.class })
 public interface UserAccessMapper extends EntityMapper<UserAccessDTO, UserAccess> {
-    @Mapping(target = "securityUser", source = "securityUser", qualifiedByName = "login")
-    UserAccessDTO toDto(UserAccess s);
+    @Mapping(source = "securityUser.id", target = "securityUserId")
+    @Mapping(source = "securityUser.login", target = "securityUserLogin")
+    UserAccessDTO toDto(UserAccess userAccess);
+
+    @Mapping(source = "securityUserId", target = "securityUser.id")
+    UserAccess toEntity(UserAccessDTO userAccessDTO);
+
+    default UserAccess fromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        UserAccess userAccess = new UserAccess();
+        userAccess.setId(id);
+        return userAccess;
+    }
 }

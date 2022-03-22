@@ -12,7 +12,7 @@ import com.techvg.inventory.management.repository.AuthorityRepository;
 import com.techvg.inventory.management.repository.UserRepository;
 import com.techvg.inventory.management.security.AuthoritiesConstants;
 import com.techvg.inventory.management.service.UserService;
-import com.techvg.inventory.management.service.dto.AdminUserDTO;
+import com.techvg.inventory.management.service.dto.LoginUserDTO;
 import com.techvg.inventory.management.service.dto.PasswordChangeDTO;
 import com.techvg.inventory.management.service.dto.UserDTO;
 import com.techvg.inventory.management.web.rest.vm.KeyAndPasswordVM;
@@ -83,7 +83,7 @@ class AccountResourceIT {
         Set<String> authorities = new HashSet<>();
         authorities.add(AuthoritiesConstants.ADMIN);
 
-        AdminUserDTO user = new AdminUserDTO();
+        LoginUserDTO user = new LoginUserDTO();
         user.setLogin(TEST_USER_LOGIN);
         user.setFirstName("john");
         user.setLastName("doe");
@@ -91,7 +91,7 @@ class AccountResourceIT {
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
         user.setAuthorities(authorities);
-        userService.createUser(user);
+        //    userService.createUser(user);
 
         restAccountMockMvc
             .perform(get("/api/account").accept(MediaType.APPLICATION_JSON))
@@ -342,7 +342,7 @@ class AccountResourceIT {
         assertThat(testUser4.get().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
         testUser4.get().setActivated(true);
-        userService.updateUser((new AdminUserDTO(testUser4.get())));
+        //    userService.updateUser((new LoginUserDTO(testUser4.get())));
 
         // Register 4th (already activated) user
         restAccountMockMvc
@@ -411,12 +411,12 @@ class AccountResourceIT {
         user.setActivated(true);
         userRepository.saveAndFlush(user);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        LoginUserDTO userDTO = new LoginUserDTO();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-account@example.com");
-        userDTO.setActivated(false);
+        //   userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -448,12 +448,12 @@ class AccountResourceIT {
 
         userRepository.saveAndFlush(user);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        LoginUserDTO userDTO = new LoginUserDTO();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("invalid email");
-        userDTO.setActivated(false);
+        //     userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -484,12 +484,12 @@ class AccountResourceIT {
 
         userRepository.saveAndFlush(anotherUser);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        LoginUserDTO userDTO = new LoginUserDTO();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-existing-email2@example.com");
-        userDTO.setActivated(false);
+        //   userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -513,12 +513,12 @@ class AccountResourceIT {
         user.setActivated(true);
         userRepository.saveAndFlush(user);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        LoginUserDTO userDTO = new LoginUserDTO();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-existing-email-and-login@example.com");
-        userDTO.setActivated(false);
+        //     userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));

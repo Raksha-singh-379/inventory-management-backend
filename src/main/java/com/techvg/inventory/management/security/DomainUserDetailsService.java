@@ -1,10 +1,13 @@
 package com.techvg.inventory.management.security;
 
-import com.techvg.inventory.management.domain.User;
-import com.techvg.inventory.management.repository.UserRepository;
-import java.util.*;
+import com.github.dockerjava.api.exception.NotFoundException;
+import com.techvg.inventory.management.domain.SecurityUser;
+import com.techvg.inventory.management.repository.SecurityUserRepository;
+import com.techvg.inventory.management.service.dto.LoginUserDTO;
+import com.techvg.inventory.management.service.mapper.LoginUserMapper;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,40 +26,55 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
-    private final UserRepository userRepository;
+    private final SecurityUserRepository userRepository;
 
-    public DomainUserDetailsService(UserRepository userRepository) {
+    private final LoginUserMapper loginUserMapper;
+
+    public DomainUserDetailsService(SecurityUserRepository userRepository, LoginUserMapper loginUserMapper) {
         this.userRepository = userRepository;
+        this.loginUserMapper = loginUserMapper;
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + login);
 
-        if (new EmailValidator().isValid(login, null)) {
-            return userRepository
-                .findOneWithAuthoritiesByEmailIgnoreCase(login)
-                .map(user -> createSpringSecurityUser(login, user))
-                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
-        }
+        /*
+         * if (new EmailValidator().isValid(login, null)) { return userRepository
+         * .findOneWithAuthoritiesByEmailIgnoreCase(login) .map(user ->
+         * createSpringSecurityUser(login, user)) .orElseThrow(() -> new
+         * UsernameNotFoundException("User with email " + login +
+         * " was not found in the database")); }
+         */
 
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
+
+        log.debug("fetch data from security user table {}", lowercaseLogin);
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + login);
+
         return userRepository
-            .findOneWithAuthoritiesByLogin(lowercaseLogin)
+            .findOneByLogin(lowercaseLogin)
             .map(user -> createSpringSecurityUser(lowercaseLogin, user))
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
     }
 
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
-        if (!user.isActivated()) {
+    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, SecurityUser user) {
+        if (user.isActivated()) {
             throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
         }
-        List<GrantedAuthority> grantedAuthorities = user
+        LoginUserDTO dto = loginUserMapper.toDto(user);
+        List<GrantedAuthority> grantedAuthorities = dto
             .getAuthorities()
             .stream()
-            .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+            .map(permision -> new SimpleGrantedAuthority(permision))
             .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), grantedAuthorities);
+
+        if (grantedAuthorities.isEmpty()) {
+            throw new NotFoundException("User " + lowercaseLogin + " has no Role or Permissions");
+        }
+
+        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPasswordHash(), grantedAuthorities);
     }
 }

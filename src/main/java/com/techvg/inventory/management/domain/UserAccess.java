@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.techvg.inventory.management.domain.enumeration.AccessLevel;
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -13,7 +14,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "user_access")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class UserAccess implements Serializable {
+public class UserAccess extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,14 +30,16 @@ public class UserAccess implements Serializable {
     @Column(name = "access_id")
     private Long accessId;
 
-    @Column(name = "last_modified")
+    @NotNull
+    @Column(name = "last_modified", nullable = false)
     private String lastModified;
 
-    @Column(name = "last_modified_by")
+    @NotNull
+    @Column(name = "last_modified_by", nullable = false)
     private String lastModifiedBy;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "securityPermissions", "securityRoles", "wareHouses", "productInventories" }, allowSetters = true)
     private SecurityUser securityUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
