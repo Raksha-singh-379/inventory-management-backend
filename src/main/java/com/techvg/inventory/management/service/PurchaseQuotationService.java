@@ -62,12 +62,11 @@ public class PurchaseQuotationService {
         PurchaseQuotation purchaseQuotation = purchaseQuotationMapper.toEntity(purchaseQuotationDTO);
         purchaseQuotation = purchaseQuotationRepository.save(purchaseQuotation);
 
-        Set<PurchaseQuotationDetails> pqDetailList = new HashSet<PurchaseQuotationDetails>();
+        //-------------------------------------------------------
+        //-------------Create PurchaseQuotationDetails product wise
         if (!purchaseQuotationDTO.getPurchaseQuotationDetails().isEmpty()) {
             List<PurchaseQuotationDetailsDTO> quotationDetailsList = purchaseQuotationDTO.getPurchaseQuotationDetails();
-
             for (int i = 0; i < quotationDetailsList.size(); i++) {
-                //    for (PurchaseQuotationDetailsDTO detailsDto : quotationDetailsList) {
                 PurchaseQuotationDetailsDTO detailsDto = quotationDetailsList.get(i);
 
                 log.debug("Request to save PurchaseQuotationDetails : {}", detailsDto);
@@ -78,13 +77,10 @@ public class PurchaseQuotationService {
                     detailsDto.setPurchaseQuotation(pqDTO);
                     PurchaseQuotationDetails purchaseQuotationDetails = purchaseQuotationDetailsMapper.toEntity(detailsDto);
                     purchaseQuotationDetails = purchaseQuotationDetailsRepository.save(purchaseQuotationDetails);
-
-                    //   PurchaseQuotationDetailsDTO result = purchaseQuotationDetailsService.save(detailsDto);
-                    pqDetailList.add(purchaseQuotationDetails);
                 }
             }
         }
-        purchaseQuotation.setPurchaseQuotationDetails(pqDetailList);
+
         purchaseQuotationDTO.setId(purchaseQuotation.getId());
         return purchaseQuotationDTO;
     }

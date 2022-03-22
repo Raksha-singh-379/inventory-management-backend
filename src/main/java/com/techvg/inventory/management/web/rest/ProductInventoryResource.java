@@ -8,6 +8,7 @@ import com.techvg.inventory.management.service.dto.ProductInventoryDTO;
 import com.techvg.inventory.management.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,7 +26,8 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.techvg.inventory.management.domain.ProductInventory}.
+ * REST controller for managing
+ * {@link com.techvg.inventory.management.domain.ProductInventory}.
  */
 @RestController
 @RequestMapping("/api")
@@ -58,7 +60,9 @@ public class ProductInventoryResource {
      * {@code POST  /product-inventories} : Create a new productInventory.
      *
      * @param productInventoryDTO the productInventoryDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new productInventoryDTO, or with status {@code 400 (Bad Request)} if the productInventory has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new productInventoryDTO, or with status
+     *         {@code 400 (Bad Request)} if the productInventory has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/product-inventories")
@@ -78,11 +82,13 @@ public class ProductInventoryResource {
     /**
      * {@code PUT  /product-inventories/:id} : Updates an existing productInventory.
      *
-     * @param id the id of the productInventoryDTO to save.
+     * @param id                  the id of the productInventoryDTO to save.
      * @param productInventoryDTO the productInventoryDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated productInventoryDTO,
-     * or with status {@code 400 (Bad Request)} if the productInventoryDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the productInventoryDTO couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated productInventoryDTO, or with status
+     *         {@code 400 (Bad Request)} if the productInventoryDTO is not valid, or
+     *         with status {@code 500 (Internal Server Error)} if the
+     *         productInventoryDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/product-inventories/{id}")
@@ -110,14 +116,17 @@ public class ProductInventoryResource {
     }
 
     /**
-     * {@code PATCH  /product-inventories/:id} : Partial updates given fields of an existing productInventory, field will ignore if it is null
+     * {@code PATCH  /product-inventories/:id} : Partial updates given fields of an
+     * existing productInventory, field will ignore if it is null
      *
-     * @param id the id of the productInventoryDTO to save.
+     * @param id                  the id of the productInventoryDTO to save.
      * @param productInventoryDTO the productInventoryDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated productInventoryDTO,
-     * or with status {@code 400 (Bad Request)} if the productInventoryDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the productInventoryDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the productInventoryDTO couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated productInventoryDTO, or with status
+     *         {@code 400 (Bad Request)} if the productInventoryDTO is not valid, or
+     *         with status {@code 404 (Not Found)} if the productInventoryDTO is not
+     *         found, or with status {@code 500 (Internal Server Error)} if the
+     *         productInventoryDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/product-inventories/{id}", consumes = { "application/json", "application/merge-patch+json" })
@@ -150,7 +159,8 @@ public class ProductInventoryResource {
      *
      * @param pageable the pagination information.
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of productInventories in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of productInventories in body.
      */
     @GetMapping("/product-inventories")
     public ResponseEntity<List<ProductInventoryDTO>> getAllProductInventories(
@@ -167,7 +177,8 @@ public class ProductInventoryResource {
      * {@code GET  /product-inventories/count} : count all the productInventories.
      *
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count
+     *         in body.
      */
     @GetMapping("/product-inventories/count")
     public ResponseEntity<Long> countProductInventories(ProductInventoryCriteria criteria) {
@@ -179,7 +190,8 @@ public class ProductInventoryResource {
      * {@code GET  /product-inventories/:id} : get the "id" productInventory.
      *
      * @param id the id of the productInventoryDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productInventoryDTO, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the productInventoryDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/product-inventories/{id}")
     public ResponseEntity<ProductInventoryDTO> getProductInventory(@PathVariable Long id) {
@@ -202,5 +214,36 @@ public class ProductInventoryResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    /**
+     * {@code POST  /product-inventories/list} : Create a new productInventories.
+     *
+     * @param productInventoryDTOList the productInventoryDTOList to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new productInventoryDTOList, or with status
+     *         {@code 400 (Bad Request)} if the productInventory has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/product-inventories/list")
+    public ResponseEntity<List<ProductInventoryDTO>> createProductInventoryList(
+        @RequestBody List<ProductInventoryDTO> productInventoryDTOList
+    ) throws URISyntaxException {
+        log.debug("REST request to save ProductInventory : {}", productInventoryDTOList);
+
+        ProductInventoryDTO result = null;
+        List<ProductInventoryDTO> productInventoryList = new ArrayList<ProductInventoryDTO>();
+        for (ProductInventoryDTO inventoryObj : productInventoryDTOList) {
+            if (inventoryObj.getId() != null) {
+                throw new BadRequestAlertException("A new productInventory cannot already have an ID", ENTITY_NAME, "idexists");
+            } else if (inventoryObj.getWareHouse() != null && inventoryObj.getProduct() != null) {
+                result = productInventoryService.save(inventoryObj);
+                productInventoryList.add(result);
+            }
+        }
+        return ResponseEntity
+            .created(new URI("/api/product-inventories/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(productInventoryList);
     }
 }
