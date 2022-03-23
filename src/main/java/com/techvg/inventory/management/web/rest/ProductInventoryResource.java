@@ -3,7 +3,10 @@ package com.techvg.inventory.management.web.rest;
 import com.techvg.inventory.management.repository.ProductInventoryRepository;
 import com.techvg.inventory.management.service.ProductInventoryQueryService;
 import com.techvg.inventory.management.service.ProductInventoryService;
+import com.techvg.inventory.management.service.ProductQueryService;
+import com.techvg.inventory.management.service.criteria.ProductCriteria;
 import com.techvg.inventory.management.service.criteria.ProductInventoryCriteria;
+import com.techvg.inventory.management.service.dto.ProductDTO;
 import com.techvg.inventory.management.service.dto.ProductInventoryDTO;
 import com.techvg.inventory.management.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -14,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +49,9 @@ public class ProductInventoryResource {
     private final ProductInventoryRepository productInventoryRepository;
 
     private final ProductInventoryQueryService productInventoryQueryService;
+
+    @Autowired
+    private ProductQueryService productQueryService;
 
     public ProductInventoryResource(
         ProductInventoryService productInventoryService,
@@ -184,6 +191,23 @@ public class ProductInventoryResource {
     public ResponseEntity<Long> countProductInventories(ProductInventoryCriteria criteria) {
         log.debug("REST request to count ProductInventories by criteria: {}", criteria);
         return ResponseEntity.ok().body(productInventoryQueryService.countByCriteria(criteria));
+    }
+
+    /**
+     * {@code GET  /product-inventories/stockCount} : count all the productInventories Stock.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/product-inventories/stockCount")
+    public ResponseEntity<List<ProductDTO>> countProductInventoriesStock(ProductInventoryCriteria criteria, Pageable page) {
+        log.debug("REST request to count ProductInventories by criteria: {}", criteria);
+
+        //        List<ProductDTO> productList = productQueryService.findByCriteria(pdCriteria);
+        //
+        //        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!1"+ productList.toString());
+
+        return ResponseEntity.ok().body(productInventoryService.countProductInventoriesStock(criteria, page));
     }
 
     /**

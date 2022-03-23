@@ -156,7 +156,7 @@ public class ProductInventoryService {
      * @param ProductInventoryCriteria criteria to calculate.
      * @return the list of product entities.
      */
-    public List<ProductDTO> countProductInventoriesStock(ProductInventoryCriteria criteria) {
+    public List<ProductDTO> countProductInventoriesStock(ProductInventoryCriteria criteria, Pageable page) {
         List<ProductDTO> productsList = new ArrayList<ProductDTO>();
 
         //---------------- Calculate Stock when ProductId not given in Criteria---------------
@@ -174,8 +174,8 @@ public class ProductInventoryService {
 
                 List<ProductInventoryDTO> stockList = productInventoryQueryService.findByCriteria(criteria);
                 int productStock = this.countInventoryStock(stockList);
-                //                productObj.setTotalStock(productStock);
-                //                productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
+                productObj.setTotalStock(productStock);
+                productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
                 return productList;
             }
         } //---------------- Calculate Stock when WareHouseId not given in Criteria---------------
@@ -191,8 +191,8 @@ public class ProductInventoryService {
                 if (!stockLists.isEmpty()) {
                     int productStock = this.countInventoryStock(stockLists);
                     ProductDTO product = stockLists.iterator().next().getProduct();
-                    //                    product.setTotalStock(productStock);
-                    //                    product.setWareHouseId(wareaHouseObj.getId());
+                    product.setTotalStock(productStock);
+                    product.setWareHouseId(wareaHouseObj.getId());
                     productsList.add(product);
                 }
             }
@@ -201,8 +201,8 @@ public class ProductInventoryService {
             List<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria);
             int productStock = this.countInventoryStock(stockLists);
             ProductDTO product = stockLists.iterator().next().getProduct();
-            //            product.setWareHouseId(criteria.getWareHouseId().getEquals());
-            //            product.setTotalStock(productStock);
+            product.setWareHouseId(criteria.getWareHouseId().getEquals());
+            product.setTotalStock(productStock);
             productsList.add(product);
         }
         return productsList;

@@ -66,6 +66,10 @@ public class ProductDTO implements Serializable {
 
     private SecurityUserDTO securityUser;
 
+    private double totalStock;
+
+    private long wareHouseId;
+
     public Long getId() {
         return id;
     }
@@ -343,5 +347,21 @@ public class ProductDTO implements Serializable {
             ", unit=" + getUnit() +
             ", securityUser=" + getSecurityUser() +
             "}";
+    }
+
+    public double getTotalStock() {
+        return totalStock;
+    }
+
+    public void setTotalStock(double totalStock) {
+        this.totalStock = totalStock;
+    }
+
+    public long getWareHouseId() {
+        return wareHouseId;
+    }
+
+    public void setWareHouseId(long wareHouseId) {
+        this.wareHouseId = wareHouseId;
     }
 }
