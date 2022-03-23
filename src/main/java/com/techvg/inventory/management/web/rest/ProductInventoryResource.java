@@ -200,14 +200,10 @@ public class ProductInventoryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/product-inventories/stockCount")
-    public ResponseEntity<List<ProductDTO>> countProductInventoriesStock(ProductInventoryCriteria criteria, Pageable page) {
+    public ResponseEntity<List<ProductDTO>> countProductInventoriesStock(ProductInventoryCriteria criteria, ProductCriteria pdCriteria) {
         log.debug("REST request to count ProductInventories by criteria: {}", criteria);
 
-        //        List<ProductDTO> productList = productQueryService.findByCriteria(pdCriteria);
-        //
-        //        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!1"+ productList.toString());
-
-        return ResponseEntity.ok().body(productInventoryService.countProductInventoriesStock(criteria, page));
+        return ResponseEntity.ok().body(productInventoryService.countProductInventoriesStock(criteria, pdCriteria));
     }
 
     /**
