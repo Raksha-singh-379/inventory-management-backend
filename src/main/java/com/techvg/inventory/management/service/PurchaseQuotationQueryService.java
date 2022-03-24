@@ -1,12 +1,12 @@
 package com.techvg.inventory.management.service;
 
 import com.techvg.inventory.management.domain.*; // for static metamodels
-import com.techvg.inventory.management.domain.PurchaseQuotation;
 import com.techvg.inventory.management.repository.PurchaseQuotationRepository;
 import com.techvg.inventory.management.service.criteria.PurchaseQuotationCriteria;
 import com.techvg.inventory.management.service.dto.PurchaseQuotationDTO;
 import com.techvg.inventory.management.service.mapper.PurchaseQuotationMapper;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,14 @@ public class PurchaseQuotationQueryService extends QueryService<PurchaseQuotatio
     public List<PurchaseQuotationDTO> findByCriteria(PurchaseQuotationCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<PurchaseQuotation> specification = createSpecification(criteria);
-        return purchaseQuotationMapper.toDto(purchaseQuotationRepository.findAll(specification));
+        List<PurchaseQuotation> purchaseQuotationList = purchaseQuotationRepository.findAll(specification);
+
+        for (PurchaseQuotation purchaseObj : purchaseQuotationList) {
+            if (!purchaseObj.getPurchaseQuotationDetails().isEmpty()) {
+                purchaseObj.setPurchaseQuotationDetails(null);
+            }
+        }
+        return purchaseQuotationMapper.toDto(purchaseQuotationList);
     }
 
     /**
@@ -63,7 +70,15 @@ public class PurchaseQuotationQueryService extends QueryService<PurchaseQuotatio
     public Page<PurchaseQuotationDTO> findByCriteria(PurchaseQuotationCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<PurchaseQuotation> specification = createSpecification(criteria);
-        return purchaseQuotationRepository.findAll(specification, page).map(purchaseQuotationMapper::toDto);
+        Page<PurchaseQuotation> pageQuotations = purchaseQuotationRepository.findAll(specification, page);
+        List<PurchaseQuotation> purchaseQuotationList = pageQuotations.getContent();
+
+        for (PurchaseQuotation purchaseObj : purchaseQuotationList) {
+            if (!purchaseObj.getPurchaseQuotationDetails().isEmpty()) {
+                purchaseObj.setPurchaseQuotationDetails(null);
+            }
+        }
+        return pageQuotations.map(purchaseQuotationMapper::toDto);
     }
 
     /**

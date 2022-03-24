@@ -435,4 +435,10 @@ public class PurchaseQuotation implements Serializable {
     public void setFreeField4(String freeField4) {
         this.freeField4 = freeField4;
     }
+
+    public PurchaseQuotation removePurchaseQuotationDetails(Set<PurchaseQuotationDetails> quotationDetails) {
+        this.purchaseQuotationDetails.remove(quotationDetails);
+        ((PurchaseQuotationDetails) purchaseQuotationDetails).setPurchaseQuotation(null);
+        return this;
+    }
 }

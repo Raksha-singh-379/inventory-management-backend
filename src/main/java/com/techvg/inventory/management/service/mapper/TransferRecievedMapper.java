@@ -9,7 +9,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { SecurityUserMapper.class, TransferMapper.class })
 public interface TransferRecievedMapper extends EntityMapper<TransferRecievedDTO, TransferRecieved> {
-    @Mapping(target = "securityUser", source = "securityUser", qualifiedByName = "login")
+    @Mapping(target = "securityUser.id", source = "securityUser.id")
     @Mapping(target = "transfer", source = "transfer", qualifiedByName = "id")
     TransferRecievedDTO toDto(TransferRecieved s);
 }

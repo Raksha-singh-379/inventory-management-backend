@@ -9,7 +9,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { ProductMapper.class, TransferMapper.class })
 public interface TransferDetailsMapper extends EntityMapper<TransferDetailsDTO, TransferDetails> {
-    @Mapping(target = "product", source = "product", qualifiedByName = "id")
-    @Mapping(target = "transfer", source = "transfer", qualifiedByName = "id")
+    @Mapping(target = "product.id", source = "product.id")
+    @Mapping(target = "transfer.id", source = "transfer.id")
     TransferDetailsDTO toDto(TransferDetails s);
 }
