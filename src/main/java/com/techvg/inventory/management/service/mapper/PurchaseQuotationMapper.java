@@ -9,9 +9,9 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { SecurityUserMapper.class, ProjectMapper.class, ClientDetailsMapper.class })
 public interface PurchaseQuotationMapper extends EntityMapper<PurchaseQuotationDTO, PurchaseQuotation> {
-    @Mapping(target = "securityUser", source = "securityUser", qualifiedByName = "login")
-    @Mapping(target = "project", source = "project", qualifiedByName = "projectName")
-    @Mapping(target = "clientDetails", source = "clientDetails", qualifiedByName = "id")
+    @Mapping(target = "securityUser.id", source = "securityUser.id")
+    @Mapping(target = "project.id", source = "project.id")
+    @Mapping(target = "clientDetails.id", source = "clientDetails.id")
     PurchaseQuotationDTO toDto(PurchaseQuotation s);
 
     @Named("id")

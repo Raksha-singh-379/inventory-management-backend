@@ -1,10 +1,10 @@
 package com.techvg.inventory.management.security;
 
-import com.github.dockerjava.api.exception.NotFoundException;
 import com.techvg.inventory.management.domain.SecurityUser;
 import com.techvg.inventory.management.repository.SecurityUserRepository;
 import com.techvg.inventory.management.service.dto.LoginUserDTO;
 import com.techvg.inventory.management.service.mapper.LoginUserMapper;
+import com.techvg.inventory.management.web.rest.errors.NotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -39,7 +39,6 @@ public class DomainUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + login);
 
         /*
          * if (new EmailValidator().isValid(login, null)) { return userRepository
@@ -52,8 +51,6 @@ public class DomainUserDetailsService implements UserDetailsService {
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
 
         log.debug("fetch data from security user table {}", lowercaseLogin);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + login);
-
         return userRepository
             .findOneByLogin(lowercaseLogin)
             .map(user -> createSpringSecurityUser(lowercaseLogin, user))

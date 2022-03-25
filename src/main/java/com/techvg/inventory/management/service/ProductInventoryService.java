@@ -159,7 +159,24 @@ public class ProductInventoryService {
     public List<ProductDTO> countProductInventoriesStock(ProductInventoryCriteria criteria, ProductCriteria pdCriteria) {
         List<ProductDTO> productsList = new ArrayList<ProductDTO>();
 
-        // ---------------- Calculate Stock when ProductId not given in
+        if (criteria.getProductId() == null && criteria.getWareHouseId() == null && pdCriteria == null) {
+            WareHouseCriteria wareHouseCri = new WareHouseCriteria();
+            List<WareHouseDTO> wareHouseList = wareHouseQueryService.findByCriteria(wareHouseCri);
+            for (WareHouseDTO wareaHouseObj : wareHouseList) {
+                LongFilter idFilter = new LongFilter();
+                idFilter.setEquals(wareaHouseObj.getId());
+                criteria.setWareHouseId(idFilter);
+                List<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria);
+                if (!stockLists.isEmpty()) {
+                    int productStock = this.countInventoryStock(stockLists);
+                    ProductDTO product = stockLists.iterator().next().getProduct();
+                    product.setTotalStock(productStock);
+                    product.setWareHouseId(wareaHouseObj.getId());
+                    productsList.add(product);
+                }
+            }
+            return productsList;
+        } else // ---------------- Calculate Stock when ProductId not given in
         // Criteria---------------
 
         if (criteria.getProductId() == null && criteria.getWareHouseId() != null && pdCriteria == null) {
@@ -213,7 +230,6 @@ public class ProductInventoryService {
                 int productStock = this.countInventoryStock(stockList);
                 productObj.setTotalStock(productStock);
                 productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
-                // productsList.add(productObj);
             }
             return productList;
         } else { // both product Id and warehouse id available

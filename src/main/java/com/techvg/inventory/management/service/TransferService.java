@@ -56,12 +56,12 @@ public class TransferService {
         Transfer transfer = transferMapper.toEntity(transferDTO);
         transfer = transferRepository.save(transfer);
 
-        //-------------------------------------------------------
-        //-------------Create TransferDetails product wise
+        // -------------------------------------------------------
+        // -------------Create TransferDetails product wise
         if (!transferDTO.getTransferDetails().isEmpty()) {
             List<TransferDetailsDTO> transferDetailsList = transferDTO.getTransferDetails();
             for (TransferDetailsDTO detailsDto : transferDetailsList) {
-                //TransferDetailsDTO detailsDto = transferDetailsList.get(i);
+                // TransferDetailsDTO detailsDto = transferDetailsList.get(i);
 
                 log.debug("Request to save PurchaseQuotationDetails : {}", detailsDto);
 

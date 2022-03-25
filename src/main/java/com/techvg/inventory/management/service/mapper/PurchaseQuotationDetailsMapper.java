@@ -9,7 +9,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { ProductMapper.class, PurchaseQuotationMapper.class })
 public interface PurchaseQuotationDetailsMapper extends EntityMapper<PurchaseQuotationDetailsDTO, PurchaseQuotationDetails> {
-    @Mapping(target = "product", source = "product", qualifiedByName = "id")
-    @Mapping(target = "purchaseQuotation", source = "purchaseQuotation", qualifiedByName = "id")
+    @Mapping(target = "product.id", source = "product.id")
+    @Mapping(target = "purchaseQuotation.id", source = "purchaseQuotation.id")
     PurchaseQuotationDetailsDTO toDto(PurchaseQuotationDetails s);
 }

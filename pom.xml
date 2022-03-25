@@ -8,7 +8,7 @@
     <groupId>com.techvg.inventory.management</groupId>
     <artifactId>inventory-management</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>Inventory Management</name>
     <description>Description for inventoryManagement</description>
 

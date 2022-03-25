@@ -66,12 +66,12 @@ public class ReportResource {
     public ResponseEntity<byte[]> getByName(
         @RequestParam(name = "format", required = true) String format,
         @RequestParam(name = "name", required = true) String name,
-        @RequestParam(name = "id", required = false) Long id
+        @RequestParam(name = "quote_id", required = false) Long quote_id
     ) {
         log.debug("REST request to get repot : {}" + name);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.reportServerUrl + "/CCMS/Reports/" + name + "." + format);
-        if (StringUtils.isNotEmpty(id.toString())) builder.queryParam("id", id);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.reportServerUrl + "/IMS/Reports/" + name + "." + format);
+        if (StringUtils.isNotEmpty(quote_id.toString())) builder.queryParam("quote_id", quote_id);
         String auth = this.reportServerUseranme + ":" + this.reportServerPassword;
         String base64Creds = Base64.getEncoder().encodeToString(auth.getBytes());
         HttpHeaders httpHeaders = new HttpHeaders();
