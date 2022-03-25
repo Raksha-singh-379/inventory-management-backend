@@ -40,10 +40,6 @@ public class PurchaseQuotationDTO implements Serializable {
 
     private String freeField2;
 
-    private String freeField3;
-
-    private String freeField4;
-
     private SecurityUserDTO securityUser;
 
     private ProjectDTO project;
@@ -227,8 +223,6 @@ public class PurchaseQuotationDTO implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", freeField1='" + getFreeField1() + "'" +
             ", freeField2='" + getFreeField2() + "'" +
-            ", freeField3='" + getFreeField3() + "'" +
-            ", freeField3='" + getFreeField3() + "'" +
             ", securityUser=" + getSecurityUser() +
             ", project=" + getProject() +
             ", clientDetails=" + getClientDetails() +
@@ -241,21 +235,5 @@ public class PurchaseQuotationDTO implements Serializable {
 
     public void setPurchaseQuotationDetails(List<PurchaseQuotationDetailsDTO> purchaseQuotationDetails) {
         this.purchaseQuotationDetails = purchaseQuotationDetails;
-    }
-
-    public String getFreeField3() {
-        return freeField3;
-    }
-
-    public void setFreeField3(String freeField3) {
-        this.freeField3 = freeField3;
-    }
-
-    public String getFreeField4() {
-        return freeField4;
-    }
-
-    public void setFreeField4(String freeField4) {
-        this.freeField4 = freeField4;
     }
 }

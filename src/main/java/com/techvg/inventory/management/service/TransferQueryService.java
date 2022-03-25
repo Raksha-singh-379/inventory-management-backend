@@ -1,7 +1,6 @@
 package com.techvg.inventory.management.service;
 
 import com.techvg.inventory.management.domain.*; // for static metamodels
-import com.techvg.inventory.management.domain.Transfer;
 import com.techvg.inventory.management.repository.TransferRepository;
 import com.techvg.inventory.management.service.criteria.TransferCriteria;
 import com.techvg.inventory.management.service.dto.TransferDTO;
@@ -18,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
 
 /**
- * Service for executing complex queries for {@link Transfer} entities in the database.
- * The main input is a {@link TransferCriteria} which gets converted to {@link Specification},
- * in a way that all the filters must apply.
- * It returns a {@link List} of {@link TransferDTO} or a {@link Page} of {@link TransferDTO} which fulfills the criteria.
+ * Service for executing complex queries for {@link Transfer} entities in the
+ * database. The main input is a {@link TransferCriteria} which gets converted
+ * to {@link Specification}, in a way that all the filters must apply. It
+ * returns a {@link List} of {@link TransferDTO} or a {@link Page} of
+ * {@link TransferDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -39,8 +39,11 @@ public class TransferQueryService extends QueryService<Transfer> {
     }
 
     /**
-     * Return a {@link List} of {@link TransferDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
+     * Return a {@link List} of {@link TransferDTO} which matches the criteria from
+     * the database.
+     *
+     * @param criteria The object which holds all the filters, which the entities
+     *                 should match.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -51,21 +54,34 @@ public class TransferQueryService extends QueryService<Transfer> {
     }
 
     /**
-     * Return a {@link Page} of {@link TransferDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * Return a {@link Page} of {@link TransferDTO} which matches the criteria from
+     * the database.
+     *
+     * @param criteria The object which holds all the filters, which the entities
+     *                 should match.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
     public Page<TransferDTO> findByCriteria(TransferCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Transfer> specification = createSpecification(criteria);
-        return transferRepository.findAll(specification, page).map(transferMapper::toDto);
+
+        Page<Transfer> pageTransfers = transferRepository.findAll(specification, page);
+        List<Transfer> transfersList = pageTransfers.getContent();
+        for (Transfer transferObj : transfersList) {
+            if (!transferObj.getTransferDetails().isEmpty()) {
+                transferObj.setTransferDetails(null);
+            }
+        }
+        return pageTransfers.map(transferMapper::toDto);
     }
 
     /**
      * Return the number of matching entities in the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
+     *
+     * @param criteria The object which holds all the filters, which the entities
+     *                 should match.
      * @return the number of matching entities.
      */
     @Transactional(readOnly = true)
@@ -77,7 +93,9 @@ public class TransferQueryService extends QueryService<Transfer> {
 
     /**
      * Function to convert {@link TransferCriteria} to a {@link Specification}
-     * @param criteria The object which holds all the filters, which the entities should match.
+     *
+     * @param criteria The object which holds all the filters, which the entities
+     *                 should match.
      * @return the matching {@link Specification} of the entity.
      */
     protected Specification<Transfer> createSpecification(TransferCriteria criteria) {

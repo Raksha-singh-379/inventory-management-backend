@@ -1,12 +1,21 @@
 package com.techvg.inventory.management.service;
 
+import com.techvg.inventory.management.domain.PurchaseQuotationDetails;
 import com.techvg.inventory.management.domain.Transfer;
+import com.techvg.inventory.management.domain.TransferDetails;
+import com.techvg.inventory.management.repository.TransferDetailsRepository;
 import com.techvg.inventory.management.repository.TransferRepository;
+import com.techvg.inventory.management.service.dto.PurchaseQuotationDTO;
+import com.techvg.inventory.management.service.dto.PurchaseQuotationDetailsDTO;
 import com.techvg.inventory.management.service.dto.TransferDTO;
+import com.techvg.inventory.management.service.dto.TransferDetailsDTO;
+import com.techvg.inventory.management.service.mapper.TransferDetailsMapper;
 import com.techvg.inventory.management.service.mapper.TransferMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +34,12 @@ public class TransferService {
 
     private final TransferMapper transferMapper;
 
+    @Autowired
+    private TransferDetailsMapper transferDetailsMapper;
+
+    @Autowired
+    private TransferDetailsRepository transferDetailsRepository;
+
     public TransferService(TransferRepository transferRepository, TransferMapper transferMapper) {
         this.transferRepository = transferRepository;
         this.transferMapper = transferMapper;
@@ -40,7 +55,27 @@ public class TransferService {
         log.debug("Request to save Transfer : {}", transferDTO);
         Transfer transfer = transferMapper.toEntity(transferDTO);
         transfer = transferRepository.save(transfer);
-        return transferMapper.toDto(transfer);
+
+        //-------------------------------------------------------
+        //-------------Create TransferDetails product wise
+        if (!transferDTO.getTransferDetails().isEmpty()) {
+            List<TransferDetailsDTO> transferDetailsList = transferDTO.getTransferDetails();
+            for (TransferDetailsDTO detailsDto : transferDetailsList) {
+                //TransferDetailsDTO detailsDto = transferDetailsList.get(i);
+
+                log.debug("Request to save PurchaseQuotationDetails : {}", detailsDto);
+
+                if (detailsDto != null) {
+                    TransferDTO transferDto = new TransferDTO();
+                    transferDto.setId(transfer.getId());
+                    detailsDto.setTransfer(transferDto);
+                    TransferDetails transferDetails = transferDetailsMapper.toEntity(detailsDto);
+                    transferDetails = transferDetailsRepository.save(transferDetails);
+                }
+            }
+        }
+        transferDTO.setId(transfer.getId());
+        return transferDTO;
     }
 
     /**

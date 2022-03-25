@@ -3,6 +3,7 @@ package com.techvg.inventory.management.service.dto;
 import com.techvg.inventory.management.domain.enumeration.Status;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,6 +32,8 @@ public class TransferDTO implements Serializable {
     private SecurityUserDTO securityUser;
 
     private WareHouseDTO wareHouse;
+
+    private List<TransferDetailsDTO> transferDetails;
 
     public Long getId() {
         return id;
@@ -120,6 +123,14 @@ public class TransferDTO implements Serializable {
         this.wareHouse = wareHouse;
     }
 
+    public List<TransferDetailsDTO> getTransferDetails() {
+        return transferDetails;
+    }
+
+    public void setTransferDetails(List<TransferDetailsDTO> transferDetails) {
+        this.transferDetails = transferDetails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -156,6 +167,7 @@ public class TransferDTO implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", securityUser=" + getSecurityUser() +
             ", wareHouse=" + getWareHouse() +
+            ", transferDetails=" + getTransferDetails() +
             "}";
     }
 }

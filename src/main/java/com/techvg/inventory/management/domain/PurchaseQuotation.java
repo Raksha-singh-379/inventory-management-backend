@@ -67,12 +67,6 @@ public class PurchaseQuotation implements Serializable {
     @Column(name = "free_field_2")
     private String freeField2;
 
-    @Column(name = "free_field_3")
-    private String freeField3;
-
-    @Column(name = "free_field_4")
-    private String freeField4;
-
     @OneToMany(mappedBy = "purchaseQuotation")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "product", "purchaseQuotation" }, allowSetters = true)
@@ -415,24 +409,6 @@ public class PurchaseQuotation implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", freeField1='" + getFreeField1() + "'" +
             ", freeField2='" + getFreeField2() + "'" +
-            ", freeField3='" + getFreeField3() + "'" +
-            ", freeField4='" + getFreeField4() + "'" +
             "}";
-    }
-
-    public String getFreeField3() {
-        return freeField3;
-    }
-
-    public void setFreeField3(String freeField3) {
-        this.freeField3 = freeField3;
-    }
-
-    public String getFreeField4() {
-        return freeField4;
-    }
-
-    public void setFreeField4(String freeField4) {
-        this.freeField4 = freeField4;
     }
 }
