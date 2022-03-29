@@ -41,10 +41,7 @@ public class UserJWTController {
             loginVM.getUsername(),
             loginVM.getPassword()
         );
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + "testing");
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication, loginVM.isRememberMe());
         this.tokenProvider.myHash.put(loginVM.getUsername(), jwt);

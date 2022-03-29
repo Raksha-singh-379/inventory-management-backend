@@ -32,6 +32,7 @@ spring:
     livereload:
       enabled: false
   datasource:
+    driverClassName: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/inventoryManagement?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
@@ -69,8 +70,7 @@ spring:
     username:
     password:
   thymeleaf:
-    cache: true
-
+    cache: false
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
 # keytool -genkey -alias inventorymanagement -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650

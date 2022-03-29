@@ -1,5 +1,6 @@
 package com.techvg.inventory.management.service;
 
+import com.techvg.inventory.management.domain.Product;
 import com.techvg.inventory.management.domain.ProductInventory;
 import com.techvg.inventory.management.domain.enumeration.ProductType;
 import com.techvg.inventory.management.repository.ProductInventoryRepository;
@@ -18,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -156,90 +159,140 @@ public class ProductInventoryService {
      * @param ProductInventoryCriteria criteria to calculate.
      * @return the list of product entities.
      */
-    public List<ProductDTO> countProductInventoriesStock(ProductInventoryCriteria criteria, ProductCriteria pdCriteria) {
+    public Page<ProductDTO> countProductInventoriesStock(ProductInventoryCriteria criteria, ProductCriteria pdCriteria, Pageable page) {
         List<ProductDTO> productsList = new ArrayList<ProductDTO>();
 
-        if (criteria.getProductId() == null && criteria.getWareHouseId() == null && pdCriteria == null) {
-            WareHouseCriteria wareHouseCri = new WareHouseCriteria();
-            List<WareHouseDTO> wareHouseList = wareHouseQueryService.findByCriteria(wareHouseCri);
-            for (WareHouseDTO wareaHouseObj : wareHouseList) {
-                LongFilter idFilter = new LongFilter();
-                idFilter.setEquals(wareaHouseObj.getId());
-                criteria.setWareHouseId(idFilter);
-                List<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria);
-                if (!stockLists.isEmpty()) {
-                    int productStock = this.countInventoryStock(stockLists);
+        // --------------------------If product search criteria is given
+
+        if (pdCriteria.getCasNumber() != null || pdCriteria.getCatlogNumber() != null || pdCriteria.getProductName() != null) {
+            Page<ProductDTO> productList = productQueryService.findByCriteria(pdCriteria, page);
+
+            if (criteria.getWareHouseId() != null) {
+                for (ProductDTO productObj : productList.getContent()) {
+                    LongFilter idFilter = new LongFilter();
+                    idFilter.setEquals(productObj.getId());
+                    criteria.setProductId(idFilter);
+
+                    Page<ProductInventoryDTO> stockList = productInventoryQueryService.findByCriteria(criteria, page);
+                    int productStock = this.countInventoryStock(stockList.getContent());
+                    productObj.setTotalStock(productStock);
+                    productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
+                }
+                return productList;
+            } else if (criteria.getWareHouseId() == null) {
+                WareHouseCriteria wareHouseCri = new WareHouseCriteria();
+                Page<WareHouseDTO> wareHouseList = wareHouseQueryService.findByCriteria(wareHouseCri, page);
+
+                for (WareHouseDTO wareaHouseObj : wareHouseList.getContent()) {
+                    LongFilter idFilter = new LongFilter();
+                    idFilter.setEquals(wareaHouseObj.getId());
+                    criteria.setWareHouseId(idFilter);
+                    Page<ProductDTO> productLists = productQueryService.findByCriteria(pdCriteria, page);
+                    for (ProductDTO productObj : productLists) {
+                        idFilter.setEquals(productObj.getId());
+                        criteria.setProductId(idFilter);
+                        Page<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria, page);
+                        if (!stockLists.getContent().isEmpty()) {
+                            int productStock = this.countInventoryStock(stockLists.getContent());
+                            productObj.setTotalStock(productStock);
+                            productObj.setWareHouseId(wareaHouseObj.getId());
+                        }
+                    }
+
+                    return productLists;
+                }
+            } else if (criteria != null) {
+                // ---------------- Calculate Stock when ProductId not given in
+                // Criteria---------------
+
+                if (criteria.getProductId() == null && criteria.getWareHouseId() != null) {
+                    ProductCriteria prodCriteria = new ProductCriteria();
+                    ProductTypeFilter productFilter = new ProductTypeFilter();
+                    productFilter.setEquals(ProductType.RAWMATERIAL);
+                    prodCriteria.setProductType(productFilter);
+                    Page<ProductDTO> productLists = productQueryService.findByCriteria(prodCriteria, page);
+
+                    for (ProductDTO productObj : productLists.getContent()) {
+                        LongFilter idFilter = new LongFilter();
+                        idFilter.setEquals(productObj.getId());
+                        criteria.setProductId(idFilter);
+
+                        Page<ProductInventoryDTO> stockList = productInventoryQueryService.findByCriteria(criteria, page);
+                        int productStock = this.countInventoryStock(stockList.getContent());
+                        productObj.setTotalStock(productStock);
+                        productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
+                    }
+                    return productLists;
+                } // both product Id and warehouse id available
+                else if (criteria.getWareHouseId() != null && criteria.getProductId() != null) {
+                    Page<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria, page);
+                    int productStock = this.countInventoryStock(stockLists.getContent());
                     ProductDTO product = stockLists.iterator().next().getProduct();
+                    product.setWareHouseId(criteria.getWareHouseId().getEquals());
                     product.setTotalStock(productStock);
-                    product.setWareHouseId(wareaHouseObj.getId());
                     productsList.add(product);
+                    return this.convertListIntoPagable(productsList, page);
+                }
+                //---------------------Calculate Stock when productId is given in Criteria---------------
+
+                if (criteria.getWareHouseId() == null && criteria.getProductId() != null) {
+                    WareHouseCriteria wareHouseCri = new WareHouseCriteria();
+                    Page<WareHouseDTO> wareHouseList = wareHouseQueryService.findByCriteria(wareHouseCri, page);
+                    for (WareHouseDTO wareaHouseObj : wareHouseList.getContent()) {
+                        LongFilter idFilter = new LongFilter();
+                        idFilter.setEquals(wareaHouseObj.getId());
+                        criteria.setWareHouseId(idFilter);
+
+                        Page<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria, page);
+                        if (!stockLists.getContent().isEmpty()) {
+                            int productStock = this.countInventoryStock(stockLists.getContent());
+                            ProductDTO product = stockLists.getContent().iterator().next().getProduct();
+                            product.setTotalStock(productStock);
+                            product.setWareHouseId(wareaHouseObj.getId());
+                            productsList.add(product);
+                        }
+
+                        return this.convertListIntoPagable(productsList, page);
+                    }
+                }
+                // ---------------- Calculate Stock when WareHouseId and productId not given in
+                // Criteria---------------
+                else {
+                    WareHouseCriteria wareHouseCri = new WareHouseCriteria();
+                    Page<WareHouseDTO> wareHouseList = wareHouseQueryService.findByCriteria(wareHouseCri, page);
+                    Page<ProductDTO> productLists = productQueryService.findByCriteria(pdCriteria, page);
+                    for (ProductDTO productObj : productLists) {
+                        LongFilter idFilter = new LongFilter();
+                        idFilter.setEquals(productObj.getId());
+                        criteria.setProductId(idFilter);
+
+                        for (WareHouseDTO wareaHouseObj : wareHouseList.getContent()) {
+                            idFilter.setEquals(wareaHouseObj.getId());
+                            criteria.setWareHouseId(idFilter);
+
+                            Page<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria, page);
+
+                            if (!stockLists.getContent().isEmpty()) {
+                                int productStock = this.countInventoryStock(stockLists.getContent());
+                                productObj.setTotalStock(productStock);
+                                productObj.setWareHouseId(wareaHouseObj.getId());
+                            }
+                        }
+                    }
+                    return productLists;
                 }
             }
-            return productsList;
-        } else // ---------------- Calculate Stock when ProductId not given in
-        // Criteria---------------
-
-        if (criteria.getProductId() == null && criteria.getWareHouseId() != null && pdCriteria == null) {
-            ProductCriteria prodCriteria = new ProductCriteria();
-            ProductTypeFilter productFilter = new ProductTypeFilter();
-            productFilter.setEquals(ProductType.RAWMATERIAL);
-            prodCriteria.setProductType(productFilter);
-            List<ProductDTO> productList = productQueryService.findByCriteria(prodCriteria);
-
-            for (ProductDTO productObj : productList) {
-                LongFilter idFilter = new LongFilter();
-                idFilter.setEquals(productObj.getId());
-                criteria.setProductId(idFilter);
-
-                List<ProductInventoryDTO> stockList = productInventoryQueryService.findByCriteria(criteria);
-                int productStock = this.countInventoryStock(stockList);
-                productObj.setTotalStock(productStock);
-                productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
-            }
-            return productList;
         }
-        // ---------------- Calculate Stock when WareHouseId not given in Criteria---------------
-        else if (criteria.getWareHouseId() == null && criteria.getProductId() != null && pdCriteria == null) {
-            WareHouseCriteria wareHouseCri = new WareHouseCriteria();
-            List<WareHouseDTO> wareHouseList = wareHouseQueryService.findByCriteria(wareHouseCri);
+        return this.convertListIntoPagable(productsList, page);
+    }
 
-            for (WareHouseDTO wareaHouseObj : wareHouseList) {
-                LongFilter idFilter = new LongFilter();
-                idFilter.setEquals(wareaHouseObj.getId());
-                criteria.setWareHouseId(idFilter);
-                List<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria);
-                if (!stockLists.isEmpty()) {
-                    int productStock = this.countInventoryStock(stockLists);
-                    ProductDTO product = stockLists.iterator().next().getProduct();
-                    product.setTotalStock(productStock);
-                    product.setWareHouseId(wareaHouseObj.getId());
-                    productsList.add(product);
-                }
-            }
-            return productsList;
+    public Page<ProductDTO> convertListIntoPagable(List<ProductDTO> productsList, Pageable page) {
+        int startOfPage = page.getPageNumber() * page.getPageSize();
+        if (startOfPage > productsList.size()) {
+            return new PageImpl<>(new ArrayList<>(), page, 0);
         }
-        if (pdCriteria != null && criteria.getProductId() == null) {
-            List<ProductDTO> productList = productQueryService.findByCriteria(pdCriteria);
 
-            for (ProductDTO productObj : productList) {
-                LongFilter idFilter = new LongFilter();
-                idFilter.setEquals(productObj.getId());
-                criteria.setProductId(idFilter);
-
-                List<ProductInventoryDTO> stockList = productInventoryQueryService.findByCriteria(criteria);
-                int productStock = this.countInventoryStock(stockList);
-                productObj.setTotalStock(productStock);
-                productObj.setWareHouseId(criteria.getWareHouseId().getEquals());
-            }
-            return productList;
-        } else { // both product Id and warehouse id available
-            List<ProductInventoryDTO> stockLists = productInventoryQueryService.findByCriteria(criteria);
-            int productStock = this.countInventoryStock(stockLists);
-            ProductDTO product = stockLists.iterator().next().getProduct();
-            product.setWareHouseId(criteria.getWareHouseId().getEquals());
-            product.setTotalStock(productStock);
-            productsList.add(product);
-        }
-        return productsList;
+        int endOfPage = Math.min(startOfPage + page.getPageSize(), productsList.size());
+        return new PageImpl<>(productsList.subList(startOfPage, endOfPage), page, productsList.size());
     }
 }
