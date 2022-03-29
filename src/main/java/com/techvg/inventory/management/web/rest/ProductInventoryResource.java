@@ -50,9 +50,6 @@ public class ProductInventoryResource {
 
     private final ProductInventoryQueryService productInventoryQueryService;
 
-    @Autowired
-    private ProductQueryService productQueryService;
-
     public ProductInventoryResource(
         ProductInventoryService productInventoryService,
         ProductInventoryRepository productInventoryRepository,

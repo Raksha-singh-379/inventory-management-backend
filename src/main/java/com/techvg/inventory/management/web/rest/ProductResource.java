@@ -1,24 +1,29 @@
 package com.techvg.inventory.management.web.rest;
 
 import com.techvg.inventory.management.repository.ProductRepository;
+import com.techvg.inventory.management.service.FileStorageService;
 import com.techvg.inventory.management.service.ProductQueryService;
 import com.techvg.inventory.management.service.ProductService;
 import com.techvg.inventory.management.service.criteria.ProductCriteria;
 import com.techvg.inventory.management.service.dto.ProductDTO;
 import com.techvg.inventory.management.web.rest.errors.BadRequestAlertException;
+import com.techvg.inventory.management.web.rest.vm.UploadFileResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -43,6 +48,9 @@ public class ProductResource {
     private final ProductRepository productRepository;
 
     private final ProductQueryService productQueryService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     public ProductResource(ProductService productService, ProductRepository productRepository, ProductQueryService productQueryService) {
         this.productService = productService;
@@ -197,5 +205,17 @@ public class ProductResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/uploadPdfFile")
+    public ResponseEntity<UploadFileResponse> uploadFile(
+        @RequestParam(name = "file", required = false) MultipartFile file,
+        @RequestParam(name = "productId") Long productId
+    ) {
+        String fileName = fileStorageService.storeFile(file, productId);
+
+        UploadFileResponse uploadResponse = new UploadFileResponse(fileName);
+
+        return ResponseEntity.ok().body(uploadResponse);
     }
 }
