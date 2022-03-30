@@ -62,9 +62,9 @@ public class PurchaseQuotationService {
         PurchaseQuotation purchaseQuotation = purchaseQuotationMapper.toEntity(purchaseQuotationDTO);
         purchaseQuotation = purchaseQuotationRepository.save(purchaseQuotation);
 
-        //-------------------------------------------------------
-        //-------------Create PurchaseQuotationDetails product wise
-        if (!purchaseQuotationDTO.getPurchaseQuotationDetails().isEmpty()) {
+        // -------------------------------------------------------
+        // -------------Create PurchaseQuotationDetails product wise
+        if (purchaseQuotationDTO.getPurchaseQuotationDetails() != null && !purchaseQuotationDTO.getPurchaseQuotationDetails().isEmpty()) {
             List<PurchaseQuotationDetailsDTO> quotationDetailsList = purchaseQuotationDTO.getPurchaseQuotationDetails();
             for (int i = 0; i < quotationDetailsList.size(); i++) {
                 PurchaseQuotationDetailsDTO detailsDto = quotationDetailsList.get(i);
@@ -135,7 +135,9 @@ public class PurchaseQuotationService {
     @Transactional(readOnly = true)
     public Optional<PurchaseQuotationDTO> findOne(Long id) {
         log.debug("Request to get PurchaseQuotation : {}", id);
-        return purchaseQuotationRepository.findOneWithEagerRelationships(id).map(purchaseQuotationMapper::toDto);
+        Optional<PurchaseQuotation> quotation = purchaseQuotationRepository.findOneWithEagerRelationships(id);
+        quotation.get().setPurchaseQuotationDetails(null);
+        return quotation.map(purchaseQuotationMapper::toDto);
     }
 
     /**
